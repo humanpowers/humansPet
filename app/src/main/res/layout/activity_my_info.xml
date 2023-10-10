@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MyInfo">
+
+    <TextView
+        android:id="@+id/myInfoText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="내 정보"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="5dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/myInfoNameText"
+        android:layout_width="@dimen/myInfoNameWidth"
+        android:layout_height="@dimen/myInfoHeight"
+        android:text="이름"
+        android:textSize="@dimen/myInfoTextSize"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.55" />
+
+    <TextView
+        android:id="@+id/myInfoUserAddress"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/myInfoHeight"
+        android:text=""
+        android:textSize="@dimen/myInfoTextSize"
+        app:layout_constraintStart_toStartOf="@+id/myInfoUserId"
+        app:layout_constraintTop_toTopOf="@+id/myInfoAddressText" />
+
+    <TextView
+        android:id="@+id/myInfoUserId"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/myInfoHeight"
+        android:text=""
+        android:textSize="@dimen/myInfoTextSize"
+        app:layout_constraintStart_toStartOf="@+id/myInfoUserName"
+        app:layout_constraintTop_toTopOf="@+id/myInfoIdText" />
+
+    <TextView
+        android:id="@+id/myInfoUserName"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/myInfoHeight"
+        android:layout_marginStart="@dimen/myInfoTextMarginStart"
+        android:text=""
+        android:textSize="@dimen/myInfoTextSize"
+        app:layout_constraintBottom_toBottomOf="@+id/myInfoNameText"
+        app:layout_constraintStart_toEndOf="@+id/myInfoNameText"
+        app:layout_constraintTop_toTopOf="@+id/myInfoNameText"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/myInfoIdText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/myInfoTextMarginTop"
+        android:text="ID"
+        android:textSize="@dimen/myInfoTextSize"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="@+id/myInfoNameText"
+        app:layout_constraintTop_toBottomOf="@+id/myInfoNameText" />
+
+    <TextView
+        android:id="@+id/myInfoAddressText"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/myInfoHeight"
+        android:layout_marginTop="@dimen/myInfoTextMarginTop"
+        android:text="주소"
+        android:textSize="@dimen/myInfoTextSize"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="@+id/myInfoIdText"
+        app:layout_constraintTop_toBottomOf="@+id/myInfoIdText" />
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/myInfoImage"
+        android:layout_width="@dimen/myInfoImageWidth"
+        android:layout_height="@dimen/myInfoImageHeight"
+        android:src="@drawable/basic_profile"
+        app:civ_border_color="@color/teal_200"
+        app:civ_border_overlay="false"
+        app:civ_border_width="2dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.05"
+        android:scaleType="centerCrop" />
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/userInfoLottie"
+        android:layout_width="@dimen/diaryFragmentLottieWidth"
+        android:layout_height="@dimen/diaryFragmentLottieHeight"
+        android:visibility="gone"
+        app:lottie_rawRes="@raw/loading"
+        app:layout_constraintBottom_toBottomOf="@id/myInfoImage"
+        app:layout_constraintTop_toTopOf="@id/myInfoImage"
+        app:layout_constraintLeft_toLeftOf="@id/myInfoImage"
+        app:layout_constraintRight_toRightOf="@id/myInfoImage"/>
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/myInfoFirstLottie"
+        android:layout_width="@dimen/diaryFragmentLottieWidth"
+        android:layout_height="@dimen/diaryFragmentLottieHeight"
+        android:visibility="gone"
+        app:lottie_rawRes="@raw/loading"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"/>
+
+    <Button
+        android:id="@+id/myInfoCheckBtn"
+        android:layout_width="@dimen/myInfoCheckBtnWidth"
+        android:layout_height="@dimen/myInfoCheckBtnHeight"
+        android:text="확인"
+        android:background="@drawable/box_mint"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.9" />
+    <TextView
+        android:id="@+id/myInfoImageAddText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="프로필 이미지 변경"
+        android:textSize="18dp"
+        android:layout_marginTop="10dp"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="@+id/myInfoImage"
+        app:layout_constraintTop_toBottomOf="@+id/myInfoImage"
+        app:layout_constraintEnd_toEndOf="@id/myInfoImage"
+        />
+
+    <ImageButton
+        android:id="@+id/myInfoImageAddButton"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="10dp"
+        android:src="@drawable/image_add"
+        android:scaleType="centerInside"
+        android:background="#00ffffff"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="@id/myInfoImageAddText"
+        app:layout_constraintStart_toEndOf="@id/myInfoImageAddText"/>
+</androidx.constraintlayout.widget.ConstraintLayout>

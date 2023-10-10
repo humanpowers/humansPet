@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+    <ImageView
+        android:id="@+id/diaryDiaryImage"
+        android:layout_width="@dimen/diaryDiaryItemImageWidth"
+        android:layout_height="@dimen/diaryDiaryItemImageHeight"
+        android:layout_marginEnd="@dimen/diaryDiaryItemImageMargin"
+        android:layout_marginStart="@dimen/diaryDiaryItemImageMargin"
+        android:layout_marginTop="@dimen/diaryDiaryItemImageMargin"
+        android:layout_marginBottom="@dimen/diaryDiaryItemImageMargin"
+        android:scaleType="centerCrop"
+        tools:srcCompat="@tools:sample/avatars"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/diaryDiaryTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:layout_marginTop="@dimen/diaryDiaryItemMarginTop"
+            android:text="진우개" />
+    <TextView
+        android:id="@+id/diaryDiaryContent"
+        android:layout_width="@dimen/diaryDiaryItemTitleWidth"
+        android:layout_height="@dimen/diaryDiaryItemTitleHeight"
+        android:layout_marginTop="@dimen/diaryDiaryItemMarginTop"
+        android:layout_gravity="left"
+        android:maxLines="2"
+        android:ellipsize="end"
+        android:text="진우개" />
+        <TextView
+            android:id="@+id/diaryDiaryDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="날짜"
+            android:layout_gravity="end"
+            android:layout_marginEnd="10dp"
+            />
+    </LinearLayout>
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="#0B03DAC5">
+
+    </View>
+
+</LinearLayout>

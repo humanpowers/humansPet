@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".PetAdd">
+
+    <TextView
+        android:id="@+id/petAddNameText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="이름"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.08"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/petAddImageButton" />
+
+    <TextView
+        android:id="@+id/petAddSexText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:text="성별"
+        app:layout_constraintEnd_toEndOf="@+id/petAddNameText"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/petAddNameText"
+        app:layout_constraintTop_toBottomOf="@+id/petAddNameText" />
+
+    <ImageButton
+        android:id="@+id/petAddImageButton"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_marginTop="8dp"
+        android:src="@drawable/image_add"
+        android:background="#00FFFFFF"
+        android:scaleType="centerInside"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+
+        tools:ignore="SpeakableTextPresentCheck"/>
+
+    <TextView
+        android:id="@+id/petAddBirthText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:text="생일"
+        app:layout_constraintEnd_toEndOf="@+id/petAddSexText"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/petAddSexText"
+        app:layout_constraintTop_toBottomOf="@+id/petAddSexText" />
+
+    <TextView
+        android:id="@+id/petAddTypesText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:text="동물과"
+        app:layout_constraintEnd_toEndOf="@+id/petAddWeightText"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/petAddWeightText"
+        app:layout_constraintTop_toBottomOf="@+id/petAddWeightText" />
+
+    <TextView
+        android:id="@+id/petAddKindText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:text="품종"
+        app:layout_constraintEnd_toEndOf="@+id/petAddTypesText"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/petAddTypesText"
+        app:layout_constraintTop_toBottomOf="@+id/petAddTypesText" />
+
+    <TextView
+        android:id="@+id/petAddWeightText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:text="몸무게"
+        app:layout_constraintEnd_toEndOf="@+id/petAddBirthText"
+        app:layout_constraintHorizontal_bias="0.538"
+        app:layout_constraintStart_toStartOf="@+id/petAddBirthText"
+        app:layout_constraintTop_toBottomOf="@+id/petAddBirthText" />
+
+    <TextView
+        android:id="@+id/petAddRegistrationNumberText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:text="등록번호"
+        app:layout_constraintEnd_toEndOf="@+id/petAddKindText"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/petAddKindText"
+        app:layout_constraintTop_toBottomOf="@+id/petAddKindText" />
+
+    <EditText
+        android:id="@+id/petAddNameEdit"
+        android:layout_width="240dp"
+        android:layout_height="50dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:hint="이름을 입력하세요"
+        app:layout_constraintBottom_toBottomOf="@+id/petAddNameText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/petAddNameText"
+        app:layout_constraintTop_toTopOf="@+id/petAddNameText" />
+
+    <EditText
+        android:id="@+id/petAddSexEdit"
+        android:layout_width="240dp"
+        android:layout_height="50dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:hint="성별을 입력하세요"
+        app:layout_constraintBottom_toBottomOf="@+id/petAddSexText"
+        app:layout_constraintEnd_toEndOf="@+id/petAddNameEdit"
+        app:layout_constraintStart_toStartOf="@+id/petAddNameEdit"
+        app:layout_constraintTop_toTopOf="@+id/petAddSexText" />
+
+    <EditText
+        android:id="@+id/petAddBirthEdit"
+        android:layout_width="240dp"
+        android:layout_height="50dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:hint="생일을 입력하세요"
+        app:layout_constraintBottom_toBottomOf="@+id/petAddBirthText"
+        app:layout_constraintEnd_toEndOf="@+id/petAddSexEdit"
+        app:layout_constraintStart_toStartOf="@+id/petAddSexEdit"
+        app:layout_constraintTop_toTopOf="@+id/petAddBirthText" />
+
+    <EditText
+        android:id="@+id/petAddTypesEdit"
+        android:layout_width="240dp"
+        android:layout_height="50dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:hint="동물과를 입력하세요"
+        app:layout_constraintBottom_toBottomOf="@+id/petAddTypesText"
+        app:layout_constraintEnd_toEndOf="@+id/petAddBirthEdit"
+        app:layout_constraintStart_toStartOf="@+id/petAddBirthEdit"
+        app:layout_constraintTop_toTopOf="@+id/petAddTypesText" />
+
+    <EditText
+        android:id="@+id/petAddKindEdit"
+        android:layout_width="240dp"
+        android:layout_height="50dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:hint="품종을 입력하세요"
+        app:layout_constraintBottom_toBottomOf="@+id/petAddKindText"
+        app:layout_constraintEnd_toEndOf="@+id/petAddTypesEdit"
+        app:layout_constraintStart_toStartOf="@+id/petAddTypesEdit"
+        app:layout_constraintTop_toTopOf="@+id/petAddKindText" />
+
+    <EditText
+        android:id="@+id/petAddWeightEdit"
+        android:layout_width="240dp"
+        android:layout_height="50dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:hint="몸무게를 입력하세요"
+        app:layout_constraintBottom_toBottomOf="@+id/petAddWeightText"
+        app:layout_constraintEnd_toEndOf="@+id/petAddKindEdit"
+        app:layout_constraintStart_toStartOf="@+id/petAddKindEdit"
+        app:layout_constraintTop_toTopOf="@+id/petAddWeightText" />
+
+    <EditText
+        android:id="@+id/petAddRegistrationNumberEdit"
+        android:layout_width="240dp"
+        android:layout_height="50dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:hint="등록번호를 입력하세요"
+        app:layout_constraintBottom_toBottomOf="@+id/petAddRegistrationNumberText"
+        app:layout_constraintEnd_toEndOf="@+id/petAddWeightEdit"
+        app:layout_constraintStart_toStartOf="@+id/petAddWeightEdit"
+        app:layout_constraintTop_toTopOf="@+id/petAddRegistrationNumberText" />
+
+    <Button
+        android:id="@+id/petAddCheckButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/box_mint"
+        android:text="확인"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.85"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/petAddCancelButton" />
+
+    <Button
+        android:id="@+id/petAddCancelButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="45dp"
+        android:background="@drawable/box_mint"
+        android:layout_marginBottom="20dp"
+        android:text="취소"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.15"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/petAddRegistrationNumberText" />
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/petAddLottie"
+        android:layout_width="@dimen/diaryFragmentLottieWidth"
+        android:layout_height="@dimen/diaryFragmentLottieHeight"
+        app:lottie_rawRes="@raw/loading"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"/>
+
+  </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Diary">
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".MainPage">
+
+
+        <TextView
+            android:id="@+id/diaryTitleText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/fragmentTitleMarginStart"
+            android:textSize="@dimen/fragmentTitleTextSize"
+            android:text="다이어리"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+<!--        <View-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="2dp"-->
+<!--            android:background="@color/teal_200"-->
+<!--            android:layout_marginStart="10dp"-->
+<!--            android:layout_marginEnd="10dp"-->
+<!--            app:layout_constraintBottom_toTopOf="@+id/diaryRecyclerView"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent" />-->
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/diaryRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/diaryFragmentRecyclerViewHeight"
+            android:layout_marginStart="@dimen/diaryFragmentRecyclerViewMargin"
+            android:layout_marginTop="@dimen/diaryFragmentRecyclerViewMarginTop"
+            android:layout_marginEnd="@dimen/diaryFragmentRecyclerViewMargin"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:id="@+id/diaryContour"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="#2503DAC5"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/diaryDiaryRecyclerView" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/diaryDiaryRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/diaryFragmentDiaryRecyclerViewHeight"
+            android:layout_marginBottom="@dimen/diaryFragmentDiaryRecyclerViewMarginBotton"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/diaryNoPetText"
+            android:layout_width="@dimen/diaryFragmentNoPetTextWidth"
+            android:layout_height="@dimen/diaryFragmentNoPetTextHeight"
+            android:layout_marginTop="@dimen/diaryFragmentNoPetTextMarginTop"
+            android:text="등록된 펫이 없습니다"
+            android:visibility="gone"
+            android:textSize="@dimen/diaryFragmentNoPetTextSize"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.877"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+            <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/lottie"
+            android:layout_width="@dimen/diaryFragmentLottieWidth"
+            android:layout_height="@dimen/diaryFragmentLottieHeight"
+            app:lottie_rawRes="@raw/loading"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"/>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fabCamera"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:src="@drawable/pet"
+            android:backgroundTint="#ffffffff"
+            app:borderWidth="0dp"
+            app:fabSize="mini"
+            app:maxImageSize="44dp"
+            android:visibility="invisible"
+            app:layout_constraintTop_toTopOf="@id/fabMain"
+            app:layout_constraintBottom_toBottomOf="@id/fabMain"
+            app:layout_constraintStart_toStartOf="@id/fabMain"
+            app:layout_constraintEnd_toEndOf="@id/fabMain"/>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fabEdit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:src="@drawable/diary"
+            android:backgroundTint="#ffffffff"
+            app:borderWidth="0dp"
+            app:fabSize="mini"
+            app:maxImageSize="44dp"
+            android:visibility="invisible"
+            app:layout_constraintTop_toTopOf="@id/fabMain"
+            app:layout_constraintBottom_toBottomOf="@id/fabMain"
+            app:layout_constraintStart_toStartOf="@id/fabMain"
+            app:layout_constraintEnd_toEndOf="@id/fabMain"/>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fabMain"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="24dp"
+            android:src="@drawable/human_plus"
+            android:backgroundTint="#ffffffff"
+            app:maxImageSize="60dp"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.9" />
+
+        <TextView
+            android:id="@+id/diaryCalendarText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="원하는 날짜를 선택해주세요."
+            android:backgroundTint="#ffffffff"
+            android:textSize="17dp"
+            android:visibility="gone"
+            android:layout_marginBottom="5dp"
+            app:layout_constraintBottom_toTopOf="@+id/diaryContour"
+            app:layout_constraintTop_toBottomOf="@id/diaryRecyclerView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <ImageButton
+            android:id="@+id/diaryCalendarBack"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:src="@drawable/calendar_back"
+            android:background="#FFFFFFFF"
+            android:visibility="gone"
+            android:scaleType="centerInside"
+            android:layout_marginRight="10dp"
+            app:layout_constraintTop_toTopOf="@id/diaryCalendarText"
+            app:layout_constraintRight_toLeftOf="@id/diaryCalendarText"
+            app:layout_constraintBottom_toBottomOf="@id/diaryCalendarText"
+            />
+
+        <ImageButton
+            android:id="@+id/diaryCalendarButton"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            app:layout_constraintTop_toTopOf="@id/diaryCalendarText"
+            app:layout_constraintLeft_toRightOf="@id/diaryCalendarText"
+            app:layout_constraintBottom_toBottomOf="@id/diaryCalendarText"
+            android:background="#00ffffff"
+            android:visibility="gone"
+            android:layout_marginLeft="10dp"
+            android:src="@drawable/calendar"
+            android:scaleType="centerInside"
+            />
+
+        <TextView
+            android:id="@+id/diaryGoneText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="다이어리가 없습니다."
+            android:textSize="20sp"
+            android:textColor="#000000"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</FrameLayout>

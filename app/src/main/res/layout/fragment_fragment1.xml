@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Noticeboard">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".MainPage">
+
+        <View
+            android:id="@+id/noticeboardMainContour"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="#6603DAC5"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toTopOf="@id/noticeboardRecyclerView"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            />
+
+    <TextView
+        android:id="@+id/noticeBoardTitleText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/fragmentTitleMarginStart"
+        android:layout_marginTop="10dp"
+        android:textSize="@dimen/fragmentTitleTextSize"
+        android:text="게시판"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageButton
+            android:layout_width="25dp"
+            android:layout_height="20dp"
+            android:background="#1203DAC5"
+            android:scaleType="centerInside"
+            android:src="@drawable/toolbar"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="5dp"
+            android:visibility="gone"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/noticeboardRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="50dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:layout_editor_absoluteY="100dp" />
+
+        <ImageButton
+            android:id="@+id/noticeboardAdd"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_margin="24dp"
+            android:scaleType="centerCrop"
+            android:background="#00ffffff"
+            android:src="@drawable/human_plus"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.9" />
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/noticeboardLottie"
+            android:layout_width="@dimen/diaryFragmentLottieWidth"
+            android:layout_height="@dimen/diaryFragmentLottieHeight"
+            app:lottie_rawRes="@raw/loading"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"/>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</FrameLayout>

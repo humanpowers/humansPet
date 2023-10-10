@@ -1,0 +1,394 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MyPage">
+
+
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".MainPage"
+        >
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/myPageRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/diaryFragmentRecyclerViewHeight"
+            android:layout_marginStart="@dimen/diaryFragmentRecyclerViewMargin"
+            android:layout_marginTop="@dimen/diaryFragmentRecyclerViewMarginTop"
+            android:layout_marginEnd="@dimen/diaryFragmentRecyclerViewMargin"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+        <View
+            android:id="@+id/diaryRecyclerViewContour"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="#2503DAC5"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginTop="10dp"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/myPageRecyclerView" />
+        <TextView
+            android:id="@+id/noticeBoardTitleText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/fragmentTitleMarginStart"
+            android:textSize="@dimen/fragmentTitleTextSize"
+            android:text="마이페이지"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+        <Button
+            android:id="@+id/mainCancelBtn"
+            android:layout_width="@dimen/myPageCheckBtnWidth"
+            android:layout_height="@dimen/myPageCheckBtnHeight"
+            android:text="회원탈퇴"
+            android:visibility="gone"
+            android:background="@drawable/box_mint"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.9"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.9" />
+
+        <Button
+            android:id="@+id/mainLogoutBtn"
+            android:layout_width="@dimen/myPageCheckBtnWidth"
+            android:layout_height="@dimen/myPageCheckBtnHeight"
+            android:text="로그아웃"
+            android:visibility="gone"
+            android:background="@drawable/box_mint"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.9" />
+        <View
+            android:id="@+id/diaryContour"
+            android:layout_width="2dp"
+            android:layout_height="484dp"
+            android:background="#2503DAC5"
+            android:layout_marginStart="30dp"
+            android:visibility="gone"
+            app:layout_constraintLeft_toRightOf="@id/myPageNameText"
+            app:layout_constraintBottom_toTopOf="@+id/diaryRegistrationContour"
+            app:layout_constraintTop_toBottomOf="@+id/diaryRecyclerViewContour" />
+
+        <Button
+            android:id="@+id/mainMyInfoBtn"
+            android:layout_width="@dimen/myPageCheckBtnWidth"
+            android:layout_height="@dimen/myPageCheckBtnHeight"
+            android:text="내 정보"
+            android:visibility="gone"
+            android:background="@drawable/box_mint"
+            app:layout_constraintEnd_toStartOf="@+id/mainCancelBtn"
+            app:layout_constraintStart_toEndOf="@+id/mainLogoutBtn"
+            app:layout_constraintTop_toTopOf="@+id/mainLogoutBtn" />
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/myPageLottie"
+            android:layout_width="@dimen/diaryFragmentLottieWidth"
+            android:layout_height="@dimen/diaryFragmentLottieHeight"
+            app:lottie_rawRes="@raw/loading"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"/>
+        <TextView
+            android:id="@+id/myPageNoPetText"
+            android:layout_width="@dimen/diaryFragmentNoPetTextWidth"
+            android:layout_height="@dimen/diaryFragmentNoPetTextHeight"
+            android:layout_marginTop="@dimen/diaryFragmentNoPetTextMarginTop"
+            android:text="등록된 펫이 없습니다"
+            android:visibility="gone"
+            android:textSize="@dimen/diaryFragmentNoPetTextSize"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.877"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+        <TextView
+            android:id="@+id/myPageNameText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="35dp"
+            android:text="이름"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.08"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/myPageRecyclerView" />
+
+        <TextView
+            android:id="@+id/myPageSexText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:text="성별"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="@+id/myPageNameText"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/myPageNameText"
+            app:layout_constraintTop_toBottomOf="@+id/myPageNameText" />
+
+        <TextView
+            android:id="@+id/myPageBirthText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:text="생일"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="@+id/myPageSexText"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/myPageSexText"
+            app:layout_constraintTop_toBottomOf="@+id/myPageSexText" />
+
+        <TextView
+            android:id="@+id/myPageTypesText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:text="동물과"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="@+id/myPageWeightText"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/myPageWeightText"
+            app:layout_constraintTop_toBottomOf="@+id/myPageWeightText" />
+
+        <TextView
+            android:id="@+id/myPageKindText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:text="품종"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="@+id/myPageTypesText"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/myPageTypesText"
+            app:layout_constraintTop_toBottomOf="@+id/myPageTypesText" />
+
+
+        <TextView
+            android:id="@+id/myPageWeightText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:text="몸무게"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="@+id/myPageBirthText"
+            app:layout_constraintHorizontal_bias="0.538"
+            app:layout_constraintStart_toStartOf="@+id/myPageBirthText"
+            app:layout_constraintTop_toBottomOf="@+id/myPageBirthText" />
+
+        <TextView
+            android:id="@+id/myPageRegistrationNumberText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:text="등록번호"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="@+id/myPageKindText"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/myPageKindText"
+            app:layout_constraintTop_toBottomOf="@+id/myPageKindText" />
+
+        <TextView
+            android:id="@+id/myPageNameEdit"
+            android:layout_width="240dp"
+            android:layout_height="50dp"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:hint="이름을 입력하세요"
+            android:gravity="center"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/myPageNameText"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/myPageNameText"
+            app:layout_constraintTop_toTopOf="@+id/myPageNameText" />
+
+        <View
+            android:id="@+id/diaryNameContour"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="#2503DAC5"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginTop="10dp"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/myPageNameEdit" />
+
+        <TextView
+            android:id="@+id/myPageSexEdit"
+            android:layout_width="240dp"
+            android:layout_height="50dp"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:hint="성별을 입력하세요"
+            android:gravity="center"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/myPageSexText"
+            app:layout_constraintEnd_toEndOf="@+id/myPageNameEdit"
+            app:layout_constraintStart_toStartOf="@+id/myPageNameEdit"
+            app:layout_constraintTop_toTopOf="@+id/myPageSexText" />
+
+        <View
+            android:id="@+id/diarySexContour"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="#2503DAC5"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginTop="10dp"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/myPageSexEdit" />
+
+        <TextView
+            android:id="@+id/myPageBirthEdit"
+            android:layout_width="240dp"
+            android:layout_height="50dp"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:hint="생일을 입력하세요"
+            android:gravity="center"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/myPageBirthText"
+            app:layout_constraintEnd_toEndOf="@+id/myPageSexEdit"
+            app:layout_constraintStart_toStartOf="@+id/myPageSexEdit"
+            app:layout_constraintTop_toTopOf="@+id/myPageBirthText" />
+
+        <View
+            android:id="@+id/diaryBirthContour"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="#2503DAC5"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginTop="10dp"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/myPageBirthEdit" />
+
+        <TextView
+            android:id="@+id/myPageTypesEdit"
+            android:layout_width="240dp"
+            android:layout_height="50dp"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:hint="동물과를 입력하세요"
+            android:gravity="center"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/myPageTypesText"
+            app:layout_constraintEnd_toEndOf="@+id/myPageBirthEdit"
+            app:layout_constraintStart_toStartOf="@+id/myPageBirthEdit"
+            app:layout_constraintTop_toTopOf="@+id/myPageTypesText" />
+        <View
+            android:id="@+id/diaryTypesContour"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="#2503DAC5"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginTop="10dp"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/myPageTypesEdit" />
+
+        <TextView
+            android:id="@+id/myPageKindEdit"
+            android:layout_width="240dp"
+            android:layout_height="50dp"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:hint="품종을 입력하세요"
+            android:gravity="center"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/myPageKindText"
+            app:layout_constraintEnd_toEndOf="@+id/myPageTypesEdit"
+            app:layout_constraintStart_toStartOf="@+id/myPageTypesEdit"
+            app:layout_constraintTop_toTopOf="@+id/myPageKindText" />
+        <View
+            android:id="@+id/diaryKindContour"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="#2503DAC5"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginTop="10dp"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/myPageKindEdit" />
+
+        <TextView
+            android:id="@+id/myPageWeightEdit"
+            android:layout_width="240dp"
+            android:layout_height="50dp"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:hint="몸무게를 입력하세요"
+            android:gravity="center"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/myPageWeightText"
+            app:layout_constraintEnd_toEndOf="@+id/myPageKindEdit"
+            app:layout_constraintStart_toStartOf="@+id/myPageKindEdit"
+            app:layout_constraintTop_toTopOf="@+id/myPageWeightText" />
+
+        <View
+            android:id="@+id/diaryWeightContour"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="#2503DAC5"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginTop="10dp"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/myPageWeightEdit" />
+
+        <TextView
+            android:id="@+id/myPageRegistrationNumberEdit"
+            android:layout_width="240dp"
+            android:layout_height="50dp"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:hint="등록번호를 입력하세요"
+            android:gravity="center"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/myPageRegistrationNumberText"
+            app:layout_constraintEnd_toEndOf="@+id/myPageWeightEdit"
+            app:layout_constraintStart_toStartOf="@+id/myPageWeightEdit"
+            app:layout_constraintTop_toTopOf="@+id/myPageRegistrationNumberText" />
+
+        <View
+            android:id="@+id/diaryRegistrationContour"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="#2503DAC5"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginTop="10dp"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/myPageRegistrationNumberEdit" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</FrameLayout>

@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Login">
+
+    <ImageView
+        android:id="@+id/loginImage"
+        android:layout_width="@dimen/loginImageViewWidth"
+        android:layout_height="@dimen/loginImageViewHeight"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.05"
+        android:src="@drawable/pet"/>
+
+    <EditText
+        android:id="@+id/loginIdEdit"
+        android:layout_width="@dimen/loginEmailWidth"
+        android:layout_height="@dimen/loginEmailHeight"
+        android:layout_marginTop="@dimen/loginEmailMarginTop"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:drawableStart="@drawable/email"
+        android:background="@drawable/box_white"
+        android:hint="E-mail"
+        android:drawablePadding="@dimen/loginEmailDrawablePadding"
+        android:paddingStart="@dimen/loginEmailPaddingStart"
+        android:maxLength="25"
+        android:textSize="@dimen/loginEmailTextSize"
+        app:layout_constraintEnd_toEndOf="@+id/loginImage"
+        app:layout_constraintStart_toStartOf="@+id/loginImage"
+        app:layout_constraintTop_toBottomOf="@+id/loginImage" />
+
+    <EditText
+        android:id="@+id/loginPasswordEdit"
+        android:layout_width="@dimen/loginEmailWidth"
+        android:layout_height="@dimen/loginEmailHeight"
+        android:layout_marginTop="@dimen/loginPasswordMarginTop"
+        android:ems="10"
+        android:inputType="textPassword"
+        android:background="@drawable/box_white"
+        android:drawableStart="@drawable/password"
+        android:drawablePadding="@dimen/loginEmailDrawablePadding"
+        android:textSize="@dimen/loginEmailTextSize"
+        android:paddingStart="@dimen/loginEmailPaddingStart"
+        android:hint="Password"
+        app:layout_constraintEnd_toEndOf="@+id/loginIdEdit"
+        app:layout_constraintStart_toStartOf="@+id/loginIdEdit"
+        app:layout_constraintTop_toBottomOf="@+id/loginIdEdit"/>
+
+    <Button
+        android:id="@+id/loginLoginBtn"
+        android:layout_width="@dimen/loginLoginBtnWidth"
+        android:layout_height="@dimen/loginBtnHeight"
+        android:layout_marginTop="@dimen/loginLoginBtnMarginTop"
+        android:background="@drawable/box_mint"
+        android:text="로그인"
+        android:textSize="@dimen/loginBtnTextSize"
+        app:layout_constraintEnd_toEndOf="@+id/loginPasswordEdit"
+        app:layout_constraintStart_toStartOf="@+id/loginPasswordEdit"
+        app:layout_constraintTop_toBottomOf="@+id/loginPasswordEdit" />
+
+    <Button
+        android:id="@+id/loginFindIdBtn"
+        android:layout_width="@dimen/loginFindBtnWidth"
+        android:layout_height="@dimen/loginBtnHeight"
+        android:layout_marginTop="@dimen/loginFindBtnMarginTop"
+        android:background="@drawable/box_mint"
+        android:text="ID찾기"
+        app:layout_constraintStart_toStartOf="@+id/loginJoinBtn"
+        app:layout_constraintTop_toBottomOf="@+id/loginJoinBtn" />
+
+    <Button
+        android:id="@+id/loginFinwPasswordBtn"
+        android:layout_width="@dimen/loginFindBtnWidth"
+        android:layout_height="@dimen/loginBtnHeight"
+        android:background="@drawable/box_mint"
+        android:text="비밀번호 찾기"
+        app:layout_constraintEnd_toEndOf="@+id/loginJoinBtn"
+        app:layout_constraintTop_toTopOf="@+id/loginFindIdBtn" />
+
+    <Button
+        android:id="@+id/loginJoinBtn"
+        android:layout_width="@dimen/loginLoginBtnWidth"
+        android:layout_height="@dimen/loginBtnHeight"
+        android:layout_marginTop="@dimen/loginJoinBtnMarginTop"
+        android:background="@drawable/box_mint"
+        android:textSize="@dimen/loginBtnTextSize"
+        android:text="회원가입"
+        app:layout_constraintEnd_toEndOf="@+id/loginLoginBtn"
+        app:layout_constraintStart_toStartOf="@+id/loginLoginBtn"
+        app:layout_constraintTop_toBottomOf="@+id/loginLoginBtn" />
+
+    <ImageButton
+        android:id="@+id/loginKakaoLogin"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/loginBtnHeight"
+        android:background="#00ff0000"
+        android:scaleType="centerCrop"
+        android:layout_marginTop="@dimen/loginKakaoBtnMarginTop"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/loginFindIdBtn"
+        app:srcCompat="@drawable/kakao_login"
+        />
+
+    <CheckBox
+        android:id="@+id/loginAutoLoginCheckBox"
+        android:layout_width="@dimen/loginAutoLoginWidth"
+        android:layout_height="@dimen/loginAutoLoginHeight"
+        android:text="로그인 상태 유지"
+        app:layout_constraintStart_toStartOf="@+id/loginPasswordEdit"
+        app:layout_constraintTop_toBottomOf="@+id/loginPasswordEdit" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

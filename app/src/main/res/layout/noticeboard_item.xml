@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:gravity="center"
+    android:orientation="vertical">
+    <View
+        android:id="@+id/noticeboardStartContour"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+
+        android:background="#6603DAC5"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="#0303DAC5"
+        android:orientation="horizontal">
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/noticeboardItemUserImage"
+            android:layout_width="@dimen/noticeboardImageWidth"
+            android:layout_height="@dimen/noticeboardImageHeight"
+            android:layout_margin="@dimen/noticeboardImageMargin"
+            app:civ_border_color="@color/teal_200"
+            app:civ_border_overlay="false"
+            app:civ_border_width="2dp"
+            android:scaleType="centerCrop"/>
+
+        <TextView
+            android:id="@+id/noticeboardItemUserName"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/noticeboardNameHeight"
+            android:layout_margin="@dimen/noticeboardImageMargin"
+            android:gravity="center"
+            android:text="배진우"
+            android:textSize="20dp"/>
+
+        <TextView
+            android:id="@+id/noticeboardItemAddressText"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/noticeboardAddressHeight"
+            android:text="주소"
+            android:layout_margin="10dp"
+            android:textSize="14dp"
+            android:maxLines="1"
+            android:maxLength="17"
+            android:ellipsize="end"
+            />
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/noticeboardItemImage"
+        android:layout_width="match_parent"
+        android:layout_height="350dp"
+        android:scaleType="centerCrop"
+        android:background="#0303DAC5"/>
+
+    <LinearLayout
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="#0303DAC5"
+        android:layout_gravity="left">
+
+
+        <ImageButton
+            android:id="@+id/noticeboardItemLikesImage"
+            android:src="@drawable/heart_none"
+            android:background="#00ffffff"
+            android:scaleType="centerCrop"
+            android:layout_marginStart="10dp"
+
+            android:layout_width="20dp"
+            android:layout_height="20dp"/>
+
+        <TextView
+            android:id="@+id/noticeboardItemLikesCount"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:text="0"
+            android:textSize="15dp"
+            android:layout_marginStart="5dp"
+            android:layout_gravity="center"
+            />
+
+        <ImageButton
+            android:id="@+id/noticeboardItemCommentImage"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/comment_icon"
+            android:background="#00ffffff"
+            android:scaleType="centerCrop"
+            android:layout_marginStart="10dp"
+            />
+
+        <TextView
+            android:id="@+id/noticeboardItemCommentCount"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:text="0"
+            android:textSize="15dp"
+            android:layout_marginStart="5dp"
+            android:layout_gravity="center"
+            />
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/noticeboardImageContour"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:background="#2203DAC5"
+        />
+
+    <TextView
+        android:id="@+id/noticeboardTitleText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#0303DAC5"
+        android:text="제목"
+        android:textSize="25dp"
+        />
+
+    <View
+        android:id="@+id/noticeboardEndContour"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="#2203DAC5"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        />
+
+    <TextView
+        android:id="@+id/noticeboardItemCommentText"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:background="#0303DAC5"
+        android:text="댓글"
+        android:textSize="20dp"
+        android:layout_gravity="left"
+
+        />
+
+    <View
+        android:id="@+id/noticeboardTitleContour"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="#6603DAC5"
+        android:layout_marginTop="10dp"
+
+        />
+
+   <View
+       android:layout_width="match_parent"
+       android:layout_height="58dp"
+       android:background="#ffffffff"/>
+
+
+</LinearLayout>

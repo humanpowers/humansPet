@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".DiaryAdd">
+
+    <ImageButton
+        android:id="@+id/addDiaryImageButton"
+        android:layout_width="@dimen/addDiaryImageWidth"
+        android:layout_height="@dimen/addDiaryImageHeight"
+        android:layout_marginTop="@dimen/addDiaryImageMarginTop"
+        android:src="@drawable/image_add"
+        android:background="#00FFFFFF"
+        android:scaleType="centerInside"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="SpeakableTextPresentCheck"/>
+
+
+    <Button
+        android:id="@+id/addDiaryCheckButton"
+        android:layout_width="@dimen/addDiaryCheckBtnWidth"
+        android:layout_height="@dimen/addDiaryCheckBtnHeight"
+        android:background="@drawable/box_mint"
+        android:text="확인"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.851"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/addDiaryCancelButton" />
+
+    <Button
+        android:id="@+id/addDiaryCancelButton"
+        android:layout_width="@dimen/addDiaryCheckBtnWidth"
+        android:layout_height="@dimen/addDiaryCheckBtnHeight"
+        android:layout_marginTop="@dimen/addDiaryCheckBtnMarginTop"
+        android:background="@drawable/box_mint"
+        android:layout_marginBottom="@dimen/addDiaryCheckBtnMarginBottom"
+        android:text="취소"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.16"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/addDiaryContentEdit" />
+
+    <TextView
+        android:id="@+id/addDiaryTitleText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/addDiaryTitleMarginTop"
+        android:text="제목"
+        android:textSize="@dimen/addDiaryTitleTextSize"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.15"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/addDiaryImageButton" />
+
+    <EditText
+        android:id="@+id/addDiaryTitleEdit"
+        android:layout_width="@dimen/addDiaryTitleEditWidth"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:text=""
+        android:maxLength="30"
+        app:layout_constraintBottom_toBottomOf="@+id/addDiaryTitleText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/addDiaryTitleText"
+        app:layout_constraintTop_toTopOf="@+id/addDiaryTitleText"
+        tools:ignore="SpeakableTextPresentCheck"/>
+
+    <EditText
+        android:id="@+id/addDiaryContentEdit"
+        android:layout_width="@dimen/addDiaryContentWidth"
+        android:layout_height="@dimen/addDiaryContentHeight"
+        android:layout_marginTop="@dimen/addDiaryContentMarginTop"
+        android:layout_weight="1"
+        android:background="#eeeeee"
+        android:hint="내용을 입력하세요."
+        android:scrollbars = "vertical"
+        android:maxLength="500"
+        android:gravity="top"
+        android:padding="@dimen/addDiaryContentPadding"
+        app:layout_constraintEnd_toEndOf="@+id/addDiaryTitleEdit"
+        app:layout_constraintHorizontal_bias="0.6"
+        app:layout_constraintStart_toStartOf="@+id/addDiaryTitleText"
+        app:layout_constraintTop_toBottomOf="@+id/addDiaryTitleEdit" />
+
+    <TextView
+        android:id="@+id/textCountText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0/500"
+        app:layout_constraintStart_toEndOf="@+id/addDiaryContentEdit"
+        app:layout_constraintBottom_toBottomOf="@+id/addDiaryContentEdit" />
+
+        <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/addDiaryLottie"
+        android:layout_width="@dimen/diaryFragmentLottieWidth"
+        android:layout_height="@dimen/diaryFragmentLottieHeight"
+        android:visibility="gone"
+        app:lottie_rawRes="@raw/loading"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

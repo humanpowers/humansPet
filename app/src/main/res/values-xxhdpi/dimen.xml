@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="mainTitleTextSize">30sp</dimen>
+
+    <dimen name="loginImageViewWidth">220dp</dimen>
+    <dimen name="loginImageViewHeight">210dp</dimen>
+    <dimen name="loginEmailWidth">300dp</dimen>
+    <dimen name="loginEmailHeight">50dp</dimen>
+    <dimen name="loginEmailMarginTop">28dp</dimen>
+    <dimen name="loginEmailPaddingStart">10dp</dimen>
+    <dimen name="loginEmailDrawablePadding">10dp</dimen>
+    <dimen name="loginEmailTextSize">16sp</dimen>
+    <dimen name="loginPasswordMarginTop">20dp</dimen>
+    <dimen name="loginLoginBtnWidth">300dp</dimen>
+    <dimen name="loginBtnHeight">50dp</dimen>
+    <dimen name="loginLoginBtnMarginTop">50dp</dimen>
+    <dimen name="loginBtnTextSize">25sp</dimen>
+    <dimen name="loginFindBtnWidth">130dp</dimen>
+    <dimen name="loginFindBtnMarginTop">28dp</dimen>
+    <dimen name="loginJoinBtnMarginTop">28dp</dimen>
+    <dimen name="loginKakaoBtnMarginTop">20dp</dimen>
+    <dimen name="loginAutoLoginWidth">130dp</dimen>
+    <dimen name="loginAutoLoginHeight">48dp</dimen>
+
+    <dimen name="registerEditWidth">280dp</dimen>
+    <dimen name="registerEditHeight">55dp</dimen>
+    <dimen name="registerEditMarginTop">20dp</dimen>
+    <dimen name="registerEditTextSize">15sp</dimen>
+    <dimen name="registerCheckBtnWidth">100dp</dimen>
+    <dimen name="registerCheckBtnHeight">50dp</dimen>
+    <dimen name="registerCheckBtnTextSize">17sp</dimen>
+    <dimen name="registerFinishBtnWidth">85dp</dimen>
+    <dimen name="registerFinishBtnHeight">50dp</dimen>
+    <dimen name="registerFinishBtnTextSize">20sp</dimen>
+
+    <dimen name="myInfoNameWidth">40dp</dimen>
+    <dimen name="myInfoHeight">30dp</dimen>
+    <dimen name="myInfoTextSize">20sp</dimen>
+    <dimen name="myInfoTextMarginStart">16dp</dimen>
+    <dimen name="myInfoTextMarginTop">40dp</dimen>
+    <dimen name="myInfoImageWidth">300dp</dimen>
+    <dimen name="myInfoImageHeight">300dp</dimen>
+    <dimen name="myInfoCheckBtnWidth">100dp</dimen>
+    <dimen name="myInfoCheckBtnHeight">50dp</dimen>
+
+    <dimen name="addDiaryImageWidth">255dp</dimen>
+    <dimen name="addDiaryImageHeight">255dp</dimen>
+    <dimen name="addDiaryImageMarginTop">8dp</dimen>
+    <dimen name="addDiaryCheckBtnHeight">50dp</dimen>
+    <dimen name="addDiaryCheckBtnWidth">100dp</dimen>
+    <dimen name="addDiaryCheckBtnMarginTop">50dp</dimen>
+    <dimen name="addDiaryCheckBtnMarginBottom">20dp</dimen>
+    <dimen name="addDiaryTitleTextSize">20sp</dimen>
+    <dimen name="addDiaryTitleMarginTop">30dp</dimen>
+    <dimen name="addDiaryTitleEditWidth">200dp</dimen>
+    <dimen name="addDiaryContentWidth">300dp</dimen>
+    <dimen name="addDiaryContentHeight">300dp</dimen>
+    <dimen name="addDiaryContentMarginTop">20dp</dimen>
+    <dimen name="addDiaryContentPadding">16dp</dimen>
+
+    <dimen name="diaryDiaryItemImageWidth">100dp</dimen>
+    <dimen name="diaryDiaryItemImageHeight">100dp</dimen>
+    <dimen name="diaryDiaryItemImageMargin">10dp</dimen>
+    <dimen name="diaryDiaryItemMarginTop">10dp</dimen>
+    <dimen name="diaryDiaryItemTitleWidth">250dp</dimen>
+    <dimen name="diaryDiaryItemTitleHeight">50dp</dimen>
+
+    <dimen name="diaryInfoItemImageWidth">60dp</dimen>
+    <dimen name="diaryInfoItemImageHeight">60dp</dimen>
+    <dimen name="diaryInfoItemImageMargin">15dp</dimen>
+    <dimen name="diaryInfoItemImageMarginSide">10dp</dimen>
+    <dimen name="diaryInfoItemNameMarginTop">7dp</dimen>
+
+    <dimen name="diaryShowCheckBtnWidth">100dp</dimen>
+    <dimen name="diaryShowCheckBtnHeight">50dp</dimen>
+    <dimen name="diaryShowCheckBtnTextSize">20dp</dimen>
+    <dimen name="diaryShowCheckBtnMarginTop">20dp</dimen>
+    <dimen name="diaryShowCheckBtnMarginBottom">20dp</dimen>
+    <dimen name="diaryShowTitleTextSize">20sp</dimen>
+    <dimen name="diaryShowTitleMarginTop">20dp</dimen>
+    <dimen name="diaryShowTitleEditWidth">200dp</dimen>
+    <dimen name="diaryShowContentWidth">300dp</dimen>
+    <dimen name="diaryShowContentHeight">300dp</dimen>
+    <dimen name="diaryShowContentMarginTop">16dp</dimen>
+    <dimen name="diaryShowContentPadding">5dp</dimen>
+    <dimen name="diaryShowImageWidth">300dp</dimen>
+    <dimen name="diaryShowImageHeight">300dp</dimen>
+    <dimen name="diaryShowImageMarginTop">36dp</dimen>
+
+    <dimen name="fragmentTitleTextSize">20sp</dimen>
+    <dimen name="fragmentTitleMarginStart">12dp</dimen>
+
+    <dimen name="diaryFragmentRecyclerViewMargin">10dp</dimen>
+    <dimen name="diaryFragmentRecyclerViewHeight">123dp</dimen>
+    <dimen name="diaryFragmentRecyclerViewMarginTop">32dp</dimen>
+    <dimen name="diaryFragmentDivisionMarginTop">50dp</dimen>
+    <dimen name="diaryFragmentDiaryRecyclerViewHeight">560dp</dimen>
+    <dimen name="diaryFragmentDiaryRecyclerViewMarginBotton">50dp</dimen>
+    <dimen name="diaryFragmentNoPetTextWidth">280dp</dimen>
+    <dimen name="diaryFragmentNoPetTextHeight">50dp</dimen>
+    <dimen name="diaryFragmentNoPetTextMarginTop">64dp</dimen>
+    <dimen name="diaryFragmentNoPetTextSize">30sp</dimen>
+    <dimen name="diaryFragmentLottieWidth">100dp</dimen>
+    <dimen name="diaryFragmentLottieHeight">100dp</dimen>
+
+    <dimen name="myPageCheckBtnWidth">100dp</dimen>
+    <dimen name="myPageCheckBtnHeight">50dp</dimen>
+
+    <dimen name="myChatImageWidth">50dp</dimen>
+    <dimen name="myChatImageHeight">50dp</dimen>
+    <dimen name="myChatImageMargin">15dp</dimen>
+
+    <dimen name="noticeboardImageHeight">40dp</dimen>
+    <dimen name="noticeboardImageWidth">40dp</dimen>
+    <dimen name="noticeboardImageMargin">10dp</dimen>
+    <dimen name="noticeboardNameHeight">40dp</dimen>
+    <dimen name="noticeboardNameMargin">10dp</dimen>
+    <dimen name="noticeboardAddressHeight">20dp</dimen>
+</resources>

@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".NoticeboardShow">
+
+
+        <ImageButton
+            android:id="@+id/noticeboardShowCancelButton"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="#00ffffff"
+            android:scaleType="centerCrop"
+            android:src="@drawable/back"
+            android:layout_margin="5dp"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/noticeboardShowTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="게시판"
+        android:textSize="20sp"
+        android:layout_marginTop="10dp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toStartOf="@+id/noticeboardShowSendButton"
+        app:layout_constraintStart_toEndOf="@+id/noticeboardShowCancelButton"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageButton
+        android:id="@+id/noticeboardShowSendButton"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="#00ffffff"
+        android:scaleType="centerCrop"
+        android:layout_margin="5dp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:src="@drawable/send" />
+
+    <View
+        android:id="@+id/noticeboardShowMainContour"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="#6603DAC5"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@id/linearLayout2"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        />
+
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        android:background="#0503DAC5"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/noticeboardShowCancelButton">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/noticeboardShowUserImage"
+            android:layout_width="@dimen/noticeboardImageWidth"
+            android:layout_height="@dimen/noticeboardImageHeight"
+            android:layout_margin="@dimen/noticeboardImageMargin"
+            android:scaleType="centerCrop"
+            app:civ_border_color="@color/teal_200"
+            app:civ_border_overlay="false"
+            app:civ_border_width="2dp" />
+
+        <TextView
+            android:id="@+id/noticeboardShowUserName"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/noticeboardNameHeight"
+            android:layout_margin="@dimen/noticeboardImageMargin"
+            android:gravity="center"
+            android:text="배진우"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/noticeboardShowAddressText"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/noticeboardAddressHeight"
+            android:layout_margin="10dp"
+            android:ellipsize="end"
+            android:maxLength="17"
+            android:maxLines="1"
+            android:text="주소"
+            android:textSize="14sp" />
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/noticeboardShowImage"
+        android:layout_width="match_parent"
+        android:layout_height="350dp"
+        android:background="#0503DAC5"
+        android:scaleType="centerCrop"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout2" />
+
+    <LinearLayout
+        android:id="@+id/noticeboardShowLikesLinear"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="left"
+        android:background="#0503DAC5"
+        android:padding="5dp"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/noticeboardShowImage">
+
+
+        <ImageButton
+            android:id="@+id/noticeboardShowLikesImage"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginStart="10dp"
+            android:background="#00ffffff"
+            android:scaleType="centerCrop"
+            android:visibility="gone"
+            android:src="@drawable/heart_none" />
+
+        <TextView
+            android:id="@+id/noticeboardShowLikesCount"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:layout_gravity="center"
+            android:layout_marginStart="5dp"
+            android:text="0"
+            android:visibility="gone"
+            android:textSize="15sp" />
+
+        <ImageButton
+            android:id="@+id/noticeboardShowCommentImage"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginStart="10dp"
+            android:background="#00ffffff"
+            android:scaleType="centerCrop"
+            android:visibility="gone"
+            android:src="@drawable/comment_icon" />
+
+        <TextView
+            android:id="@+id/noticeboardShowCommentCount"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:layout_gravity="center"
+            android:layout_marginStart="5dp"
+            android:visibility="gone"
+            android:text="0"
+            android:textSize="15sp" />
+    </LinearLayout>
+
+    <View
+        android:id="@+id/noticeboardShowLikesContour"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="#2203DAC5"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/noticeboardShowLikesLinear"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        />
+
+    <TextView
+        android:id="@+id/noticeboardShowTitleText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#0503DAC5"
+        android:text="제목"
+        android:textSize="25dp"
+        android:padding="5dp"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/noticeboardShowLikesLinear"
+        />
+
+    <View
+        android:id="@+id/noticeboardShowTitleContour"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="#2203DAC5"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/noticeboardShowTitleText"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        />
+
+    <TextView
+        android:id="@+id/noticeboardShowContentText"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:text="본문"
+        android:textSize="20sp"
+        android:background="#0503DAC5"
+        android:padding="5dp"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/noticeboardShowTitleText"
+        />
+    <View
+        android:id="@+id/noticeboardShowContentContour"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="#2203DAC5"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/noticeboardShowContentText"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        />
+
+    <TextView
+        android:id="@+id/noticeboardShowCommentText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="댓글"
+        android:textSize="15sp"
+        android:background="#0503DAC5"
+        android:padding="5dp"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/noticeboardShowContentText"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/noticeboardShowLottie"
+        android:layout_width="@dimen/diaryFragmentLottieWidth"
+        android:layout_height="@dimen/diaryFragmentLottieHeight"
+        android:visibility="gone"
+        app:lottie_rawRes="@raw/loading"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"/>
+</androidx.constraintlayout.widget.ConstraintLayout>

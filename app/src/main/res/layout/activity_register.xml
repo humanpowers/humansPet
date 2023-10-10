@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Register">
+    <TextView
+        android:id="@+id/joinText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="회원가입"
+        android:textSize="@dimen/mainTitleTextSize"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/joinNameEdit"
+        android:layout_width="@dimen/registerEditWidth"
+        android:layout_height="@dimen/registerEditHeight"
+        android:layout_marginTop="@dimen/registerEditMarginTop"
+        android:hint="이름 입력"
+        android:inputType="textPersonName"
+        android:maxLength="10"
+        android:textSize="@dimen/registerEditTextSize"
+        app:layout_constraintStart_toStartOf="@+id/joinRePwEdit"
+        app:layout_constraintTop_toBottomOf="@+id/joinRePwEdit" />
+
+    <EditText
+        android:id="@+id/joinPhoneEdit"
+        android:layout_width="@dimen/registerEditWidth"
+        android:layout_height="@dimen/registerEditHeight"
+        android:layout_marginTop="@dimen/registerEditMarginTop"
+        android:hint="핸드폰 번호 입력"
+        android:textSize="@dimen/registerEditTextSize"
+        android:maxLength="13"
+        android:inputType="phone"
+        app:layout_constraintEnd_toEndOf="@+id/joinNameEdit"
+        app:layout_constraintStart_toStartOf="@+id/joinNameEdit"
+        app:layout_constraintTop_toBottomOf="@+id/joinNameEdit" />
+
+    <EditText
+        android:id="@+id/joinEmailEdit"
+        android:layout_width="@dimen/registerEditWidth"
+        android:layout_height="@dimen/registerEditHeight"
+        android:layout_marginTop="@dimen/registerEditMarginTop"
+        android:hint="이메일 입력"
+        android:textSize="@dimen/registerEditTextSize"
+        android:maxLength="25"
+        android:bufferType="spannable"
+        android:inputType="textEmailAddress"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.2" />
+
+    <Button
+        android:id="@+id/joinEmailCheckBtn"
+        android:layout_width="@dimen/registerCheckBtnWidth"
+        android:layout_height="@dimen/registerCheckBtnHeight"
+        android:textColor="#452435"
+        android:background="@drawable/box_mint"
+        android:text="이메일 인증"
+        android:textSize="@dimen/registerCheckBtnTextSize"
+        app:layout_constraintBottom_toBottomOf="@+id/joinEmailEdit"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.2"
+        app:layout_constraintStart_toEndOf="@+id/joinEmailEdit"
+        app:layout_constraintTop_toTopOf="@+id/joinEmailEdit" />
+
+    <Button
+        android:id="@+id/invisibleIdButton"
+        android:layout_width="@dimen/registerCheckBtnWidth"
+        android:layout_height="@dimen/registerCheckBtnHeight"
+        android:background="@drawable/box_white"
+        android:text="이메일 인증"
+        android:textColor="#AAA6A6"
+        android:visibility="gone"
+        android:textSize="@dimen/registerCheckBtnTextSize"
+        app:layout_constraintBottom_toBottomOf="@+id/joinEmailEdit"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.2"
+        app:layout_constraintStart_toEndOf="@+id/joinEmailEdit"
+        app:layout_constraintTop_toTopOf="@+id/joinEmailEdit" />
+
+    <EditText
+        android:id="@+id/joinPwEdit"
+        android:layout_width="@dimen/registerEditWidth"
+        android:layout_height="@dimen/registerEditHeight"
+        android:layout_marginTop="@dimen/registerEditMarginTop"
+        android:hint="비밀번호 입력(영어+숫자+특수문자 8이상)"
+        android:inputType="textPassword"
+        android:maxLength="15"
+        android:textSize="@dimen/registerEditTextSize"
+        app:layout_constraintEnd_toEndOf="@+id/joinEmailEdit"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/joinEmailEdit"
+        app:layout_constraintTop_toBottomOf="@+id/joinEmailEdit" />
+
+    <EditText
+        android:id="@+id/joinRePwEdit"
+        android:layout_width="@dimen/registerEditWidth"
+        android:layout_height="@dimen/registerEditHeight"
+        android:layout_marginTop="@dimen/registerEditMarginTop"
+        android:hint="비밀번호 재입력"
+        android:maxLength="15"
+        android:textSize="@dimen/registerEditTextSize"
+        android:inputType="textPassword"
+        app:layout_constraintEnd_toEndOf="@+id/joinPwEdit"
+        app:layout_constraintStart_toStartOf="@+id/joinPwEdit"
+        app:layout_constraintTop_toBottomOf="@+id/joinPwEdit" />
+
+    <TextView
+        android:id="@+id/joinPasswordCheck"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        app:layout_constraintStart_toStartOf="@+id/joinRePwEdit"
+        app:layout_constraintTop_toBottomOf="@+id/joinRePwEdit" />
+    <TextView
+        android:id="@+id/joinPasswordReCheck"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        app:layout_constraintStart_toStartOf="@+id/joinPwEdit"
+        app:layout_constraintTop_toBottomOf="@+id/joinPwEdit" />
+
+    <Button
+        android:id="@+id/joinFinishBtn1"
+        android:layout_width="@dimen/registerFinishBtnWidth"
+        android:layout_height="@dimen/registerFinishBtnHeight"
+        android:text="완료"
+        android:textColor="#00CCFF"
+        android:background="@drawable/box_mint"
+        android:visibility="gone"
+        android:textSize="@dimen/registerFinishBtnTextSize"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.8"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.95"/>
+    <Button
+        android:id="@+id/joinFinishBtn2"
+        android:layout_width="@dimen/registerFinishBtnWidth"
+        android:layout_height="@dimen/registerFinishBtnHeight"
+        android:text="완료"
+        android:background="@drawable/box_white"
+        android:textSize="@dimen/registerFinishBtnTextSize"
+        android:textColor="#03DAC5"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.8"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.95" />
+
+    <Button
+        android:id="@+id/joinCancelButton"
+        android:layout_width="@dimen/registerFinishBtnWidth"
+        android:layout_height="@dimen/registerFinishBtnHeight"
+        android:textColor="#FF0000"
+        android:background="@drawable/box_mint"
+        android:text="취소"
+        android:textStyle="bold"
+        android:textSize="@dimen/registerFinishBtnTextSize"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.95" />
+
+
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/barrier2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="left" />
+
+    <TextView
+        android:id="@+id/joinEmailCheckText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        app:layout_constraintStart_toStartOf="@+id/joinEmailEdit"
+        app:layout_constraintTop_toBottomOf="@+id/joinEmailEdit" />
+
+    <Button
+        android:id="@+id/joinPhoneCheckBtn"
+        android:layout_width="@dimen/registerCheckBtnWidth"
+        android:layout_height="@dimen/registerCheckBtnHeight"
+        android:background="@drawable/box_mint"
+        android:text="휴대폰 인증"
+        android:textColor="#000000"
+        android:textSize="@dimen/registerCheckBtnTextSize"
+        app:layout_constraintBottom_toBottomOf="@+id/joinPhoneEdit"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.2"
+        app:layout_constraintStart_toEndOf="@+id/joinPhoneEdit"
+        app:layout_constraintTop_toTopOf="@+id/joinPhoneEdit"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/joinPhoneCheckText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        app:layout_constraintStart_toStartOf="@+id/joinPhoneEdit"
+        app:layout_constraintTop_toBottomOf="@+id/joinPhoneEdit"/>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
