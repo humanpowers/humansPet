@@ -58,11 +58,25 @@ public class ChatRoom extends AppCompatActivity {
         preferences = getSharedPreferences("USER",MODE_PRIVATE);
         userName=preferences.getString("USERNAME","");
 
-
         Intent intent=getIntent();
         userId=intent.getStringExtra("userId");
         otherName=intent.getStringExtra("otherName");
-        userImage=intent.getStringExtra("image");
+
+        MyInfoInterface getImage = ApiClient.getApiClient().create(MyInfoInterface.class);
+        Call<String> getImageApi=getImage.getUserInfo(userId);
+        getImageApi.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+                String userInfo=response.body();
+                String[] userInfoSp=userInfo.split("!!@!!");
+                userImage=userInfoSp[2];
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+
+            }
+        });
 
         GetChatting chatApi=ApiClient.getApiClient().create(GetChatting.class);
         Call<ArrayList> chatCall = chatApi.GetChatting(userName,otherName);
@@ -89,6 +103,7 @@ public class ChatRoom extends AppCompatActivity {
                     chatArrayList.add(chatItem);
                     chattingAdapter.notifyDataSetChanged();
                 }
+                recyclerView.scrollToPosition(chatArrayList.size()-1);
             }
 
             @Override
@@ -159,10 +174,12 @@ public class ChatRoom extends AppCompatActivity {
     protected void onStop() {
         Log.d(TAG,"onStop호출");
         super.onStop();
-        try {
-            socket.close();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        if(socket!=null){
+            try {
+                socket.close();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
@@ -233,7 +250,7 @@ public class ChatRoom extends AppCompatActivity {
                 call.enqueue(new Callback<String>() {
                     @Override
                     public void onResponse(Call<String> call, Response<String> response) {
-                        ChatItem chatItem= new ChatItem("http://3.141.38.95/diaryImage/humanpowers@naver.com캬아.jpg",messageSp[0],messageSp[1],todayDate);
+                        ChatItem chatItem= new ChatItem("http://"+apiClient.goUri(userImage),messageSp[0],messageSp[1],todayDate);
                         chatArrayList.add(chatItem);
                         Log.d(TAG, "run: "+chatArrayList);
                         recyclerView.scrollToPosition(chatArrayList.size()-1);

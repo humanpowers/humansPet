@@ -79,7 +79,6 @@ public class Chatting extends Fragment {
                 Intent intent = new Intent(getActivity(),ChatRoom.class);
                 intent.putExtra("userId",userId);
                 intent.putExtra("otherName",chatItemArrayList.get(position).getTitle());
-                intent.putExtra("image","/profileImage/humanpowers@naver.com.jpg");
                 startActivity(intent);
             }
         });
