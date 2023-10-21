@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.example.humanspet.Interface.ChatInterface;
 import com.example.humanspet.Interface.ChattingRoomInterface;
 import com.example.humanspet.Interface.GetChatting;
+import com.example.humanspet.Interface.GetUserImageInterface;
 import com.example.humanspet.Interface.MyInfoInterface;
 
 import java.io.BufferedReader;
@@ -47,7 +48,9 @@ public class ChatRoom extends AppCompatActivity {
     private LinearLayoutManager linearLayoutManager;
     ChattingAdapter chattingAdapter;
     ArrayList getChatList;
+    String message;
     ApiClient apiClient = new ApiClient();
+    String image;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -131,7 +134,24 @@ public class ChatRoom extends AppCompatActivity {
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                sendMessage();
+                long now = System.currentTimeMillis();
+                Date date = new Date(now);
+                SimpleDateFormat format = new SimpleDateFormat("MM:dd");
+                String todayDate=format.format(date);
+                ChatInterface api = ApiClient.getApiClient().create(ChatInterface.class);
+                Call<String> call = api.ChattingAdd(userId,userName,userImage,messageEditText.getText().toString(),todayDate,otherName);
+                call.enqueue(new Callback<String>() {
+                    @Override
+                    public void onResponse(Call<String> call, Response<String> response) {
+                        image=response.body();
+                        sendMessage();
+                    }
+
+                    @Override
+                    public void onFailure(Call<String> call, Throwable t) {
+
+                    }
+                });
             }
         });
 
@@ -219,7 +239,6 @@ public class ChatRoom extends AppCompatActivity {
                 in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
                 out.println(userName);
-                String message;
                 while ((message = in.readLine()) != null) {
                     Log.d(TAG, "doInBackground: in됨: "+in);
                     updateChatView(message);
@@ -237,37 +256,38 @@ public class ChatRoom extends AppCompatActivity {
             @Override
             public void run() {
                 String[] messageSp=message.split(":");
-                long now = System.currentTimeMillis();
-                Date date = new Date(now);
-                SimpleDateFormat format = new SimpleDateFormat("MM:dd");
-                String todayDate=format.format(date);
-                Log.d(TAG, "run 이름: "+messageSp[0]);
-                Log.d(TAG, "run 메시지: "+messageSp[1]);
-                Log.d(TAG, "run 날짜: "+todayDate);
 
-                ChatInterface api = ApiClient.getApiClient().create(ChatInterface.class);
-                Call<String> call = api.ChattingAdd(userId,userName,userImage,messageSp[1],todayDate,otherName);
-                call.enqueue(new Callback<String>() {
+                GetUserImageInterface userApi=ApiClient.getApiClient().create(GetUserImageInterface.class);
+                Call<String> imageCall = userApi.getUserImage(messageSp[0]);
+                imageCall.enqueue(new Callback<String>() {
                     @Override
                     public void onResponse(Call<String> call, Response<String> response) {
-                        ChatItem chatItem= new ChatItem("http://"+apiClient.goUri(userImage),messageSp[0],messageSp[1],todayDate);
+                        long now = System.currentTimeMillis();
+                        Date date = new Date(now);
+                        SimpleDateFormat format = new SimpleDateFormat("MM:dd");
+                        String todayDate=format.format(date);
+                        Log.d(TAG, "run 이름: "+messageSp[0]);
+                        Log.d(TAG, "run 메시지: "+messageSp[1]);
+                        Log.d(TAG, "run 날짜: "+todayDate);
+                        ChatItem chatItem= new ChatItem("http://"+apiClient.goUri(response.body()),messageSp[0],messageSp[1],todayDate);
                         chatArrayList.add(chatItem);
                         Log.d(TAG, "run: "+chatArrayList);
                         recyclerView.scrollToPosition(chatArrayList.size()-1);
                         chattingAdapter.notifyDataSetChanged();
-                        ChattingRoomInterface roomApi=ApiClient.getApiClient().create(ChattingRoomInterface.class);
-                        Call<String> roomCall=roomApi.ChattingRoomAdd(userName,otherName);
-                        roomCall.enqueue(new Callback<String>() {
-                            @Override
-                            public void onResponse(Call<String> call, Response<String> response) {
+                    }
 
-                            }
+                    @Override
+                    public void onFailure(Call<String> call, Throwable t) {
 
-                            @Override
-                            public void onFailure(Call<String> call, Throwable t) {
+                    }
+                });
 
-                            }
-                        });
+                ChattingRoomInterface roomApi=ApiClient.getApiClient().create(ChattingRoomInterface.class);
+                Call<String> roomCall=roomApi.ChattingRoomAdd(userName,otherName);
+                roomCall.enqueue(new Callback<String>() {
+                    @Override
+                    public void onResponse(Call<String> call, Response<String> response) {
+
                     }
 
                     @Override
