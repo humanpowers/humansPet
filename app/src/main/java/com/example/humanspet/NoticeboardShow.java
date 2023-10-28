@@ -11,6 +11,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.bumptech.glide.Glide;
@@ -28,6 +29,7 @@ public class NoticeboardShow extends AppCompatActivity {
     ImageView userImage,noticeboardImage;
     TextView nameText,addressText,likesCountText,commentCountText,titleText,contentText,commentText;
     ImageButton likesBtn,sendBtn,cancelBtn;
+    LinearLayout commentLinear;
     ApiClient apiClient = new ApiClient();
     private SharedPreferences preferences;
     String userId;
@@ -59,6 +61,14 @@ public class NoticeboardShow extends AppCompatActivity {
         likesBtn=findViewById(R.id.noticeboardShowLikesImage);
         sendBtn=findViewById(R.id.noticeboardShowSendButton);
         cancelBtn=findViewById(R.id.noticeboardShowCancelButton);
+        commentLinear=findViewById(R.id.noticeboardShowCommentLinear);
+
+        commentLinear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(NoticeboardShow.this, "asdfasdf", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         Intent intent=getIntent();
         noticeboardName=intent.getStringExtra("name");

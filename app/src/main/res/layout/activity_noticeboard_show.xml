@@ -223,19 +223,27 @@
         app:layout_constraintRight_toRightOf="parent"
         />
 
-    <TextView
-        android:id="@+id/noticeboardShowCommentText"
+    <LinearLayout
+        android:id="@+id/noticeboardShowCommentLinear"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="댓글"
-        android:textSize="15sp"
-        android:background="#0503DAC5"
-        android:padding="5dp"
-        android:visibility="gone"
-        app:layout_constraintTop_toBottomOf="@id/noticeboardShowContentText"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        />
+        app:layout_constraintTop_toBottomOf="@+id/noticeboardShowContentContour"
+        android:orientation="horizontal"
+        android:layout_gravity="left"
+        >
+        <TextView
+            android:id="@+id/noticeboardShowCommentText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="댓글"
+            android:textSize="15sp"
+            android:background="#0503DAC5"
+            android:padding="5dp"
+            android:visibility="gone"
+            />
+
+    </LinearLayout>
+
 
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/noticeboardShowLottie"
