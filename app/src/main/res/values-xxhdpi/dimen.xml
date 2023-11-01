@@ -117,4 +117,7 @@
     <dimen name="noticeboardNameHeight">40dp</dimen>
     <dimen name="noticeboardNameMargin">10dp</dimen>
     <dimen name="noticeboardAddressHeight">20dp</dimen>
+
+    <dimen name="noticeboardShowCommentImageHeight">40dp</dimen>
+    <dimen name="noticeboardShowCommentImageWidth">40dp</dimen>
 </resources>

@@ -80,7 +80,7 @@ public class Noticeboard extends Fragment {
                 Intent intent = new Intent(getActivity(),NoticeboardShow.class);
                 intent.putExtra("name",nameSt);
                 intent.putExtra("title",responseSp[3]);
-                intent.putExtra("id",responseSp[9]);
+                intent.putExtra("id",responseSp[8]);
                 startActivity(intent);
             }
         });
@@ -116,12 +116,12 @@ public class Noticeboard extends Fragment {
                     for(int j=1;j<responseSp[0].length();j++){
                         nameSt+=nameSp[j];
                     }
-                    String[] imageSp=responseSp[10].split("");
+                    String[] imageSp=responseSp[9].split("");
                     String imageSt="";
-                    for(int j=0;j<responseSp[10].length()-1;j++){
+                    for(int j=0;j<responseSp[9].length()-1;j++){
                         imageSt+=imageSp[j];
                     }
-                    NoticeboardItem noticeboardItem =new NoticeboardItem(imageSt,nameSt,responseSp[2],responseSp[1],responseSp[5],Integer.valueOf(responseSp[6]),Integer.valueOf(responseSp[7]),responseSp[8],responseSp[3]);
+                    NoticeboardItem noticeboardItem =new NoticeboardItem(imageSt,nameSt,responseSp[2],responseSp[1],responseSp[5],Integer.valueOf(responseSp[6]),Integer.valueOf(responseSp[7]),responseSp[4],responseSp[3]);
                     noticeboardItemArrayList.add(noticeboardItem);
                     noticeboardAdapter.notifyDataSetChanged();
                 }
