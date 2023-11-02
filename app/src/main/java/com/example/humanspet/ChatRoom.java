@@ -1,9 +1,5 @@
 package com.example.humanspet;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.icu.text.SimpleDateFormat;
@@ -16,17 +12,19 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.humanspet.Interface.ChatInterface;
 import com.example.humanspet.Interface.ChattingRoomInterface;
 import com.example.humanspet.Interface.GetChatting;
-import com.example.humanspet.Interface.GetUserImageInterface;
 import com.example.humanspet.Interface.MyInfoInterface;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.lang.reflect.Array;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Date;
@@ -238,7 +236,7 @@ public class ChatRoom extends AppCompatActivity {
         protected Void doInBackground(Void... voids) {
             try {
                 Log.d(TAG, "doInBackground: " + Thread.currentThread().getName() + ": 소켓쓰레드");
-                socket = new Socket("3.22.63.114", 8888); // 서버 IP 주소와 포트 번호를 서버에 맞게 변경
+                socket = new Socket("18.225.32.239", 8888); // 서버 IP 주소와 포트 번호를 서버에 맞게 변경
                 Log.d(TAG, "doInBackground: " + Thread.currentThread().getName() + ": 소켓아래");
                 out = new PrintWriter(socket.getOutputStream(), true);
                 Log.d(TAG, "doInBackground: " + Thread.currentThread().getName() + out);

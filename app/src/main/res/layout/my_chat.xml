@@ -46,7 +46,6 @@
                     android:padding="5dp"
                     android:layout_marginTop="@dimen/diaryDiaryItemMarginTop"
                     android:layout_gravity="right"
-                    android:maxLines="2"
                     android:ellipsize="end"
                     android:text="메시지" />
 
