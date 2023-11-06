@@ -1,12 +1,12 @@
 package com.example.humanspet;
 
-import android.content.Intent;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -63,6 +63,13 @@ public class NoticeboardAdapter extends RecyclerView.Adapter<NoticeboardAdapter.
                     mListener.onImageButtonClicker(pos);
                 }
             });
+            holder.likesBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Toast.makeText(holder.itemView.getContext(), "asdfasdf", Toast.LENGTH_SHORT).show();
+
+                }
+            });
         }
     }
 
@@ -81,6 +88,7 @@ public class NoticeboardAdapter extends RecyclerView.Adapter<NoticeboardAdapter.
         TextView comment;
         TextView title;
         TextView address;
+        ImageButton likesBtn;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -92,6 +100,7 @@ public class NoticeboardAdapter extends RecyclerView.Adapter<NoticeboardAdapter.
             comment=itemView.findViewById(R.id.noticeboardItemCommentText);
             address= itemView.findViewById(R.id.noticeboardItemAddressText);
             title = itemView.findViewById(R.id.noticeboardTitleText);
+            likesBtn=itemView.findViewById(R.id.noticeboardItemLikesImage);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

@@ -2,26 +2,21 @@ package com.example.humanspet;
 
 import static android.content.Context.MODE_PRIVATE;
 
-import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.Toast;
+
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.airbnb.lottie.LottieAnimationView;
-import com.example.humanspet.Interface.MyInfoInterface;
 import com.example.humanspet.Interface.NoticeboardShowInterface;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 
@@ -34,7 +29,7 @@ public class Noticeboard extends Fragment {
     String TAG="게시판";
     private SharedPreferences preferences;
     private String userId;
-    ImageButton noticeboardAddBtn;
+    ImageButton noticeboardAddBtn,noticeboardLikesBtn;
     LottieAnimationView animationView;
     ArrayList responseArray;
     ArrayList<NoticeboardItem> noticeboardItemArrayList = new ArrayList<>();
@@ -50,6 +45,7 @@ public class Noticeboard extends Fragment {
 
         preferences = getActivity().getSharedPreferences("USER",MODE_PRIVATE);
         userId=preferences.getString("USERID","");
+
 
         recyclerView=v.findViewById(R.id.noticeboardRecyclerView);
         linearLayoutManager=new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false);
