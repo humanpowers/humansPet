@@ -9,14 +9,19 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.example.humanspet.Interface.NoticeboardShowInterface;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.ArrayList;
 
@@ -37,6 +42,7 @@ public class Noticeboard extends Fragment {
     private LinearLayoutManager linearLayoutManager;
     NoticeboardAdapter noticeboardAdapter;
     View v;
+    Button testBtn;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -81,6 +87,34 @@ public class Noticeboard extends Fragment {
             }
         });
 
+        testBtn=v.findViewById(R.id.testBtn);
+        FirebaseMessaging.getInstance()
+                .getToken()
+                .addOnCompleteListener(new OnCompleteListener<String>() {
+                    @Override
+                    public void onComplete(@NonNull Task<String> task) {
+                        if (task.isSuccessful()) {
+                            String token = task.getResult();
+                            testBtn.setText(token);
+                            Log.d(TAG, "onComplete: "+token);
+                        }
+                    }
+                });
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(new OnCompleteListener<String>() {
+                    @Override
+                    public void onComplete(@NonNull Task<String> task) {
+                        if (!task.isSuccessful()) {
+                            Log.w(TAG, "Fetching FCM registration token failed", task.getException());
+                            return;
+                        }
+
+                        // Get new FCM registration token
+                        String token = task.getResult();
+                        Log.d(TAG, "onCompleteasdf: "+token);
+
+                    }
+                });
         return v;
     }
 
