@@ -21,7 +21,7 @@ public class FirebaseMessage extends com.google.firebase.messaging.FirebaseMessa
         if (remoteMessage.getNotification() != null) {
             Log.d(TAG, "Message Notification Body: " + remoteMessage.getNotification().getBody());
 
-            // 여기서 알림 메시지를 처리하거나 원하는 동작을 수행합니다
+            // 여기서 알림 메시지를 처리하거나 원하는 동작을 수행합니다.
         }
     }
 
