@@ -11,6 +11,7 @@ public interface LoginInterface {
     @POST("login.php")
     Call<String> getUserLogin(
             @Field("email") String email,
-            @Field("password") String password
+            @Field("password") String password,
+            @Field("token") String token
     );
 }

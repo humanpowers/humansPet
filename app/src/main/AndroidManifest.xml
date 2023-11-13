@@ -90,6 +90,14 @@
         <meta-data
             android:name="com.naver.maps.map.CLIENT_ID"
             android:value="6xte3lk7xg" />
+        <service android:name=".FirebaseMessage"
+            android:exported="true">
+            <intent-filter>
+
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+
+        </service>
     </application>
 
 

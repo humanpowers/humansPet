@@ -1,5 +1,9 @@
 package com.example.humanspet;
 
+import static android.content.Context.MODE_PRIVATE;
+
+import android.content.SharedPreferences;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,11 +16,18 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.humanspet.Interface.LikesBtnClickInterface;
 
 import java.util.ArrayList;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class NoticeboardAdapter extends RecyclerView.Adapter<NoticeboardAdapter.ViewHolder> {
 
+    private SharedPreferences preferences;
+    String userId;
     private ArrayList<NoticeboardItem> noticeboardItemsArrayList;
 
     public NoticeboardAdapter(ArrayList<NoticeboardItem> noticeboardItems){
@@ -66,8 +77,31 @@ public class NoticeboardAdapter extends RecyclerView.Adapter<NoticeboardAdapter.
             holder.likesBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Toast.makeText(holder.itemView.getContext(), "asdfasdf", Toast.LENGTH_SHORT).show();
+                    preferences = holder.itemView.getContext().getSharedPreferences("USER",MODE_PRIVATE);
+                    userId=preferences.getString("USERID","");
+                    LikesBtnClickInterface api = ApiClient.getApiClient().create(LikesBtnClickInterface.class);
+                    Call<String> call = api.LikesChick(userId,noticeboardItemsArrayList.get(pos).getTitle());
+                    call.enqueue(new Callback<String>() {
+                        @Override
+                        public void onResponse(Call<String> call, Response<String> response) {
+                            Log.d("어댑터", "onResponse: "+response.body());
+                            String[] responseSp=response.body().split("!!@!!");
+                            if(response.body().equals("본인계정")){
+                                Toast.makeText(holder.itemView.getContext(), "본인 게시물입니다.", Toast.LENGTH_SHORT).show();
+                            }else if(responseSp[0].equals("취소")){
+                                holder.likesBtn.setImageResource(R.drawable.heart_none);
+                                holder.likesCount.setText(responseSp[1]);
+                            }else if(responseSp[0].equals("확인")){
+                                holder.likesCount.setText(responseSp[1]);
+                                holder.likesBtn.setImageResource(R.drawable.heart_yes);
+                            }
+                        }
 
+                        @Override
+                        public void onFailure(Call<String> call, Throwable t) {
+
+                        }
+                    });
                 }
             });
         }

@@ -1,8 +1,5 @@
 package com.example.humanspet;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
@@ -19,8 +16,15 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.humanspet.Interface.LoginInterface;
 import com.example.humanspet.Interface.MyInfoInterface;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.kakao.sdk.auth.model.OAuthToken;
 import com.kakao.sdk.user.UserApiClient;
 import com.kakao.sdk.user.model.User;
@@ -45,6 +49,7 @@ public class Login extends AppCompatActivity {
     ImageButton btnKakao;
     PreferenceHelper preferenceHelper;
     private Long mLastClickTime = 0L;
+    String token;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,7 +115,18 @@ public class Login extends AppCompatActivity {
                 }
             }
         });
+        FirebaseMessaging.getInstance()
+                .getToken()
+                .addOnCompleteListener(new OnCompleteListener<String>() {
+                    @Override
+                    public void onComplete(@NonNull Task<String> task) {
+                        if (task.isSuccessful()) {
+                            token = task.getResult();
 
+                            Log.d(TAG, "onComplete: "+token);
+                        }
+                    }
+                });
 
     }
 
@@ -122,7 +138,7 @@ public class Login extends AppCompatActivity {
         SharedPreferences.Editor editor = preferences.edit();
 
         LoginInterface api = ApiClient.getApiClient().create(LoginInterface.class);
-        Call<String> call= api.getUserLogin(userId,userPw);
+        Call<String> call= api.getUserLogin(userId,userPw,token);
         call.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {

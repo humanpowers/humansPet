@@ -22,14 +22,19 @@ import com.airbnb.lottie.LottieAnimationView;
 import com.bumptech.glide.Glide;
 import com.example.humanspet.Interface.CommentAddInterface;
 import com.example.humanspet.Interface.CommentShowInterface;
+import com.example.humanspet.Interface.FCMService;
 import com.example.humanspet.Interface.MyInfoInterface;
 import com.example.humanspet.Interface.NoticeboardDetailShowInterface;
+import com.example.humanspet.Interface.SendPushMessage;
 
 import java.util.ArrayList;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class NoticeboardShow extends AppCompatActivity {
     String TAG="게시판보기";
@@ -131,14 +136,6 @@ public class NoticeboardShow extends AppCompatActivity {
                             Log.d(TAG, "onResponse: "+response.body());
                             commentEdit.setText("");
                             Toast.makeText(NoticeboardShow.this, "댓글을 작성하였습니다.", Toast.LENGTH_SHORT).show();
-//                            CommentItem commentItem =new CommentItem(userName,"http://"+apiClient.goUri(image),commentSt);
-//                            commentItemArrayList.add(commentItem);
-//                            int commentCount=Integer.parseInt(commentCountText.getText().toString());
-//                            int commentPlus=commentCount+1;
-//                            commentCountText.setText(Integer.toString(commentPlus));
-//                            commentText.setText("최신댓글: "+commentSt);
-//                            recyclerView.scrollToPosition(commentItemArrayList.size()-1);
-//                            commentAdapter.notifyDataSetChanged();
                             NoticeboardDetailShowInterface showApi=ApiClient.getApiClient().create(NoticeboardDetailShowInterface.class);
                             Call<String> showCall = showApi.noticeboardDetailShow(noticeboardId,noticeboardTitle);
                             showCall.enqueue(new Callback<String>() {
@@ -192,6 +189,49 @@ public class NoticeboardShow extends AppCompatActivity {
 
                                         @Override
                                         public void onFailure(Call<ArrayList> call, Throwable t) {
+
+                                        }
+                                    });
+
+                                    SendPushMessage sendApi = ApiClient.getApiClient().create(SendPushMessage.class);
+                                    Call<String> sendCall = sendApi.SendPush(noticeboardId);
+                                    sendCall.enqueue(new Callback<String>() {
+                                        @Override
+                                        public void onResponse(Call<String> call, Response<String> sendResponse) {
+                                            Retrofit retrofit = new Retrofit.Builder()
+                                                    .baseUrl("https://fcm.googleapis.com/")
+                                                    .addConverterFactory(GsonConverterFactory.create())
+                                                    .build();
+
+                                            FCMService fcmService = retrofit.create(FCMService.class);
+
+                                            // FCM 메시지 생성
+                                            FCMNotificationData notificationData = new FCMNotificationData("Human's Pet", "회원님의 게시물에 댓글이 작성되었습니다.");
+                                            FCMNotification fcmNotification = new FCMNotification(sendResponse.body(), notificationData);
+
+                                            // Retrofit을 사용하여 FCM 서버로 메시지 전송 (비동기 방식)
+                                            Call<ResponseBody> pushCall = fcmService.sendNotification(fcmNotification);
+                                            pushCall.enqueue(new Callback<ResponseBody>() {
+                                                @Override
+                                                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                                                    if (response.isSuccessful()) {
+                                                        Log.d(TAG, "onResponse: "+"성공");
+                                                    } else {
+                                                        Log.d(TAG, "onResponse: "+"실패");
+                                                    }
+                                                }
+
+                                                @Override
+                                                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                                                    Log.d(TAG, "onFailure: "+"예외");
+                                                    // 예외 처리
+                                                    t.printStackTrace();
+                                                }
+                                            });
+                                        }
+
+                                        @Override
+                                        public void onFailure(Call<String> call, Throwable t) {
 
                                         }
                                     });

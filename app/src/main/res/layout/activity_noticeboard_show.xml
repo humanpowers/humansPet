@@ -239,7 +239,7 @@
             android:id="@+id/noticeboardShowCommentText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="댓글"
+            android:text="댓글이 없습니다"
             android:textSize="15sp"
             android:background="#0503DAC5"
             android:padding="5dp"
