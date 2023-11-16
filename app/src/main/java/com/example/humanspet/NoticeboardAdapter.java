@@ -63,6 +63,11 @@ public class NoticeboardAdapter extends RecyclerView.Adapter<NoticeboardAdapter.
         }else{
             holder.comment.setText(noticeboardItemsArrayList.get(position).getComment());
         }
+        if(noticeboardItemsArrayList.get(position).getCheck().equals("확인")){
+            holder.likesBtn.setImageResource(R.drawable.heart_yes);
+        }else{
+            holder.likesBtn.setImageResource(R.drawable.heart_none);
+        }
         holder.title.setText(noticeboardItemsArrayList.get(position).getTitle());
         holder.address.setText(noticeboardItemsArrayList.get(position).getDoName()+" "+noticeboardItemsArrayList.get(position).getSiName());
         Glide.with(holder.itemView.getContext()).load("http://"+apiClient.goUri(noticeboardItemsArrayList.get(position).getUploadImage())).thumbnail(Glide.with(holder.itemView.getContext()).load(R.raw.loadinggif)).override(500,500).into(holder.uploadImage);

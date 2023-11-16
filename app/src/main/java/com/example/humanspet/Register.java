@@ -1,19 +1,18 @@
 package com.example.humanspet;
 
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.util.Log;
-
-import android.content.Intent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.humanspet.Interface.RegisterInterface;
 
@@ -26,8 +25,8 @@ import retrofit2.Response;
 public class Register extends AppCompatActivity {
     String TAG="조인";
     EditText etName,etEmail,etPhone,etPassword,etRePassword;
-    Button finishBtn,cancelBtn,joinPhoneCheckBtn,joinEmailCheckBtn;
-    TextView phoneCheckText,emailCheckText,passwordCheck;
+    Button finishBtn,cancelBtn,joinPhoneCheckBtn;
+    TextView phoneCheckText,passwordCheck,passwordReCheck;
     PreferenceHelper preferenceHelper;
     private Long mLastClickTime = 0L;
 
@@ -37,20 +36,29 @@ public class Register extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
+        Intent intent = getIntent();
+        String id = intent.getStringExtra("id");
+
         preferenceHelper = new PreferenceHelper(this);
 
         phoneCheckText=findViewById(R.id.joinPhoneCheckText);
-        emailCheckText=findViewById(R.id.joinEmailCheckText);
         passwordCheck=findViewById(R.id.joinPasswordCheck);
+        passwordReCheck=findViewById(R.id.joinPasswordReCheck);
         etName= findViewById(R.id.joinNameEdit);
         etEmail= findViewById(R.id.joinEmailEdit);
         etPassword= findViewById(R.id.joinPwEdit);
         etRePassword= findViewById(R.id.joinRePwEdit);
         etPhone= findViewById(R.id.joinPhoneEdit);
-        finishBtn= findViewById(R.id.joinFinishBtn2);
+        finishBtn= findViewById(R.id.joinFinishButton);
         joinPhoneCheckBtn= findViewById(R.id.joinPhoneCheckBtn);
-        joinEmailCheckBtn=findViewById(R.id.joinEmailCheckBtn);
-        cancelBtn= findViewById(R.id.joinCancelButton);
+        cancelBtn= findViewById(R.id.joinPreviousButton);
+
+        etEmail.setText(id);
+        etEmail.setEnabled(false);
+
+        focusOn(etEmail);
+        focusOn(etName);
+        focusOn(etPhone);
 
         finishBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -58,7 +66,7 @@ public class Register extends AppCompatActivity {
                 Log.d(TAG, "onClick: 클릭됨");
                 if(SystemClock.elapsedRealtime() - mLastClickTime > 1000) {
                     switch (view.getId()) {
-                        case R.id.joinFinishBtn2:
+                        case R.id.joinFinishButton:
                             registerMe();
                             break;
                     }
@@ -71,8 +79,9 @@ public class Register extends AppCompatActivity {
             @Override
             public void onFocusChange(View view, boolean b) {
                 if(b){
-
+                    etPassword.setBackgroundResource(R.drawable.box_white_mint);
                 }else{
+                    etPassword.setBackgroundResource(R.drawable.box_white_gray);
                     passCheck();
                 }
 
@@ -83,12 +92,15 @@ public class Register extends AppCompatActivity {
             @Override
             public void onFocusChange(View view, boolean b) {
                 if(b){
-
+                    etRePassword.setBackgroundResource(R.drawable.box_white_mint);
                 }else{
+                    etRePassword.setBackgroundResource(R.drawable.box_white_gray);
                     if(etPassword.getText().toString().equals(etRePassword.getText().toString())){
+                        passwordCheck.setVisibility(View.VISIBLE);
                         passwordCheck.setText("두 비밀번호가 일치합니다.");
                         passwordCheck.setTextColor(Color.parseColor("#0000FF"));
                     }else{
+                        passwordCheck.setVisibility(View.VISIBLE);
                         passwordCheck.setText("두 비밀번호가 일치하지 않습니다.");
                         passwordCheck.setTextColor(Color.parseColor("#FF0000"));
                     }
@@ -110,13 +122,6 @@ public class Register extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 phoneCheck();
-            }
-        });
-
-        joinEmailCheckBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                emailCheck();
             }
         });
     }
@@ -202,9 +207,11 @@ public class Register extends AppCompatActivity {
 
 
         if(!Pattern.matches(phonePattern,phone)){
-            phoneCheckText.setText("올바른 핸드폰 번호 형식이 아닙니다.");
+            phoneCheckText.setVisibility(View.VISIBLE);
+            phoneCheckText.setText("올바른 휴대폰 번호 형식이 아닙니다.");
             phoneCheckText.setTextColor(Color.parseColor("#FF0000"));
         }else{
+            phoneCheckText.setVisibility(View.GONE);
             phoneCheckText.setText("");
             phoneCheckText.setTextColor(Color.parseColor("#000000"));
             Intent intent = new Intent(Register.this,PhoneCertification.class);
@@ -215,46 +222,31 @@ public class Register extends AppCompatActivity {
 
     }
 
-    private void emailCheck(){
-        final String email = etEmail.getText().toString();
-//        String emailPattern = "^[a-zA-Z0-9]+@[a-zA-Z0-9]+$";
-        Pattern pattern = android.util.Patterns.EMAIL_ADDRESS;
-
-        if(pattern.matcher(email).matches()){
-            emailCheckText.setText("");
-            emailCheckText.setTextColor(Color.parseColor("#000000"));
-            Intent emailIntent = new Intent(Register.this, EmailCertification.class);
-            emailIntent.putExtra("email",email);
-            startActivity(emailIntent);
-        } else {
-            emailCheckText.setText("올바른 이메일 형식이 아닙니다.");
-            emailCheckText.setTextColor(Color.parseColor("#FF0000"));
-        }
-
-//        if(!Pattern.matches(emailPattern,email)){
-//            emailCheckText.setText("올바른 이메일 형식이 아닙니다.");
-//            emailCheckText.setTextColor(Color.parseColor("#FF0000"));
-//        }else{
-//            emailCheckText.setText("");
-//            emailCheckText.setTextColor(Color.parseColor("#000000"));
-//            Intent emailIntent = new Intent(Join.this, EmailCertification.class);
-//            emailIntent.putExtra("email",email);
-//            startActivity(emailIntent);
-//        }
-    }
-
     private void passCheck(){
         final String password = etPassword.getText().toString();
         String passwordPattern = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[$@$!.%*#?&])[A-Za-z\\d$@$.!%*#?&]{8,}$";
 
 
         if(!Pattern.matches(passwordPattern,password)){
-            passwordCheck.setText("올바른 비밀번호 형식이 아닙니다.");
-            passwordCheck.setTextColor(Color.parseColor("#FF0000"));
+            passwordReCheck.setText("올바른 비밀번호 형식이 아닙니다.");
+            passwordReCheck.setTextColor(Color.parseColor("#FF0000"));
         }else{
-            passwordCheck.setText("");
-            passwordCheck.setTextColor(Color.parseColor("#000000"));
+            passwordReCheck.setText("");
+            passwordReCheck.setTextColor(Color.parseColor("#000000"));
         }
+    }
+
+    public void focusOn(EditText editText){
+        editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                if(b==true){
+                    editText.setBackgroundResource(R.drawable.box_white_mint);
+                }else{
+                    editText.setBackgroundResource(R.drawable.box_white_gray);
+                }
+            }
+        });
     }
 
 }

@@ -11,11 +11,13 @@
     <dimen name="loginEmailPaddingStart">10dp</dimen>
     <dimen name="loginEmailDrawablePadding">10dp</dimen>
     <dimen name="loginEmailTextSize">16sp</dimen>
+    <dimen name="loginPasswordDrawablePadding">8dp</dimen>
     <dimen name="loginPasswordMarginTop">20dp</dimen>
+    <dimen name="loginPasswordPaddingStart">7dp</dimen>
     <dimen name="loginLoginBtnWidth">300dp</dimen>
     <dimen name="loginBtnHeight">50dp</dimen>
     <dimen name="loginLoginBtnMarginTop">50dp</dimen>
-    <dimen name="loginBtnTextSize">25sp</dimen>
+    <dimen name="loginBtnTextSize">18sp</dimen>
     <dimen name="loginFindBtnWidth">130dp</dimen>
     <dimen name="loginFindBtnMarginTop">28dp</dimen>
     <dimen name="loginJoinBtnMarginTop">28dp</dimen>
@@ -23,13 +25,13 @@
     <dimen name="loginAutoLoginWidth">130dp</dimen>
     <dimen name="loginAutoLoginHeight">48dp</dimen>
 
-    <dimen name="registerEditWidth">280dp</dimen>
-    <dimen name="registerEditHeight">55dp</dimen>
-    <dimen name="registerEditMarginTop">20dp</dimen>
+    <dimen name="registerEditWidth">350dp</dimen>
+    <dimen name="registerEditHeight">50dp</dimen>
+    <dimen name="registerEditMarginTop">45dp</dimen>
     <dimen name="registerEditTextSize">15sp</dimen>
     <dimen name="registerCheckBtnWidth">100dp</dimen>
     <dimen name="registerCheckBtnHeight">50dp</dimen>
-    <dimen name="registerCheckBtnTextSize">17sp</dimen>
+    <dimen name="registerCheckBtnTextSize">15sp</dimen>
     <dimen name="registerFinishBtnWidth">85dp</dimen>
     <dimen name="registerFinishBtnHeight">50dp</dimen>
     <dimen name="registerFinishBtnTextSize">20sp</dimen>

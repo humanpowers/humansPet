@@ -10,6 +10,7 @@ public interface NoticeboardDetailShowInterface {
     @POST("noticeboardDetailShow.php")
     Call<String> noticeboardDetailShow(
             @Field("userId") String userId,
-            @Field("title") String title
+            @Field("title") String title,
+            @Field("id") String id
     );
 }

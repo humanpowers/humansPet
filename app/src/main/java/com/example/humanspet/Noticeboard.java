@@ -70,7 +70,7 @@ public class Noticeboard extends Fragment {
         noticeboardAdapter.setOnClickListener(new NoticeboardAdapter.RecyclerViewClickListener() {
             @Override
             public void onImageButtonClicker(int position) {
-                String responseSt= String.valueOf(responseArray.get(position));
+                String responseSt= String.valueOf(responseArray.get(responseArray.size()-position-1));
                 String[] responseSp=responseSt.split(", ");
                 String[] nameSp=responseSp[0].split("");
                 String nameSt="";
@@ -108,7 +108,7 @@ public class Noticeboard extends Fragment {
                 Log.d(TAG, "onResponse: "+response.body());
                 animationView.setVisibility(View.GONE);
                 responseArray=response.body();
-                for(int i=0;i<responseArray.size();i++){
+                for(int i=responseArray.size()-1;i>=0;i--){
                     String responseSt= String.valueOf(responseArray.get(i));
                     String[] responseSp=responseSt.split(", ");
                     String[] nameSp=responseSp[0].split("");
@@ -116,12 +116,12 @@ public class Noticeboard extends Fragment {
                     for(int j=1;j<responseSp[0].length();j++){
                         nameSt+=nameSp[j];
                     }
-                    String[] imageSp=responseSp[9].split("");
+                    String[] imageSp=responseSp[10].split("");
                     String imageSt="";
-                    for(int j=0;j<responseSp[9].length()-1;j++){
+                    for(int j=0;j<responseSp[10].length()-1;j++){
                         imageSt+=imageSp[j];
                     }
-                    NoticeboardItem noticeboardItem =new NoticeboardItem(imageSt,nameSt,responseSp[2],responseSp[1],responseSp[5],Integer.valueOf(responseSp[6]),Integer.valueOf(responseSp[7]),responseSp[4],responseSp[3]);
+                    NoticeboardItem noticeboardItem =new NoticeboardItem(imageSt,nameSt,responseSp[2],responseSp[1],responseSp[5],Integer.valueOf(responseSp[6]),Integer.valueOf(responseSp[7]),responseSp[4],responseSp[3],responseSp[9]);
                     noticeboardItemArrayList.add(noticeboardItem);
                     noticeboardAdapter.notifyDataSetChanged();
                 }

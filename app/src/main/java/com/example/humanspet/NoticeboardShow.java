@@ -23,6 +23,7 @@ import com.bumptech.glide.Glide;
 import com.example.humanspet.Interface.CommentAddInterface;
 import com.example.humanspet.Interface.CommentShowInterface;
 import com.example.humanspet.Interface.FCMService;
+import com.example.humanspet.Interface.LikesBtnClickInterface;
 import com.example.humanspet.Interface.MyInfoInterface;
 import com.example.humanspet.Interface.NoticeboardDetailShowInterface;
 import com.example.humanspet.Interface.SendPushMessage;
@@ -137,7 +138,7 @@ public class NoticeboardShow extends AppCompatActivity {
                             commentEdit.setText("");
                             Toast.makeText(NoticeboardShow.this, "댓글을 작성하였습니다.", Toast.LENGTH_SHORT).show();
                             NoticeboardDetailShowInterface showApi=ApiClient.getApiClient().create(NoticeboardDetailShowInterface.class);
-                            Call<String> showCall = showApi.noticeboardDetailShow(noticeboardId,noticeboardTitle);
+                            Call<String> showCall = showApi.noticeboardDetailShow(noticeboardId,noticeboardTitle,userId);
                             showCall.enqueue(new Callback<String>() {
                                 @Override
                                 public void onResponse(Call<String> call, Response<String> response) {
@@ -161,7 +162,12 @@ public class NoticeboardShow extends AppCompatActivity {
                                             if(userId.equals(responseSp[8])){
                                                 sendBtn.setVisibility(View.GONE);
                                             }
-                                            Glide.with(NoticeboardShow.this).load("http://"+apiClient.goUri(responseSp[9])).thumbnail(Glide.with(NoticeboardShow.this).load(R.raw.loadinggif)).into(userImage);
+                                            if(responseSp[9].equals("확인")){
+                                                likesBtn.setImageResource(R.drawable.heart_yes);
+                                            }else{
+                                                likesBtn.setImageResource(R.drawable.heart_none);
+                                            }
+                                            Glide.with(NoticeboardShow.this).load("http://"+apiClient.goUri(responseSp[10])).thumbnail(Glide.with(NoticeboardShow.this).load(R.raw.loadinggif)).into(userImage);
                                             Glide.with(NoticeboardShow.this).load("http://"+apiClient.goUri(responseSp[5])).thumbnail(Glide.with(NoticeboardShow.this).load(R.raw.loadinggif)).into(noticeboardImage);
 
                                             responseArray=showResponse.body();
@@ -192,49 +198,51 @@ public class NoticeboardShow extends AppCompatActivity {
 
                                         }
                                     });
+                                    if(userName.equals(responseSp[0])){
+                                    }else{
+                                        SendPushMessage sendApi = ApiClient.getApiClient().create(SendPushMessage.class);
+                                        Call<String> sendCall = sendApi.SendPush(noticeboardId);
+                                        sendCall.enqueue(new Callback<String>() {
+                                            @Override
+                                            public void onResponse(Call<String> call, Response<String> sendResponse) {
+                                                Retrofit retrofit = new Retrofit.Builder()
+                                                        .baseUrl("https://fcm.googleapis.com/")
+                                                        .addConverterFactory(GsonConverterFactory.create())
+                                                        .build();
 
-                                    SendPushMessage sendApi = ApiClient.getApiClient().create(SendPushMessage.class);
-                                    Call<String> sendCall = sendApi.SendPush(noticeboardId);
-                                    sendCall.enqueue(new Callback<String>() {
-                                        @Override
-                                        public void onResponse(Call<String> call, Response<String> sendResponse) {
-                                            Retrofit retrofit = new Retrofit.Builder()
-                                                    .baseUrl("https://fcm.googleapis.com/")
-                                                    .addConverterFactory(GsonConverterFactory.create())
-                                                    .build();
+                                                FCMService fcmService = retrofit.create(FCMService.class);
 
-                                            FCMService fcmService = retrofit.create(FCMService.class);
+                                                // FCM 메시지 생성
+                                                FCMNotificationData notificationData = new FCMNotificationData("Human's Pet", "회원님의 게시물에 댓글이 작성되었습니다.");
+                                                FCMNotification fcmNotification = new FCMNotification(sendResponse.body(), notificationData);
 
-                                            // FCM 메시지 생성
-                                            FCMNotificationData notificationData = new FCMNotificationData("Human's Pet", "회원님의 게시물에 댓글이 작성되었습니다.");
-                                            FCMNotification fcmNotification = new FCMNotification(sendResponse.body(), notificationData);
-
-                                            // Retrofit을 사용하여 FCM 서버로 메시지 전송 (비동기 방식)
-                                            Call<ResponseBody> pushCall = fcmService.sendNotification(fcmNotification);
-                                            pushCall.enqueue(new Callback<ResponseBody>() {
-                                                @Override
-                                                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                                                    if (response.isSuccessful()) {
-                                                        Log.d(TAG, "onResponse: "+"성공");
-                                                    } else {
-                                                        Log.d(TAG, "onResponse: "+"실패");
+                                                // Retrofit을 사용하여 FCM 서버로 메시지 전송 (비동기 방식)
+                                                Call<ResponseBody> pushCall = fcmService.sendNotification(fcmNotification);
+                                                pushCall.enqueue(new Callback<ResponseBody>() {
+                                                    @Override
+                                                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                                                        if (response.isSuccessful()) {
+                                                            Log.d(TAG, "onResponse: "+"성공");
+                                                        } else {
+                                                            Log.d(TAG, "onResponse: "+"실패");
+                                                        }
                                                     }
-                                                }
 
-                                                @Override
-                                                public void onFailure(Call<ResponseBody> call, Throwable t) {
-                                                    Log.d(TAG, "onFailure: "+"예외");
-                                                    // 예외 처리
-                                                    t.printStackTrace();
-                                                }
-                                            });
-                                        }
+                                                    @Override
+                                                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+                                                        Log.d(TAG, "onFailure: "+"예외");
+                                                        // 예외 처리
+                                                        t.printStackTrace();
+                                                    }
+                                                });
+                                            }
 
-                                        @Override
-                                        public void onFailure(Call<String> call, Throwable t) {
+                                            @Override
+                                            public void onFailure(Call<String> call, Throwable t) {
 
-                                        }
-                                    });
+                                            }
+                                        });
+                                    }
                                 }
 
                                 @Override
@@ -283,7 +291,7 @@ public class NoticeboardShow extends AppCompatActivity {
         Log.d(TAG, "onCreate: id: "+noticeboardId);
 
         NoticeboardDetailShowInterface showApi=ApiClient.getApiClient().create(NoticeboardDetailShowInterface.class);
-        Call<String> call = showApi.noticeboardDetailShow(noticeboardId,noticeboardTitle);
+        Call<String> call = showApi.noticeboardDetailShow(noticeboardId,noticeboardTitle,userId);
         call.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
@@ -306,7 +314,12 @@ public class NoticeboardShow extends AppCompatActivity {
                         if(userId.equals(responseSp[8])){
                             sendBtn.setVisibility(View.GONE);
                         }
-                        Glide.with(NoticeboardShow.this).load("http://"+apiClient.goUri(responseSp[9])).thumbnail(Glide.with(NoticeboardShow.this).load(R.raw.loadinggif)).into(userImage);
+                        if(responseSp[9].equals("확인")){
+                            likesBtn.setImageResource(R.drawable.heart_yes);
+                        }else{
+                            likesBtn.setImageResource(R.drawable.heart_none);
+                        }
+                        Glide.with(NoticeboardShow.this).load("http://"+apiClient.goUri(responseSp[10])).thumbnail(Glide.with(NoticeboardShow.this).load(R.raw.loadinggif)).into(userImage);
                         Glide.with(NoticeboardShow.this).load("http://"+apiClient.goUri(responseSp[5])).thumbnail(Glide.with(NoticeboardShow.this).load(R.raw.loadinggif)).into(noticeboardImage);
 
                         responseArray=showResponse.body();
@@ -341,6 +354,35 @@ public class NoticeboardShow extends AppCompatActivity {
             @Override
             public void onFailure(Call<String> call, Throwable t) {
 
+            }
+        });
+
+        likesBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                LikesBtnClickInterface likesApi = ApiClient.getApiClient().create(LikesBtnClickInterface.class);
+                Call<String> likesCall = likesApi.LikesChick(userId,responseSp[3]);
+                likesCall.enqueue(new Callback<String>() {
+                    @Override
+                    public void onResponse(Call<String> call, Response<String> response) {
+                        Log.d("어댑터", "onResponse: "+response.body());
+                        String[] responseSp=response.body().split("!!@!!");
+                        if(response.body().equals("본인계정")){
+                            Toast.makeText(NoticeboardShow.this, "본인 게시물입니다.", Toast.LENGTH_SHORT).show();
+                        }else if(responseSp[0].equals("취소")){
+                            likesBtn.setImageResource(R.drawable.heart_none);
+                            likesCountText.setText(responseSp[1]);
+                        }else if(responseSp[0].equals("확인")){
+                            likesCountText.setText(responseSp[1]);
+                            likesBtn.setImageResource(R.drawable.heart_yes);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<String> call, Throwable t) {
+
+                    }
+                });
             }
         });
 

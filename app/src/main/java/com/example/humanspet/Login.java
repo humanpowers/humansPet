@@ -71,7 +71,7 @@ public class Login extends AppCompatActivity {
         joinBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(Login.this, Register.class);
+                Intent intent = new Intent(Login.this, EmailCertification.class);
                 startActivity(intent);
             }
         });
@@ -80,6 +80,28 @@ public class Login extends AppCompatActivity {
 
         etId=findViewById(R.id.loginIdEdit);
         etPassword=findViewById(R.id.loginPasswordEdit);
+
+        etId.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                if(b==true){
+                    etId.setBackgroundResource(R.drawable.box_white_mint);
+                }else{
+                    etId.setBackgroundResource(R.drawable.box_white_gray);
+                }
+            }
+        });
+
+        etPassword.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                if(b==true){
+                    etPassword.setBackgroundResource(R.drawable.box_white_mint);
+                }else{
+                    etPassword.setBackgroundResource(R.drawable.box_white_gray);
+                }
+            }
+        });
 
         btnLogin=findViewById(R.id.loginLoginBtn);
         btnLogin.setOnClickListener(new View.OnClickListener() {

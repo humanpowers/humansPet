@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#33dddddd"
     tools:context=".Login">
 
     <ImageView
@@ -26,7 +27,7 @@
         android:ems="10"
         android:inputType="textPersonName"
         android:drawableStart="@drawable/email"
-        android:background="@drawable/box_white"
+        android:background="@drawable/box_white_gray"
         android:hint="E-mail"
         android:drawablePadding="@dimen/loginEmailDrawablePadding"
         android:paddingStart="@dimen/loginEmailPaddingStart"
@@ -43,11 +44,11 @@
         android:layout_marginTop="@dimen/loginPasswordMarginTop"
         android:ems="10"
         android:inputType="textPassword"
-        android:background="@drawable/box_white"
+        android:background="@drawable/box_white_gray"
         android:drawableStart="@drawable/password"
-        android:drawablePadding="@dimen/loginEmailDrawablePadding"
+        android:drawablePadding="@dimen/loginPasswordDrawablePadding"
         android:textSize="@dimen/loginEmailTextSize"
-        android:paddingStart="@dimen/loginEmailPaddingStart"
+        android:paddingStart="@dimen/loginPasswordPaddingStart"
         android:hint="Password"
         app:layout_constraintEnd_toEndOf="@+id/loginIdEdit"
         app:layout_constraintStart_toStartOf="@+id/loginIdEdit"
@@ -60,6 +61,7 @@
         android:layout_marginTop="@dimen/loginLoginBtnMarginTop"
         android:background="@drawable/box_mint"
         android:text="로그인"
+        android:textStyle="bold"
         android:textSize="@dimen/loginBtnTextSize"
         app:layout_constraintEnd_toEndOf="@+id/loginPasswordEdit"
         app:layout_constraintStart_toStartOf="@+id/loginPasswordEdit"
@@ -72,6 +74,8 @@
         android:layout_marginTop="@dimen/loginFindBtnMarginTop"
         android:background="@drawable/box_mint"
         android:text="ID찾기"
+        android:textSize="15sp"
+        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="@+id/loginJoinBtn"
         app:layout_constraintTop_toBottomOf="@+id/loginJoinBtn" />
 
@@ -81,6 +85,8 @@
         android:layout_height="@dimen/loginBtnHeight"
         android:background="@drawable/box_mint"
         android:text="비밀번호 찾기"
+        android:textSize="15sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="@+id/loginJoinBtn"
         app:layout_constraintTop_toTopOf="@+id/loginFindIdBtn" />
 
@@ -91,6 +97,7 @@
         android:layout_marginTop="@dimen/loginJoinBtnMarginTop"
         android:background="@drawable/box_mint"
         android:textSize="@dimen/loginBtnTextSize"
+        android:textStyle="bold"
         android:text="회원가입"
         app:layout_constraintEnd_toEndOf="@+id/loginLoginBtn"
         app:layout_constraintStart_toStartOf="@+id/loginLoginBtn"

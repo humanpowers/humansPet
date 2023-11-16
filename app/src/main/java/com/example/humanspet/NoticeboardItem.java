@@ -10,8 +10,9 @@ public class NoticeboardItem {
     private String siName;
     private String doName;
     private String title;
+    private String check;
 
-    public NoticeboardItem(String userImage, String userName,String siName,String doName, String uploadImage, int likeCount, int commentCount, String comment,String title) {
+    public NoticeboardItem(String userImage, String userName,String siName,String doName, String uploadImage, int likeCount, int commentCount, String comment,String title,String check) {
         this.userImage = userImage;
         this.userName = userName;
         this.uploadImage = uploadImage;
@@ -21,6 +22,15 @@ public class NoticeboardItem {
         this.siName = siName;
         this.doName = doName;
         this.title = title;
+        this.check = check;
+    }
+
+    public String getCheck() {
+        return check;
+    }
+
+    public void setCheck(String check) {
+        this.check = check;
     }
 
     public String getTitle() {

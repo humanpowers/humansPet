@@ -1,9 +1,5 @@
 package com.example.humanspet;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -19,6 +15,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
+import android.widget.Toast;
+
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.bumptech.glide.Glide;
@@ -66,11 +67,13 @@ public class NoticeboardAdd extends AppCompatActivity {
     String userId,userName;
     private SharedPreferences preferences;
     LottieAnimationView animationView;
+    int imageCheck;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_noticeboard_add);
+        imageCheck=0;
 
         preferences = getSharedPreferences("USER",MODE_PRIVATE);
         userId=preferences.getString("USERID","");
@@ -98,6 +101,7 @@ public class NoticeboardAdd extends AppCompatActivity {
                         Glide.with(this)
                                 .load(noticeboardRealUri)
                                 .into(imageBtn);
+                        imageCheck=1;
                     }
                 });
 
@@ -135,34 +139,42 @@ public class NoticeboardAdd extends AppCompatActivity {
             public void onClick(View view) {
                 title=titleEdit.getText().toString();
                 content=contentEdit.getText().toString();
-                File noticeboardDataFile= new File(noticeboardDataUri);
-                String noticeboardFileName=userId+title+".jpg";
 
-                animationView = findViewById(R.id.noticeboardAddLottie);
-                animationView.loop(true);
-                animationView.playAnimation();
-                animationView.setVisibility(View.VISIBLE);
+                if(title.equals("")){
+                    Toast.makeText(NoticeboardAdd.this, "제목을 입력해주세요.", Toast.LENGTH_SHORT).show();
+                }else if(content.equals("")){
+                    Toast.makeText(NoticeboardAdd.this, "본문을 입력해주세요.", Toast.LENGTH_SHORT).show();
+                }else if(imageCheck==0){
+                    Toast.makeText(NoticeboardAdd.this, "사진을 선택해주세요.", Toast.LENGTH_SHORT).show();
+                }else{
+                    File noticeboardDataFile= new File(noticeboardDataUri);
+                    String noticeboardFileName=userId+title+".jpg";
+                    animationView = findViewById(R.id.noticeboardAddLottie);
+                    animationView.loop(true);
+                    animationView.playAnimation();
+                    animationView.setVisibility(View.VISIBLE);
 
-                RequestBody noticeboardRequestBody=RequestBody.create(MediaType.parse("multipart/form-data"),noticeboardDataFile);
-                MultipartBody.Part noticeboardBody = MultipartBody.Part.createFormData("uploaded_file",noticeboardFileName,noticeboardRequestBody);
-                Log.d(TAG, "onClick: body: "+noticeboardBody);
+                    RequestBody noticeboardRequestBody=RequestBody.create(MediaType.parse("multipart/form-data"),noticeboardDataFile);
+                    MultipartBody.Part noticeboardBody = MultipartBody.Part.createFormData("uploaded_file",noticeboardFileName,noticeboardRequestBody);
+                    Log.d(TAG, "onClick: body: "+noticeboardBody);
 
-                NoticeboardAddInterface noticeboardApi=ApiClient.getApiClient().create(NoticeboardAddInterface.class);
-                Call<String> call = noticeboardApi.noticeboardAdd(userId,userName,siText,doText,title,content,noticeboardBody);
-                call.enqueue(new Callback<String>() {
-                    @Override
-                    public void onResponse(Call<String> call, Response<String> response) {
-                        if(response.body().equals("성공")){
-                            animationView.setVisibility(View.GONE);
-                            finish();
+                    NoticeboardAddInterface noticeboardApi=ApiClient.getApiClient().create(NoticeboardAddInterface.class);
+                    Call<String> call = noticeboardApi.noticeboardAdd(userId,userName,siText,doText,title,content,noticeboardBody);
+                    call.enqueue(new Callback<String>() {
+                        @Override
+                        public void onResponse(Call<String> call, Response<String> response) {
+                            if(response.body().equals("성공")){
+                                animationView.setVisibility(View.GONE);
+                                finish();
+                            }
                         }
-                    }
 
-                    @Override
-                    public void onFailure(Call<String> call, Throwable t) {
+                        @Override
+                        public void onFailure(Call<String> call, Throwable t) {
 
-                    }
-                });
+                        }
+                    });
+                }
             }
         });
 

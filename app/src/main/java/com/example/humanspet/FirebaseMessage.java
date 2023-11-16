@@ -1,5 +1,6 @@
 package com.example.humanspet;
 
+import android.content.Intent;
 import android.util.Log;
 
 import com.google.firebase.messaging.RemoteMessage;
@@ -15,13 +16,14 @@ public class FirebaseMessage extends com.google.firebase.messaging.FirebaseMessa
             String title = remoteMessage.getData().get("title");
             String body = remoteMessage.getData().get("body");
 
-            FCMNotificationHandler.showNotification(this, title, body);
+            Intent intent = new Intent(getApplicationContext(),MainPage.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            FCMNotificationHandler.showNotification(this, title, body,intent);
         }
 
         if (remoteMessage.getNotification() != null) {
             Log.d(TAG, "Message Notification Body: " + remoteMessage.getNotification().getBody());
 
-            // 여기서 알림 메시지를 처리하거나 원하는 동작을 수행합니다.
         }
     }
 
