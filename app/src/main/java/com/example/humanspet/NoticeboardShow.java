@@ -63,6 +63,7 @@ public class NoticeboardShow extends AppCompatActivity {
     private LinearLayoutManager linearLayoutManager;
     CommentAdapter commentAdapter;
     ArrayList responseArray;
+    String type;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -213,7 +214,7 @@ public class NoticeboardShow extends AppCompatActivity {
                                                 FCMService fcmService = retrofit.create(FCMService.class);
 
                                                 // FCM 메시지 생성
-                                                FCMNotificationData notificationData = new FCMNotificationData("Human's Pet", "회원님의 게시물에 댓글이 작성되었습니다.");
+                                                FCMNotificationData notificationData = new FCMNotificationData("Human's Pet", "회원님의 게시물("+responseSp[3]+")에 댓글이 작성되었습니다.");
                                                 FCMNotification fcmNotification = new FCMNotification(sendResponse.body(), notificationData);
 
                                                 // Retrofit을 사용하여 FCM 서버로 메시지 전송 (비동기 방식)
@@ -289,6 +290,7 @@ public class NoticeboardShow extends AppCompatActivity {
         Log.d(TAG, "onCreate: title: "+noticeboardTitle);
         noticeboardId=intent.getStringExtra("id");
         Log.d(TAG, "onCreate: id: "+noticeboardId);
+        type=intent.getStringExtra("type");
 
         NoticeboardDetailShowInterface showApi=ApiClient.getApiClient().create(NoticeboardDetailShowInterface.class);
         Call<String> call = showApi.noticeboardDetailShow(noticeboardId,noticeboardTitle,userId);
@@ -413,7 +415,12 @@ public class NoticeboardShow extends AppCompatActivity {
             page.startAnimation(translate_right);
             isPageOpen=false;
         }else{
-            finish();
+            if(type.equals("push")){
+                Intent pushIntent = new Intent(NoticeboardShow.this,MainPage.class);
+                startActivity(pushIntent);
+            }else{
+                finish();
+            }
         }
     }
 

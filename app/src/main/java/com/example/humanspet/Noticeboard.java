@@ -81,6 +81,7 @@ public class Noticeboard extends Fragment {
                 intent.putExtra("name",nameSt);
                 intent.putExtra("title",responseSp[3]);
                 intent.putExtra("id",responseSp[8]);
+                intent.putExtra("type","select");
                 startActivity(intent);
             }
         });
