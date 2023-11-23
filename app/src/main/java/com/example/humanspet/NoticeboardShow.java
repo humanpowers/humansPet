@@ -1,9 +1,13 @@
 package com.example.humanspet;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -44,7 +48,7 @@ public class NoticeboardShow extends AppCompatActivity {
     String noticeboardId;
     ImageView userImage,noticeboardImage;
     TextView nameText,addressText,likesCountText,commentCountText,titleText,contentText,commentText;
-    ImageButton likesBtn,sendBtn,cancelBtn,commentBackBtn,commentSendBtn;
+    ImageButton likesBtn,sendBtn,cancelBtn,commentSendBtn,commentBtn;
     LinearLayout commentLinear;
     ApiClient apiClient = new ApiClient();
     private SharedPreferences preferences;
@@ -64,6 +68,8 @@ public class NoticeboardShow extends AppCompatActivity {
     CommentAdapter commentAdapter;
     ArrayList responseArray;
     String type;
+    private float startY;
+    private boolean isPageVisible = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,8 +98,8 @@ public class NoticeboardShow extends AppCompatActivity {
         sendBtn=findViewById(R.id.noticeboardShowSendButton);
         cancelBtn=findViewById(R.id.noticeboardShowCancelButton);
         commentLinear=findViewById(R.id.noticeboardShowCommentLinear);
-        commentBackBtn=findViewById(R.id.noticeboardShowCommentBackButton);
         commentSendBtn=findViewById(R.id.noticeboardShowCommentSendButton);
+        commentBtn=findViewById(R.id.noticeboardShowCommentImage);
 
         recyclerView=findViewById(R.id.noticeboardShowCommentRecyclerView);
         linearLayoutManager=new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
@@ -267,21 +273,27 @@ public class NoticeboardShow extends AppCompatActivity {
         commentLinear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                recyclerView.scrollToPosition(0);
-                page.setVisibility(View.VISIBLE);
-                page.startAnimation(translate_left);
-                isPageOpen=true;
+                togglePageVisibility();
             }
         });
 
-        commentBackBtn.setOnClickListener(new View.OnClickListener() {
+        commentBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                page.setVisibility(View.INVISIBLE);
-                page.startAnimation(translate_right);
-                isPageOpen=false;
+                togglePageVisibility();
             }
         });
+
+        page.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                if (isPageVisible) {
+                    handleTouch(motionEvent);
+                }
+                return true;
+            }
+        });
+
 
         Intent intent=getIntent();
         noticeboardName=intent.getStringExtra("name");
@@ -423,6 +435,78 @@ public class NoticeboardShow extends AppCompatActivity {
             }
         }
     }
+
+    private void togglePageVisibility() {
+        if (isPageVisible) {
+            slideDownAndHide();
+        } else {
+            slideUpAndShow();
+        }
+    }
+
+    private void slideUpAndShow() {
+        ObjectAnimator slideAnimator = ObjectAnimator.ofFloat(page, "translationY", page.getHeight(), 0);
+        slideAnimator.setDuration(500);
+        slideAnimator.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+                page.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                isPageVisible = true;
+            }
+        });
+        slideAnimator.start();
+    }
+
+    private void slideDownAndHide() {
+        ObjectAnimator slideAnimator = ObjectAnimator.ofFloat(page, "translationY", page.getTranslationY(), page.getHeight());
+        slideAnimator.setDuration(500);
+        slideAnimator.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                page.setVisibility(View.GONE);
+                isPageVisible = false;
+            }
+        });
+        slideAnimator.start();
+    }
+
+    private void handleTouch(MotionEvent event) {
+        float newY = event.getRawY();
+
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                startY = newY;
+                break;
+
+            case MotionEvent.ACTION_MOVE:
+                float deltaY = newY - startY;
+                if (deltaY < 0) {
+                    // 위쪽으로의 슬라이드를 허용하지 않음
+                    return;
+                }
+                page.setTranslationY(deltaY);
+                break;
+
+            case MotionEvent.ACTION_UP:
+                float deltaYUp = newY - startY;
+
+                if (deltaYUp > 0 && deltaYUp > 200) {
+                    slideDownAndHide();
+                } else {
+                    resetViewPosition();
+                }
+                break;
+        }
+    }
+
+    private void resetViewPosition() {
+        page.animate().translationY(0).setDuration(300).start();
+    }
+
 
 
     public void startView(){

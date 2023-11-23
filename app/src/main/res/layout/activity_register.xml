@@ -35,22 +35,23 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/joinText" />
 
+
     <Button
         android:id="@+id/joinFinishButton"
-        android:layout_width="60dp"
+        android:layout_width="350dp"
         android:layout_height="40dp"
-        android:background="#00ffffff"
+        android:background="@drawable/box_gray"
+        android:inputType="textEmailAddress"
+        android:maxLength="25"
         android:text="완료"
+        android:textColor="#000000"
         android:textSize="15sp"
         android:textStyle="bold"
-        android:textColor="#000000"
-        app:layout_constraintBottom_toBottomOf="@+id/joinText"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.8"
-        app:layout_constraintStart_toEndOf="@+id/joinText"
-        app:layout_constraintTop_toTopOf="@+id/joinText"
-        />
-
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/joinPhoneCheckBtn"
+        app:layout_constraintVertical_bias="0.7" />
 
     <EditText
         android:id="@+id/joinNameEdit"
@@ -67,15 +68,14 @@
 
     <EditText
         android:id="@+id/joinPhoneEdit"
-        android:layout_width="@dimen/registerEditWidth"
+        android:layout_width="220dp"
         android:layout_height="@dimen/registerEditHeight"
         android:layout_marginTop="@dimen/registerEditMarginTop"
-        android:textSize="@dimen/registerEditTextSize"
-        android:maxLength="13"
-        android:inputType="phone"
         android:background="@drawable/box_white_gray"
+        android:inputType="phone"
+        android:maxLength="13"
         android:padding="5dp"
-        app:layout_constraintEnd_toEndOf="@+id/joinNameEdit"
+        android:textSize="@dimen/registerEditTextSize"
         app:layout_constraintStart_toStartOf="@+id/joinNameEdit"
         app:layout_constraintTop_toBottomOf="@+id/joinNameEdit" />
 
@@ -84,16 +84,16 @@
         android:layout_width="@dimen/registerEditWidth"
         android:layout_height="@dimen/registerEditHeight"
         android:layout_marginTop="@dimen/registerEditMarginTop"
-        android:background="@drawable/box_white_gray"
+        android:background="@drawable/box_gray_black"
         android:bufferType="spannable"
         android:inputType="textEmailAddress"
         android:maxLength="25"
         android:padding="5dp"
         android:textSize="@dimen/registerEditTextSize"
         android:textColor="#000000"
+        android:enabled="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.14" />
@@ -177,10 +177,10 @@
         android:text="휴대폰 인증"
         android:textColor="#000000"
         android:textSize="@dimen/registerCheckBtnTextSize"
-        android:layout_marginTop="@dimen/registerEditMarginTop"
-        app:layout_constraintEnd_toEndOf="@+id/joinPhoneEdit"
-        app:layout_constraintStart_toStartOf="@+id/joinPhoneEdit"
-        app:layout_constraintTop_toBottomOf="@+id/joinPhoneCheckText" />
+        app:layout_constraintBottom_toBottomOf="@+id/joinPhoneEdit"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/joinPhoneEdit"
+        app:layout_constraintTop_toTopOf="@+id/joinPhoneEdit" />
 
     <TextView
         android:id="@+id/joinPhoneCheckText"

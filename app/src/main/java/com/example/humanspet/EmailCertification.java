@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.StrictMode;
 import android.text.Editable;
@@ -32,6 +33,9 @@ public class EmailCertification extends AppCompatActivity {
     TextView emailCheckText;
     private SharedPreferences preferences;
     boolean emailBoolean,codeBoolean;
+    private TextView countdownText;
+    private CountDownTimer countDownTimer;
+    long initialTimeMillis;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +43,21 @@ public class EmailCertification extends AppCompatActivity {
         setContentView(R.layout.activity_email_certification);
         emailBoolean=false;
         codeBoolean=false;
+        initialTimeMillis = 30 * 1000;
+
+        countdownText = findViewById(R.id.emailCertificationCodeTime);
+        countDownTimer = new CountDownTimer(initialTimeMillis, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                updateCountdownText(millisUntilFinished);
+            }
+
+            @Override
+            public void onFinish() {
+                // 시간이 종료될 때 수행할 작업
+                countdownText.setText("00:00");
+            }
+        };
 
         StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
                 .permitDiskReads()
@@ -52,6 +71,7 @@ public class EmailCertification extends AppCompatActivity {
         nextBtn=findViewById(R.id.emailCertificationNextButton);
         codeBtn=findViewById(R.id.emailCertificationCodeButton);
         codeEdit=findViewById(R.id.emailCertificationCodeEdit);
+
 
         codeEdit.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -85,6 +105,8 @@ public class EmailCertification extends AppCompatActivity {
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 emailBoolean=false;
                 codeBoolean=false;
+                mailBtn.setText("이메일 인증");
+                nextBtn.setBackgroundResource(R.drawable.box_gray);
             }
 
             @Override
@@ -104,6 +126,9 @@ public class EmailCertification extends AppCompatActivity {
                         if(response.body().equals("존재")){
                             Toast.makeText(EmailCertification.this, "이미 사용중인 이메일 입니다.", Toast.LENGTH_SHORT).show();
                         }else{
+                            countdownText.setVisibility(View.VISIBLE);
+                            initialTimeMillis = 30 * 1000;
+                            countDownTimer.start();
                             mailBtn.setClickable(false);
                             emailCheck();
                             mailBtn.setText("재전송");
@@ -155,16 +180,35 @@ public class EmailCertification extends AppCompatActivity {
                 SharedPreferences.Editor editor = preferences.edit();
                 Log.d(TAG, "onClick: "+checkCode);
                 Log.d(TAG, "onClick: "+codeEdit.getText().toString());
-                if(codeEdit.getText().toString().equals(checkCode)){
-                    codeBoolean=true;
-                    Toast.makeText(EmailCertification.this, "인증되었습니다.", Toast.LENGTH_SHORT).show();
-                    editor.remove("CODE");
-                    editor.commit();
+                String time = countdownText.getText().toString();
+                if(time.equals("00:00")){
+                    Toast.makeText(EmailCertification.this, "인증 시간이 초과되었습니다.\n 메일을 다시 전송해 주세요.", Toast.LENGTH_SHORT).show();
                 }else{
-                    Toast.makeText(EmailCertification.this, "인증 번호가 올바르지 않습니다.", Toast.LENGTH_SHORT).show();
+                    if(codeEdit.getText().toString().equals(checkCode)){
+                        codeBoolean=true;
+                        nextBtn.setBackgroundResource(R.drawable.box_mint);
+                        countdownText.setVisibility(View.INVISIBLE);
+                        Toast.makeText(EmailCertification.this, "인증되었습니다.", Toast.LENGTH_SHORT).show();
+                        editor.remove("CODE");
+                        editor.commit();
+                    }else{
+                        Toast.makeText(EmailCertification.this, "인증 번호가 올바르지 않습니다.", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         });
+    }
+
+    private void startCountdown() {
+        countDownTimer.start();
+    }
+
+    private void updateCountdownText(long millisUntilFinished) {
+        int minutes = (int) (millisUntilFinished / (1000 * 60));
+        int seconds = (int) ((millisUntilFinished % (1000 * 60)) / 1000);
+
+        String timeLeftFormatted = String.format("%02d:%02d", minutes, seconds);
+        countdownText.setText(timeLeftFormatted);
     }
 
     private void emailCheck(){

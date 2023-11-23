@@ -1,7 +1,5 @@
 package com.example.humanspet;
 
-import android.Manifest;
-import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
@@ -13,28 +11,28 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.viewmodel.CreationExtras;
 
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.naver.maps.geometry.LatLng;
-import com.naver.maps.map.CameraUpdate;
+import com.naver.maps.map.LocationTrackingMode;
 import com.naver.maps.map.MapFragment;
+import com.naver.maps.map.MapView;
 import com.naver.maps.map.NaverMap;
 import com.naver.maps.map.OnMapReadyCallback;
 import com.naver.maps.map.overlay.Marker;
 import com.naver.maps.map.overlay.PathOverlay;
+import com.naver.maps.map.util.FusedLocationSource;
 
 import java.util.ArrayList;
 
 public class Walking extends Fragment implements OnMapReadyCallback {
     String TAG = "산책";
-    private static final int LOCATION_PERMISSION_REQUEST_CODE = 123;
-    private FusedLocationProviderClient fusedLocationClient;
-    private MapFragment mapView;
+
+    private static final int LOCATION_PERMISSION_REQUEST_CODE = 1000;
+    private FusedLocationSource locationSource;
+    private NaverMap naverMap;
+    private MapView mapView;
     private Button startBtn;
     private TextView timeText,distanceText,speedText,calorieText;
     private boolean isRunning = false;
@@ -43,16 +41,20 @@ public class Walking extends Fragment implements OnMapReadyCallback {
     private int seconds = 0;
     private final Handler handler = new Handler();
     private Runnable timerRunnable;
-    private NaverMap naverMap;
     private Marker marker;
     ArrayList<LatLng> overLay = new ArrayList<>();
     LatLng initialLocation;
     int totalDistance=0;
     double xDistance;
     double yDistance;
-    int count=0;
+    int count;
     int timeCount=0;
     int totalCalorie;
+    double lat;
+    double lon;
+    MapFragment mapFragment;
+    Boolean timerBoolean;
+    PathOverlay path;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -65,6 +67,21 @@ public class Walking extends Fragment implements OnMapReadyCallback {
         speedText=v.findViewById(R.id.walkingSpeed);
         calorieText=v.findViewById(R.id.walkingCalories);
 
+        path = new PathOverlay();
+
+        locationSource = new FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE);
+
+        mapFragment = (MapFragment) getParentFragmentManager().findFragmentById(R.id.mapView);
+        if (mapFragment == null) {
+            mapFragment = MapFragment.newInstance();
+            getParentFragmentManager().beginTransaction().add(R.id.mapView, mapFragment).commit();
+        }
+        mapFragment.getMapAsync(this);
+
+        // 지도가 준비되면 onMapReady 메서드가 호출됩니다.
+
+
+
         startBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -74,7 +91,16 @@ public class Walking extends Fragment implements OnMapReadyCallback {
                     handler.removeCallbacks(timerRunnable);
                     startBtn.setText("시작");
                 } else {
+                    count=0;
+                    timeCount=0;
+                    hours=0;
+                    minutes=0;
+                    seconds=0;
+                    totalDistance=0;
+                    totalCalorie=0;
                     // 타이머 시작 또는 재개
+                    path.setMap(null);
+                    overLay.clear();
                     isRunning = true;
                     startBtn.setText("정지");
                     startTimer();
@@ -96,28 +122,24 @@ public class Walking extends Fragment implements OnMapReadyCallback {
                     }
                 }
                 updateTimerText();
-                getLocation();
                 handler.postDelayed(this, 1000); // 1초마다 실행
-                if(seconds>1){
-                    PathOverlay pathOverlay = new PathOverlay();
-                    pathOverlay.setCoords(overLay);
-                    pathOverlay.setMap(naverMap);
-                }
             }
         };
 
-        // FusedLocationProviderClient 초기화
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext());
 
-        // 위치 권한을 요청
-        requestLocationPermission();
-
-        mapView = (MapFragment) getChildFragmentManager().findFragmentById(R.id.mapView);
-        mapView.onResume();
-        mapView.getMapAsync(this);
 
         return v;
     }
+
+    @Override
+    public void onStart() {
+        Log.d(TAG,"onStart호출");
+        super.onStart();
+        count=0;
+
+
+    }
+
 
     private void startTimer() {
         handler.post(timerRunnable);
@@ -127,77 +149,6 @@ public class Walking extends Fragment implements OnMapReadyCallback {
         timeText.setText(String.format("%02d:%02d:%02d", hours, minutes, seconds));
     }
 
-    private void requestLocationPermission() {
-        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            // 위치 권한이 부여되었으면 위치 정보를 얻습니다.
-            getLocation();
-        } else {
-            ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_REQUEST_CODE);
-        }
-    }
-
-    private void getLocation() {
-        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            // 위치 정보를 가져오는 작업을 수행
-            fusedLocationClient.getLastLocation()
-                    .addOnSuccessListener(requireActivity(), new OnSuccessListener<Location>() {
-                        @Override
-                        public void onSuccess(Location location) {
-                            if (location != null) {
-                                // 위치 정보를 얻은 경우
-                                double latitude = location.getLatitude();
-                                double longitude = location.getLongitude();
-                                if(count>=1){
-                                    totalDistance+=distance(xDistance,yDistance,latitude,longitude);
-                                    double speed=distance(xDistance,yDistance,latitude,longitude);
-                                    distanceText.setText(Integer.toString(totalDistance)+"m");
-                                    speedText.setText(Integer.toString((int)speed*3600/1000)+"km/h");
-                                    int calorie=(int)speed*17*70/1/60/100;
-                                    totalCalorie+=calorie;
-                                    calorieText.setText(Integer.toString(totalCalorie));
-                                    Log.d(TAG, "onSuccess: "+totalDistance);
-                                }
-                                xDistance=latitude;
-                                yDistance=longitude;
-                                count++;
-
-                                initialLocation = new LatLng(latitude, longitude);
-                                overLay.add(initialLocation);
-                                updateLocationOnMap(latitude, longitude);
-                                Log.d(TAG, "Latitude: " + latitude + ", Longitude: " + longitude);
-                            }
-                        }
-                    });
-        }
-    }
-
-    private void updateLocationOnMap(double latitude, double longitude) {
-        if (naverMap != null) {
-            // 이전 마커를 제거하고 새로운 마커를 추가
-            if (marker != null) {
-                marker.setMap(null); // 이전 마커 제거
-            }
-
-            marker = new Marker();
-            marker.setPosition(new LatLng(latitude, longitude));
-            marker.setMap(naverMap);
-
-            // 지도를 새로운 위치로 이동
-            CameraUpdate cameraUpdate = CameraUpdate.scrollTo(new LatLng(latitude, longitude));
-            naverMap.moveCamera(cameraUpdate);
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // 위치 권한이 부여되면 위치 정보를 얻습니다.
-                getLocation();
-            }
-        }
-    }
 
     private static double distance(double lat1, double lon1, double lat2, double lon2){
         double theta = lon1 - lon2;
@@ -217,14 +168,71 @@ public class Walking extends Fragment implements OnMapReadyCallback {
         return (rad * 180 / Math.PI);
     }
 
-    @Override
-    public void onMapReady(@NonNull NaverMap naverMap) {
-        this.naverMap = naverMap;
-    }
 
     @Override
     public void onStop() {
         super.onStop();
+        Log.d(TAG, "onStop호출");
         handler.removeCallbacks(timerRunnable);
+        mapFragment.onStop();
+        overLay.clear();
     }
+
+    @Override
+    public void onMapReady(@NonNull NaverMap naverMap) {
+        this.naverMap = naverMap;
+        Log.d(TAG, "onMapReady");
+
+        naverMap.setLocationSource(locationSource);
+        naverMap.setLocationTrackingMode(LocationTrackingMode.Follow);
+        naverMap.addOnLocationChangeListener(new NaverMap.OnLocationChangeListener() {
+            @Override
+            public void onLocationChange(@NonNull Location location) {
+                lat=location.getLatitude();
+                lon=location.getLongitude();
+                if(isRunning){
+                    overLay.add(new LatLng(location.getLatitude(),location.getLongitude()));
+                    if(count>=1){
+                        path.setCoords(overLay);
+                        path.setMap(naverMap);
+
+                        totalDistance+=distance(xDistance,yDistance,lat,lon);
+                        double speed=distance(xDistance,yDistance,lat,lon);
+                        distanceText.setText(Integer.toString(totalDistance)+"m");
+                        speedText.setText(Integer.toString((int)speed*3600/1000)+"km/h");
+                        int calorie=(int)speed*17*70/1/60/100;
+                        totalCalorie+=calorie;
+                        calorieText.setText(Integer.toString(totalCalorie));
+                        Log.d(TAG, "onSuccess: "+totalDistance);
+                    }
+                    xDistance=lat;
+                    yDistance=lon;
+                    count++;
+                }
+
+
+                Log.d(TAG, "onLocationChange: lat: "+lat+" lon: "+lon +"정확도 : "+location.getAccuracy());
+            }
+        });
+    }
+
+    @NonNull
+    @Override
+    public CreationExtras getDefaultViewModelCreationExtras() {
+        return super.getDefaultViewModelCreationExtras();
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String[] permissions,  @NonNull int[] grantResults) {
+        if (locationSource.onRequestPermissionsResult(
+                requestCode, permissions, grantResults)) {
+            if (!locationSource.isActivated()) { // 권한 거부됨
+                naverMap.setLocationTrackingMode(LocationTrackingMode.None);
+            }
+            return;
+        }
+        super.onRequestPermissionsResult(
+                requestCode, permissions, grantResults);
+    }
+
 }

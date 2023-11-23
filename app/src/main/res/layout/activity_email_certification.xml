@@ -33,14 +33,15 @@
 
     <EditText
         android:id="@+id/emailCertificationEmailEdit"
-        android:layout_width="280dp"
+        android:layout_width="220dp"
         android:layout_height="50dp"
         android:background="@drawable/box_white_gray"
         android:hint="이메일을 입력해주세요"
         android:padding="5dp"
+        android:textSize="15dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.1"
+        app:layout_constraintHorizontal_bias="0.165"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.7" />
@@ -59,12 +60,13 @@
 
     <EditText
         android:id="@+id/emailCertificationCodeEdit"
-        android:layout_width="280dp"
+        android:layout_width="220dp"
         android:layout_height="50dp"
         android:layout_marginTop="60dp"
         android:background="@drawable/box_white_gray"
-        android:padding="5dp"
         android:hint="인증코드를 입력해주세요"
+        android:padding="5dp"
+        android:textSize="15dp"
         app:layout_constraintEnd_toEndOf="@+id/emailCertificationEmailEdit"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="@+id/emailCertificationEmailEdit"
@@ -108,21 +110,19 @@
 
     <Button
         android:id="@+id/emailCertificationNextButton"
-        android:layout_width="60dp"
+        android:layout_width="350dp"
         android:layout_height="40dp"
-        android:background="#00ffffff"
-        android:text="다음"
-        android:textSize="15sp"
-        android:textStyle="bold"
-        android:textColor="#000000"
+        android:background="@drawable/box_gray"
         android:inputType="textEmailAddress"
         android:maxLength="25"
-        app:layout_constraintBottom_toBottomOf="@+id/emailCertificationText"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.8"
-        app:layout_constraintStart_toEndOf="@+id/emailCertificationText"
-        app:layout_constraintTop_toTopOf="@+id/emailCertificationText"
-        />
+        android:text="다음"
+        android:textColor="#000000"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/emailCertificationCodeButton"
+        app:layout_constraintStart_toStartOf="@+id/emailCertificationCodeEdit"
+        app:layout_constraintTop_toBottomOf="@+id/emailCertificationCodeEdit" />
 
     <Button
         android:id="@+id/emailCertificationPreviousButton"
@@ -147,6 +147,18 @@
         android:textColor="#000000"
         app:layout_constraintStart_toStartOf="@+id/emailCertificationEmailEdit"
         app:layout_constraintTop_toBottomOf="@+id/emailCertificationEmailEdit" />
+
+    <TextView
+        android:id="@+id/emailCertificationCodeTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:visibility="invisible"
+        android:layout_marginRight="7dp"
+        android:textColor="@color/Red"
+        app:layout_constraintBottom_toBottomOf="@+id/emailCertificationCodeEdit"
+        app:layout_constraintEnd_toEndOf="@+id/emailCertificationCodeEdit"
+        app:layout_constraintTop_toTopOf="@+id/emailCertificationCodeEdit" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

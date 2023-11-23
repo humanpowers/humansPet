@@ -5,6 +5,8 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.telephony.PhoneNumberFormattingTextWatcher;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -29,6 +31,7 @@ public class Register extends AppCompatActivity {
     TextView phoneCheckText,passwordCheck,passwordReCheck;
     PreferenceHelper preferenceHelper;
     private Long mLastClickTime = 0L;
+    boolean passwordBoolean,nameBoolean,phoneBoolean;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +41,9 @@ public class Register extends AppCompatActivity {
 
         Intent intent = getIntent();
         String id = intent.getStringExtra("id");
+        passwordBoolean=false;
+        nameBoolean=false;
+        phoneBoolean=false;
 
         preferenceHelper = new PreferenceHelper(this);
 
@@ -57,8 +63,33 @@ public class Register extends AppCompatActivity {
         etEmail.setEnabled(false);
 
         focusOn(etEmail);
-        focusOn(etName);
         focusOn(etPhone);
+
+        etName.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if(etName.getText().toString().equals("")){
+                    finishBtn.setBackgroundResource(R.drawable.box_gray);
+                    nameBoolean=false;
+                }else{
+                    nameBoolean=true;
+                    if(passwordBoolean==true&&phoneBoolean==true&&nameBoolean==true){
+                        finishBtn.setBackgroundResource(R.drawable.box_mint);
+                    }else{
+                        finishBtn.setBackgroundResource(R.drawable.box_gray);
+                    }
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
 
         finishBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -67,7 +98,9 @@ public class Register extends AppCompatActivity {
                 if(SystemClock.elapsedRealtime() - mLastClickTime > 1000) {
                     switch (view.getId()) {
                         case R.id.joinFinishButton:
-                            registerMe();
+                            if(nameBoolean==true&&phoneBoolean==true&&passwordBoolean==true){
+                                registerMe();
+                            }
                             break;
                     }
                 }
@@ -88,6 +121,23 @@ public class Register extends AppCompatActivity {
             }
         });
 
+        etPhone.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                phoneCheck();
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
         etRePassword.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean b) {
@@ -97,9 +147,16 @@ public class Register extends AppCompatActivity {
                     etRePassword.setBackgroundResource(R.drawable.box_white_gray);
                     if(etPassword.getText().toString().equals(etRePassword.getText().toString())){
                         passwordCheck.setVisibility(View.VISIBLE);
+                        passwordBoolean=true;
                         passwordCheck.setText("두 비밀번호가 일치합니다.");
                         passwordCheck.setTextColor(Color.parseColor("#0000FF"));
+                        if(passwordBoolean==true&&phoneBoolean==true&&nameBoolean==true){
+                            finishBtn.setBackgroundResource(R.drawable.box_mint);
+                        }else{
+                            finishBtn.setBackgroundResource(R.drawable.box_gray);
+                        }
                     }else{
+                        finishBtn.setBackgroundResource(R.drawable.box_gray);
                         passwordCheck.setVisibility(View.VISIBLE);
                         passwordCheck.setText("두 비밀번호가 일치하지 않습니다.");
                         passwordCheck.setTextColor(Color.parseColor("#FF0000"));
@@ -121,7 +178,12 @@ public class Register extends AppCompatActivity {
         joinPhoneCheckBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                phoneCheck();
+                if(phoneBoolean==true){
+                    final String phone = etPhone.getText().toString();
+                    Intent intent = new Intent(Register.this,PhoneCertification.class);
+                    intent.putExtra("phone",phone);
+                    startActivity(intent);
+                }
             }
         });
     }
@@ -207,17 +269,21 @@ public class Register extends AppCompatActivity {
 
 
         if(!Pattern.matches(phonePattern,phone)){
+            finishBtn.setBackgroundResource(R.drawable.box_gray);
+            phoneBoolean=false;
             phoneCheckText.setVisibility(View.VISIBLE);
             phoneCheckText.setText("올바른 휴대폰 번호 형식이 아닙니다.");
             phoneCheckText.setTextColor(Color.parseColor("#FF0000"));
         }else{
+            phoneBoolean=true;
+            if(passwordBoolean==true&&phoneBoolean==true&&nameBoolean==true){
+                finishBtn.setBackgroundResource(R.drawable.box_mint);
+            }else{
+                finishBtn.setBackgroundResource(R.drawable.box_gray);
+            }
             phoneCheckText.setVisibility(View.GONE);
             phoneCheckText.setText("");
             phoneCheckText.setTextColor(Color.parseColor("#000000"));
-            Intent intent = new Intent(Register.this,PhoneCertification.class);
-            intent.putExtra("phone",phone);
-            startActivity(intent);
-
         }
 
     }
@@ -225,7 +291,6 @@ public class Register extends AppCompatActivity {
     private void passCheck(){
         final String password = etPassword.getText().toString();
         String passwordPattern = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[$@$!.%*#?&])[A-Za-z\\d$@$.!%*#?&]{8,}$";
-
 
         if(!Pattern.matches(passwordPattern,password)){
             passwordReCheck.setText("올바른 비밀번호 형식이 아닙니다.");

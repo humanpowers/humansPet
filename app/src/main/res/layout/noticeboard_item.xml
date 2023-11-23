@@ -8,8 +8,7 @@
     <View
         android:id="@+id/noticeboardStartContour"
         android:layout_width="match_parent"
-        android:layout_height="2dp"
-
+        android:layout_height="1dp"
         android:background="#6603DAC5"
         />
 
@@ -36,7 +35,8 @@
             android:layout_margin="@dimen/noticeboardImageMargin"
             android:gravity="center"
             android:text="배진우"
-            android:textSize="20dp"/>
+            android:textSize="20dp"
+            android:textColor="#000000"/>
 
         <TextView
             android:id="@+id/noticeboardItemAddressText"
@@ -45,6 +45,7 @@
             android:text="주소"
             android:layout_margin="10dp"
             android:textSize="14dp"
+            android:textColor="#000000"
             android:maxLines="1"
             android:maxLength="17"
             android:ellipsize="end"
@@ -74,9 +75,8 @@
             android:background="#00ffffff"
             android:scaleType="centerCrop"
             android:layout_marginStart="10dp"
-
-            android:layout_width="20dp"
-            android:layout_height="20dp"/>
+            android:layout_width="25dp"
+            android:layout_height="25dp"/>
 
         <TextView
             android:id="@+id/noticeboardItemLikesCount"
@@ -84,14 +84,15 @@
             android:layout_height="20dp"
             android:text="0"
             android:textSize="15dp"
+            android:textColor="#000000"
             android:layout_marginStart="5dp"
             android:layout_gravity="center"
             />
 
         <ImageButton
             android:id="@+id/noticeboardItemCommentImage"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
             android:src="@drawable/comment_icon"
             android:background="#00ffffff"
             android:scaleType="centerCrop"
@@ -104,20 +105,21 @@
             android:layout_height="20dp"
             android:text="0"
             android:textSize="15dp"
+            android:textColor="#000000"
             android:layout_marginStart="5dp"
             android:layout_gravity="center"
             />
 
     </LinearLayout>
 
-    <View
-        android:id="@+id/noticeboardImageContour"
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp"
-        android:background="#2203DAC5"
-        />
+<!--    <View-->
+<!--        android:id="@+id/noticeboardImageContour"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="2dp"-->
+<!--        android:layout_marginTop="5dp"-->
+<!--        android:layout_marginBottom="5dp"-->
+<!--        android:background="#2203DAC5"-->
+<!--        />-->
 
     <TextView
         android:id="@+id/noticeboardTitleText"
@@ -125,42 +127,46 @@
         android:layout_height="wrap_content"
         android:background="#0303DAC5"
         android:text="제목"
-        android:textSize="25dp"
+        android:textSize="20dp"
+        android:textColor="#000000"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="5dp"
         />
 
-    <View
-        android:id="@+id/noticeboardEndContour"
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:background="#2203DAC5"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp"
-        />
+<!--    <View-->
+<!--        android:id="@+id/noticeboardEndContour"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="2dp"-->
+<!--        android:background="#2203DAC5"-->
+<!--        android:layout_marginTop="5dp"-->
+<!--        android:layout_marginBottom="5dp"-->
+<!--        />-->
 
     <TextView
         android:id="@+id/noticeboardItemCommentText"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:background="#0303DAC5"
+        android:textColor="#000000"
         android:text="댓글"
-        android:textSize="20dp"
+        android:textSize="15dp"
         android:layout_gravity="left"
-
-        />
-
-    <View
-        android:id="@+id/noticeboardTitleContour"
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:background="#6603DAC5"
         android:layout_marginTop="10dp"
-
+        android:layout_marginStart="10dp"
         />
+
+<!--    <View-->
+<!--        android:id="@+id/noticeboardTitleContour"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="2dp"-->
+<!--        android:background="#6603DAC5"-->
+<!--        android:layout_marginTop="10dp"-->
+<!--        />-->
 
    <View
        android:layout_width="match_parent"
        android:layout_height="58dp"
-       android:background="#ffffffff"/>
+       android:background="#0303DAC5"/>
 
 
 </LinearLayout>
