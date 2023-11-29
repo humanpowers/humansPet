@@ -3,6 +3,7 @@ package com.example.humanspet;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.SystemClock;
 import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.text.Editable;
@@ -14,10 +15,22 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.humanspet.Interface.RegisterInterface;
+import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.FirebaseException;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.PhoneAuthCredential;
+import com.google.firebase.auth.PhoneAuthProvider;
 
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
 import retrofit2.Call;
@@ -26,12 +39,16 @@ import retrofit2.Response;
 
 public class Register extends AppCompatActivity {
     String TAG="조인";
-    EditText etName,etEmail,etPhone,etPassword,etRePassword;
-    Button finishBtn,cancelBtn,joinPhoneCheckBtn;
-    TextView phoneCheckText,passwordCheck,passwordReCheck;
+    EditText etName,etEmail,etPhone,etPassword,etRePassword,etPhoneCode;
+    Button finishBtn,cancelBtn,joinPhoneCheckBtn,phoneCodeBtn;
+    TextView phoneCheckText,passwordCheck,passwordReCheck,phoneCodeText;
     PreferenceHelper preferenceHelper;
     private Long mLastClickTime = 0L;
-    boolean passwordBoolean,nameBoolean,phoneBoolean;
+    boolean passwordBoolean,nameBoolean,phoneBoolean,phoneCodeBoolean;
+    private TextView countdownText;
+    private CountDownTimer countDownTimer;
+    long initialTimeMillis;
+    String phoneCodeId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,11 +56,31 @@ public class Register extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
+        FirebaseApp.initializeApp(this);
+        GoogleApiAvailability.getInstance().makeGooglePlayServicesAvailable(this);
+
+        initialTimeMillis = 2*60 * 1000;
+
+        countdownText = findViewById(R.id.joinPhoneCodeTime);
+        countDownTimer = new CountDownTimer(initialTimeMillis, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                updateCountdownText(millisUntilFinished);
+            }
+
+            @Override
+            public void onFinish() {
+                // 시간이 종료될 때 수행할 작업
+                countdownText.setText("00:00");
+            }
+        };
+
         Intent intent = getIntent();
         String id = intent.getStringExtra("id");
         passwordBoolean=false;
         nameBoolean=false;
         phoneBoolean=false;
+        phoneCodeBoolean=false;
 
         preferenceHelper = new PreferenceHelper(this);
 
@@ -58,12 +95,16 @@ public class Register extends AppCompatActivity {
         finishBtn= findViewById(R.id.joinFinishButton);
         joinPhoneCheckBtn= findViewById(R.id.joinPhoneCheckBtn);
         cancelBtn= findViewById(R.id.joinPreviousButton);
+        phoneCodeText=findViewById(R.id.joinPhoneCodeText);
+        phoneCodeBtn=findViewById(R.id.joinPhoneCodeBtn);
+        etPhoneCode=findViewById(R.id.joinPhoneCodeEdit);
 
         etEmail.setText(id);
         etEmail.setEnabled(false);
 
         focusOn(etEmail);
         focusOn(etPhone);
+        focusOn(etPhoneCode);
 
         etName.addTextChangedListener(new TextWatcher() {
             @Override
@@ -77,7 +118,7 @@ public class Register extends AppCompatActivity {
                     nameBoolean=false;
                 }else{
                     nameBoolean=true;
-                    if(passwordBoolean==true&&phoneBoolean==true&&nameBoolean==true){
+                    if(passwordBoolean==true&&phoneBoolean==true&&nameBoolean==true&&phoneCodeBoolean==true){
                         finishBtn.setBackgroundResource(R.drawable.box_mint);
                     }else{
                         finishBtn.setBackgroundResource(R.drawable.box_gray);
@@ -98,7 +139,7 @@ public class Register extends AppCompatActivity {
                 if(SystemClock.elapsedRealtime() - mLastClickTime > 1000) {
                     switch (view.getId()) {
                         case R.id.joinFinishButton:
-                            if(nameBoolean==true&&phoneBoolean==true&&passwordBoolean==true){
+                            if(passwordBoolean==true&&phoneBoolean==true&&nameBoolean==true&&phoneCodeBoolean==true){
                                 registerMe();
                             }
                             break;
@@ -150,7 +191,7 @@ public class Register extends AppCompatActivity {
                         passwordBoolean=true;
                         passwordCheck.setText("두 비밀번호가 일치합니다.");
                         passwordCheck.setTextColor(Color.parseColor("#0000FF"));
-                        if(passwordBoolean==true&&phoneBoolean==true&&nameBoolean==true){
+                        if(passwordBoolean==true&&phoneBoolean==true&&nameBoolean==true&&phoneCodeBoolean==true){
                             finishBtn.setBackgroundResource(R.drawable.box_mint);
                         }else{
                             finishBtn.setBackgroundResource(R.drawable.box_gray);
@@ -178,14 +219,92 @@ public class Register extends AppCompatActivity {
         joinPhoneCheckBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                String rawPhoneNumber = etPhone.getText().toString();
+//                rawPhoneNumber="010-1111-2222";
+                String numericPhoneNumber = rawPhoneNumber.replaceAll("[^0-9]", "");
+                String e164PhoneNumber = "+82" + numericPhoneNumber;
                 if(phoneBoolean==true){
-                    final String phone = etPhone.getText().toString();
-                    Intent intent = new Intent(Register.this,PhoneCertification.class);
-                    intent.putExtra("phone",phone);
-                    startActivity(intent);
+                    Log.d(TAG, "onClick: 들어옴");
+                    PhoneAuthProvider.getInstance().verifyPhoneNumber(
+                            e164PhoneNumber,
+                            120,  // 타임아웃 시간 (초)
+                            TimeUnit.SECONDS,
+                            Register.this,  // 현재 액티비티
+                            new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+                                @Override
+                                public void onVerificationCompleted(PhoneAuthCredential phoneAuthCredential) {
+                                    // 인증이 자동으로 완료된 경우 호출
+                                    Log.d(TAG, "onVerificationCompleted: 인증자동");
+                                }
+
+                                @Override
+                                public void onVerificationFailed(FirebaseException e) {
+                                    // 인증이 실패한 경우 호출
+                                    Log.e(TAG, "인증 실패: " + e.getMessage());
+                                }
+
+                                @Override
+                                public void onCodeSent(String verificationId, PhoneAuthProvider.ForceResendingToken forceResendingToken) {
+                                    // 인증 코드가 성공적으로 전송된 경우 호출
+                                    // 여기에서 verificationId를 저장하거나 다른 과정을 진행할 수 있습니다.
+                                    phoneCodeId=verificationId;
+                                    Toast.makeText(Register.this, "인증코드가 성공적으로 전송되었습니다.", Toast.LENGTH_SHORT).show();
+                                    countdownText.setVisibility(View.VISIBLE);
+                                    initialTimeMillis = 30 * 1000;
+                                    countDownTimer.start();
+                                    etPhoneCode.setVisibility(View.VISIBLE);
+                                    phoneCodeBtn.setVisibility(View.VISIBLE);
+                                    phoneCodeText.setVisibility(View.VISIBLE);
+                                }
+                            }
+                    );
                 }
             }
         });
+
+        phoneCodeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(countdownText.getText().toString().equals("00:00")){
+                    Toast.makeText(Register.this, "인증 시간이 초과되었습니다.\n 코드를 다시 전송해 주세요.", Toast.LENGTH_SHORT).show();
+                }else{
+                    // PhoneAuthCredential 객체 생성
+                    PhoneAuthCredential credential = PhoneAuthProvider.getCredential(phoneCodeId, etPhoneCode.getText().toString());
+
+                    // FirebaseAuth 인스턴스 가져오기
+                    FirebaseAuth mAuth = FirebaseAuth.getInstance();
+                    // PhoneAuthCredential을 사용하여 사용자를 인증
+                    mAuth.signInWithCredential(credential)
+                            .addOnCompleteListener(Register.this, new OnCompleteListener<AuthResult>() {
+                                @Override
+                                public void onComplete(@NonNull Task<AuthResult> task) {
+                                    if (task.isSuccessful()) {
+                                        // 인증이 성공한 경우
+                                        Log.d(TAG, "signInWithCredential:success");
+                                        Toast.makeText(Register.this, "인증되었습니다.", Toast.LENGTH_SHORT).show();
+                                        phoneCodeBoolean=true;
+                                        countdownText.setVisibility(View.INVISIBLE);
+                                        if(passwordBoolean==true&&phoneBoolean==true&&nameBoolean==true&&phoneCodeBoolean==true){
+                                            finishBtn.setBackgroundResource(R.drawable.box_mint);
+                                        }else{
+                                            finishBtn.setBackgroundResource(R.drawable.box_gray);
+                                        }
+                                    } else {
+                                        // 인증이 실패한 경우
+                                        Log.w(TAG, "signInWithCredential:failure", task.getException());
+                                        Toast.makeText(Register.this, "인증 코드가 올바르지 않습니다.", Toast.LENGTH_SHORT).show();
+                                        if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
+                                            // 잘못된 인증 코드를 입력한 경우 등에 대한 처리
+                                            Toast.makeText(Register.this, "인증 코드가 올바르지 않습니다.", Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                }
+                            });
+                }
+
+            }
+        });
+
     }
 
     @Override
@@ -264,6 +383,7 @@ public class Register extends AppCompatActivity {
     }
 
     private void phoneCheck(){
+        phoneCodeBoolean=false;
         final String phone = etPhone.getText().toString();
         String phonePattern = "^01(?:0|1|[6-9])-(?:\\d{3}|\\d{4})-\\d{4}$";
 
@@ -276,7 +396,7 @@ public class Register extends AppCompatActivity {
             phoneCheckText.setTextColor(Color.parseColor("#FF0000"));
         }else{
             phoneBoolean=true;
-            if(passwordBoolean==true&&phoneBoolean==true&&nameBoolean==true){
+            if(passwordBoolean==true&&phoneBoolean==true&&nameBoolean==true&&phoneCodeBoolean==true){
                 finishBtn.setBackgroundResource(R.drawable.box_mint);
             }else{
                 finishBtn.setBackgroundResource(R.drawable.box_gray);
@@ -313,5 +433,11 @@ public class Register extends AppCompatActivity {
             }
         });
     }
+    private void updateCountdownText(long millisUntilFinished) {
+        int minutes = (int) (millisUntilFinished / (1000 * 60));
+        int seconds = (int) ((millisUntilFinished % (1000 * 60)) / 1000);
 
+        String timeLeftFormatted = String.format("%02d:%02d", minutes, seconds);
+        countdownText.setText(timeLeftFormatted);
+    }
 }

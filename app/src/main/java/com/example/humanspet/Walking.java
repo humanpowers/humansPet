@@ -78,7 +78,6 @@ public class Walking extends Fragment implements OnMapReadyCallback {
         }
         mapFragment.getMapAsync(this);
 
-        // 지도가 준비되면 onMapReady 메서드가 호출됩니다.
 
 
 
@@ -98,6 +97,13 @@ public class Walking extends Fragment implements OnMapReadyCallback {
                     seconds=0;
                     totalDistance=0;
                     totalCalorie=0;
+                    timeText.setText(String.format("%02d:%02d:%02d", hours, minutes, seconds));
+                    double speed=distance(xDistance,yDistance,lat,lon);
+                    distanceText.setText(Integer.toString(totalDistance)+"m");
+                    speedText.setText(Integer.toString((int)speed*3600/1000)+"km/h");
+                    int calorie=(int)speed*17*70/1/60/100;
+                    totalCalorie+=calorie;
+                    calorieText.setText(Integer.toString(totalCalorie));
                     // 타이머 시작 또는 재개
                     path.setMap(null);
                     overLay.clear();
@@ -205,10 +211,10 @@ public class Walking extends Fragment implements OnMapReadyCallback {
                         calorieText.setText(Integer.toString(totalCalorie));
                         Log.d(TAG, "onSuccess: "+totalDistance);
                     }
-                    xDistance=lat;
-                    yDistance=lon;
                     count++;
                 }
+                xDistance=lat;
+                yDistance=lon;
 
 
                 Log.d(TAG, "onLocationChange: lat: "+lat+" lon: "+lon +"정확도 : "+location.getAccuracy());

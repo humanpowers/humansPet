@@ -48,10 +48,6 @@
             android:exported="false"
             android:launchMode="singleTop" />
         <activity
-            android:name=".PhoneCertification"
-            android:exported="false"
-            android:launchMode="singleTop" />
-        <activity
             android:name=".MyInfo"
             android:exported="false"
             android:launchMode="singleTop" />

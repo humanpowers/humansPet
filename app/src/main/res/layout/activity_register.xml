@@ -241,7 +241,7 @@
         app:layout_constraintStart_toStartOf="@+id/joinNameEdit" />
 
     <TextView
-        android:id="@+id/textView6"
+        android:id="@+id/joinPhoneText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="5dp"
@@ -252,5 +252,59 @@
         app:layout_constraintBottom_toTopOf="@+id/joinPhoneEdit"
         app:layout_constraintStart_toStartOf="@+id/joinPhoneEdit" />
 
+    <EditText
+        android:id="@+id/joinPhoneCodeEdit"
+        android:layout_width="220dp"
+        android:layout_height="@dimen/registerEditHeight"
+        android:background="@drawable/box_white_gray"
+        android:ems="10"
+        android:inputType="number"
+        android:maxLength="13"
+        android:padding="5dp"
+        android:hint="인증코드를 입력해주세요."
+        android:textSize="@dimen/registerEditTextSize"
+        android:layout_marginTop="@dimen/registerEditMarginTop"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="@+id/joinPhoneEdit"
+        app:layout_constraintTop_toBottomOf="@+id/joinPhoneEdit" />
+
+    <TextView
+        android:id="@+id/joinPhoneCodeText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:text="인증 코드"
+        android:textColor="#000000"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/joinPhoneCodeEdit"
+        app:layout_constraintStart_toStartOf="@+id/joinPhoneCodeEdit" />
+
+    <Button
+        android:id="@+id/joinPhoneCodeBtn"
+        android:layout_width="@dimen/registerCheckBtnWidth"
+        android:layout_height="@dimen/registerCheckBtnHeight"
+        android:background="@drawable/box_mint"
+        android:text="확인"
+        android:textColor="#000000"
+        android:textSize="@dimen/registerCheckBtnTextSize"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/joinPhoneCodeEdit"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/joinPhoneCodeEdit"
+        app:layout_constraintTop_toTopOf="@+id/joinPhoneCodeEdit" />
+
+    <TextView
+        android:id="@+id/joinPhoneCodeTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:visibility="invisible"
+        android:layout_marginRight="7dp"
+        android:textColor="@color/Red"
+        app:layout_constraintBottom_toBottomOf="@+id/joinPhoneCodeEdit"
+        app:layout_constraintEnd_toEndOf="@+id/joinPhoneCodeEdit"
+        app:layout_constraintTop_toTopOf="@+id/joinPhoneCodeEdit" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

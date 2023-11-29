@@ -21,6 +21,8 @@ public class FirebaseMessage extends com.google.firebase.messaging.FirebaseMessa
             String name = preferences.getString("USERNAME","");
             String id= preferences.getString("USERID","");
             String[] noticeboardTitleSp= body.split("[\\(\\)]");
+            String[] noticeboardCommentSp=body.split("작성되었습니다\\.\n");
+            Log.d(TAG, "onMessageReceived: "+noticeboardCommentSp[1]);
 
 
             Intent intent = new Intent(this,NoticeboardShow.class);
@@ -28,6 +30,7 @@ public class FirebaseMessage extends com.google.firebase.messaging.FirebaseMessa
             intent.putExtra("id",id);
             intent.putExtra("title",noticeboardTitleSp[1]);
             intent.putExtra("type","push");
+            intent.putExtra("comment",noticeboardCommentSp[1]);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
             FCMNotificationHandler.showNotification(this, title, body,intent);
         }

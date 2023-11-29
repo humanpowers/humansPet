@@ -43,7 +43,7 @@ public class EmailCertification extends AppCompatActivity {
         setContentView(R.layout.activity_email_certification);
         emailBoolean=false;
         codeBoolean=false;
-        initialTimeMillis = 30 * 1000;
+        initialTimeMillis = 3*60 * 1000;
 
         countdownText = findViewById(R.id.emailCertificationCodeTime);
         countDownTimer = new CountDownTimer(initialTimeMillis, 1000) {

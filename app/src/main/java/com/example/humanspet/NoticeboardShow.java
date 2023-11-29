@@ -24,6 +24,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.humanspet.Interface.CommentAddInterface;
 import com.example.humanspet.Interface.CommentShowInterface;
 import com.example.humanspet.Interface.FCMService;
@@ -34,6 +35,7 @@ import com.example.humanspet.Interface.SendPushMessage;
 
 import java.util.ArrayList;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -70,7 +72,9 @@ public class NoticeboardShow extends AppCompatActivity {
     String type;
     private float startY;
     private boolean isPageVisible = false;
-
+    CircleImageView myImage;
+    String pushComment;
+    String commentSt;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -100,6 +104,7 @@ public class NoticeboardShow extends AppCompatActivity {
         commentLinear=findViewById(R.id.noticeboardShowCommentLinear);
         commentSendBtn=findViewById(R.id.noticeboardShowCommentSendButton);
         commentBtn=findViewById(R.id.noticeboardShowCommentImage);
+        myImage=findViewById(R.id.noticeboardShowMyImage);
 
         recyclerView=findViewById(R.id.noticeboardShowCommentRecyclerView);
         linearLayoutManager=new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
@@ -109,8 +114,8 @@ public class NoticeboardShow extends AppCompatActivity {
         recyclerView.setAdapter(commentAdapter);
 
         page=findViewById(R.id.page);
-        translate_left=AnimationUtils.loadAnimation(this,R.anim.translate_left);
-        translate_right=AnimationUtils.loadAnimation(this,R.anim.translate_right);
+        translate_left=AnimationUtils.loadAnimation(this,R.anim.translate_up);
+        translate_right=AnimationUtils.loadAnimation(this,R.anim.translate_down);
 
         MyInfoInterface userApi=ApiClient.getApiClient().create(MyInfoInterface.class);
         Call<String> userCall=userApi.getUserInfo(userId);
@@ -120,6 +125,11 @@ public class NoticeboardShow extends AppCompatActivity {
                 String userInfo = response.body();
                 String[] userInfoSp = userInfo.split("!!@!!");
                 image=userInfoSp[2];
+                Glide.with(NoticeboardShow.this)
+                        .load("http://"+apiClient.goUri(image))
+                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+                        .skipMemoryCache(true)
+                        .into(myImage);
             }
 
             @Override
@@ -132,12 +142,12 @@ public class NoticeboardShow extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 commentEdit=findViewById(R.id.noticeboardShowCommentEdit);
-                String commentSt=commentEdit.getText().toString();
-                if(commentEdit.getText().toString().equals("")){
+                commentSt=commentEdit.getText().toString();
+                if(commentSt.equals("")){
                     Toast.makeText(NoticeboardShow.this, "댓글 작성후 전송버튼을 눌러주세요.", Toast.LENGTH_SHORT).show();
                 }else{
                     CommentAddInterface commentApi= ApiClient.getApiClient().create(CommentAddInterface.class);
-                    Call<String> commentCall = commentApi.CommentAdd(userName,image,commentEdit.getText().toString(),responseSp[3],responseSp[0]);
+                    Call<String> commentCall = commentApi.CommentAdd(userName,image,commentSt,responseSp[3],responseSp[0]);
                     commentCall.enqueue(new Callback<String>() {
                         @Override
                         public void onResponse(Call<String> call, Response<String> response) {
@@ -218,9 +228,8 @@ public class NoticeboardShow extends AppCompatActivity {
                                                         .build();
 
                                                 FCMService fcmService = retrofit.create(FCMService.class);
-
                                                 // FCM 메시지 생성
-                                                FCMNotificationData notificationData = new FCMNotificationData("Human's Pet", "회원님의 게시물("+responseSp[3]+")에 댓글이 작성되었습니다.");
+                                                FCMNotificationData notificationData = new FCMNotificationData("Human's Pet", "회원님의 게시물("+responseSp[3]+")에 댓글이 작성되었습니다.\n"+commentSt);
                                                 FCMNotification fcmNotification = new FCMNotification(sendResponse.body(), notificationData);
 
                                                 // Retrofit을 사용하여 FCM 서버로 메시지 전송 (비동기 방식)
@@ -304,6 +313,10 @@ public class NoticeboardShow extends AppCompatActivity {
         Log.d(TAG, "onCreate: id: "+noticeboardId);
         type=intent.getStringExtra("type");
 
+        if(type.equals("push")){
+            pushComment=intent.getStringExtra("comment");
+        }
+
         NoticeboardDetailShowInterface showApi=ApiClient.getApiClient().create(NoticeboardDetailShowInterface.class);
         Call<String> call = showApi.noticeboardDetailShow(noticeboardId,noticeboardTitle,userId);
         call.enqueue(new Callback<String>() {
@@ -355,6 +368,18 @@ public class NoticeboardShow extends AppCompatActivity {
                             commentItemArrayList.add(commentItem);
                             commentAdapter.notifyDataSetChanged();
                         }
+                        if(type.equals("push")) {
+                            int index=0;
+                            for(int i=0;i<commentItemArrayList.size();i++){
+                                String selectComment = commentItemArrayList.get(i).getComment();
+                                if(selectComment.equals(pushComment)){
+                                    index=i;
+                                    break;
+                                }
+                            }
+                            togglePageVisibility();
+                            recyclerView.scrollToPosition(index);
+                        }
 
                     }
 
@@ -381,9 +406,7 @@ public class NoticeboardShow extends AppCompatActivity {
                     public void onResponse(Call<String> call, Response<String> response) {
                         Log.d("어댑터", "onResponse: "+response.body());
                         String[] responseSp=response.body().split("!!@!!");
-                        if(response.body().equals("본인계정")){
-                            Toast.makeText(NoticeboardShow.this, "본인 게시물입니다.", Toast.LENGTH_SHORT).show();
-                        }else if(responseSp[0].equals("취소")){
+                        if(responseSp[0].equals("취소")){
                             likesBtn.setImageResource(R.drawable.heart_none);
                             likesCountText.setText(responseSp[1]);
                         }else if(responseSp[0].equals("확인")){
@@ -403,7 +426,12 @@ public class NoticeboardShow extends AppCompatActivity {
         cancelBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                finish();
+                if(type.equals("push")){
+                    Intent pushIntent = new Intent(NoticeboardShow.this,MainPage.class);
+                    startActivity(pushIntent);
+                }else{
+                    finish();
+                }
             }
         });
 
@@ -445,6 +473,7 @@ public class NoticeboardShow extends AppCompatActivity {
     }
 
     private void slideUpAndShow() {
+        isPageOpen=true;
         ObjectAnimator slideAnimator = ObjectAnimator.ofFloat(page, "translationY", page.getHeight(), 0);
         slideAnimator.setDuration(500);
         slideAnimator.addListener(new AnimatorListenerAdapter() {
@@ -462,6 +491,7 @@ public class NoticeboardShow extends AppCompatActivity {
     }
 
     private void slideDownAndHide() {
+        isPageOpen=false;
         ObjectAnimator slideAnimator = ObjectAnimator.ofFloat(page, "translationY", page.getTranslationY(), page.getHeight());
         slideAnimator.setDuration(500);
         slideAnimator.addListener(new AnimatorListenerAdapter() {
