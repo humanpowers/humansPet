@@ -249,6 +249,7 @@ public class Register extends AppCompatActivity {
                                     // 여기에서 verificationId를 저장하거나 다른 과정을 진행할 수 있습니다.
                                     phoneCodeId=verificationId;
                                     Toast.makeText(Register.this, "인증코드가 성공적으로 전송되었습니다.", Toast.LENGTH_SHORT).show();
+                                    joinPhoneCheckBtn.setText("재전송");
                                     countdownText.setVisibility(View.VISIBLE);
                                     initialTimeMillis = 30 * 1000;
                                     countDownTimer.start();

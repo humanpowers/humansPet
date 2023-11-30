@@ -90,6 +90,8 @@ public class Walking extends Fragment implements OnMapReadyCallback {
                     handler.removeCallbacks(timerRunnable);
                     startBtn.setText("시작");
                 } else {
+//                    Intent intent = new Intent(getActivity(),WalkingBackground.class);
+//                    getActivity().startService(intent);
                     count=0;
                     timeCount=0;
                     hours=0;
