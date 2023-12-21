@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="20dp"
+    android:layout_marginRight="20dp">
+
+    <TextView
+        android:id="@+id/walkingDialogText"
+        android:layout_width="150dp"
+        android:layout_height="40dp"
+        android:text="펫을 선택해주세요."
+        android:gravity="center"
+        android:textSize="15dp"
+        android:textColor="#000000"
+        android:textStyle="bold"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/walkingDialogRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="123dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/walkingDialogText"/>
+
+    <Button
+        android:id="@+id/walkingDialogSelectButton"
+        android:layout_width="100dp"
+        android:layout_height="40dp"
+        android:background="@drawable/box_mint"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:text="선택"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@id/walkingDialogRecyclerView"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        />
+</androidx.constraintlayout.widget.ConstraintLayout>

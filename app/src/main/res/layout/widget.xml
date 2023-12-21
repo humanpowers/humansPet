@@ -1,0 +1,141 @@
+<LinearLayout android:id="@+id/llRoot"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:background="#ffffffff"
+    >
+
+    <LinearLayout
+        android:id="@+id/walkingLinear"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@+id/walkingTitleText"
+        android:padding="1dp"
+        android:background="#222ECCFA"
+        >
+        <LinearLayout
+            android:layout_width="93dp"
+            android:layout_height="100dp"
+            android:orientation="vertical"
+            android:layout_gravity="center"
+            android:gravity="center"
+            >
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/run"/>
+            <TextView
+                android:id="@+id/widgetDistance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0m"
+                android:textStyle="bold"
+                android:textColor="#000000"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="거리"
+                android:textStyle="bold"
+                android:textColor="#000000"
+                />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="93dp"
+            android:layout_height="100dp"
+            android:orientation="vertical"
+            android:layout_gravity="center"
+            android:gravity="center"
+            >
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/walking_time"/>
+            <TextView
+                android:id="@+id/widgetTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="00:00:00"
+                android:textStyle="bold"
+                android:textColor="#000000"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="시간"
+                android:textStyle="bold"
+                android:textColor="#000000"
+                />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="93dp"
+            android:layout_height="100dp"
+            android:orientation="vertical"
+            android:layout_gravity="center"
+            android:gravity="center"
+            >
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/walking_speed"/>
+            <TextView
+                android:id="@+id/widgetSpeed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0km/h"
+                android:textStyle="bold"
+                android:textColor="#000000"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="속도"
+                android:textStyle="bold"
+                android:textColor="#000000"
+                />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="93dp"
+            android:layout_height="100dp"
+            android:orientation="vertical"
+            android:layout_gravity="center"
+            android:gravity="center"
+            >
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/walking_calorie"/>
+            <TextView
+                android:id="@+id/widgetCalories"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0kcal"
+                android:textStyle="bold"
+                android:textColor="#000000"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="칼로리"
+                android:textStyle="bold"
+                android:textColor="#000000"
+                />
+
+        </LinearLayout>
+
+    </LinearLayout>
+</LinearLayout>

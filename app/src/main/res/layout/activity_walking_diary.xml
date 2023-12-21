@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".WalkingDiary">
+
+    <TextView
+        android:id="@+id/walkingDiaryText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="산책 다이어리"
+        android:textSize="20sp"
+        android:layout_marginTop="25dp"
+        android:textStyle="bold"
+        android:textColor="#000000"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/walkingDiaryPreviousButton"
+        android:layout_width="60dp"
+        android:layout_height="40dp"
+        android:background="#00ffffff"
+        android:text="이전"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        android:textColor="#000000"
+        app:layout_constraintBottom_toBottomOf="@+id/walkingDiaryText"
+        app:layout_constraintEnd_toStartOf="@+id/walkingDiaryText"
+        app:layout_constraintHorizontal_bias="0.2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/walkingDiaryText" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/walkingDiaryPetRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/diaryFragmentRecyclerViewHeight"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="5dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/walkingDiaryText" />
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/walkingDiaryDiaryRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="500dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/walkingDiaryPetRecyclerView"/>
+
+    <ImageButton
+        android:id="@+id/walkingDiaryMapCancel"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:src="@drawable/human_cancel"
+        android:scaleType="centerCrop"
+        android:background="#ffffffff"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="@+id/walkingDiaryMap"
+        app:layout_constraintBottom_toTopOf="@id/walkingDiaryMap"
+        />
+
+    <ImageView
+        android:id="@+id/walkingDiaryMap"
+        android:layout_width="match_parent"
+        android:layout_height="632dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

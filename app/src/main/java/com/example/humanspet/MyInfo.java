@@ -1,19 +1,10 @@
 package com.example.humanspet;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.app.Dialog;
 import android.content.CursorLoader;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -24,16 +15,17 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.airbnb.lottie.LottieAnimationView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.signature.ObjectKey;
-import com.example.humanspet.Interface.DiaryDiaryAddInterface;
 import com.example.humanspet.Interface.MyInfoInterface;
 import com.example.humanspet.Interface.UserImageChangeInterface;
-import com.kakao.sdk.user.model.ShippingAddress;
-
-import org.w3c.dom.Text;
+import com.kakao.sdk.user.UserApiClient;
 
 import java.io.File;
 
@@ -46,7 +38,7 @@ import retrofit2.Response;
 
 public class MyInfo extends AppCompatActivity {
     String TAG="인포";
-    Button checkBtn;
+    Button checkBtn,logoutBtn,outBtn;
     String userEmail;
     TextView nameText,emailText,addressText;
     ImageButton userImageBtn;
@@ -61,6 +53,7 @@ public class MyInfo extends AppCompatActivity {
         Log.d(TAG, "onCreate호출");
 
         preferences = getSharedPreferences("USER",MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
         userEmail=preferences.getString("USERID","");
 
         userImageBtn=findViewById(R.id.myInfoImageAddButton);
@@ -138,6 +131,47 @@ public class MyInfo extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 finish();
+            }
+        });
+
+        logoutBtn=findViewById(R.id.myInfoLogoutBtn);
+        logoutBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                UserApiClient.getInstance().logout(error -> {
+                    if (error != null) {
+                        Log.e(TAG, "로그아웃 실패 , SDK에서 토큰 삭제됨", error);
+                    } else {
+                        Log.e(TAG, "로그아웃 성공, SDK에서 토큰 삭제됨");
+                    }
+                    return null;
+                });
+                editor.remove("USERID");
+                editor.remove("AUTOLOGIN");
+                editor.commit();
+                Intent intent = new Intent(MyInfo.this,Login.class); //fragment라서 activity intent와는 다른 방식
+                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                startActivity(intent);
+                finish();
+            }
+        });
+
+        outBtn=findViewById(R.id.myInfoOutBtn);
+        outBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                UserApiClient.getInstance().unlink(error -> {
+                    if (error != null) {
+                        Log.e(TAG, "회원탈퇴 실패", error);
+                    } else {
+                        Log.e(TAG, "회원 탈퇴 성공");
+                        Intent intent = new Intent(MyInfo.this,Login.class); //fragment라서 activity intent와는 다른 방식
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                        startActivity(intent);
+                        finish();
+                    }
+                    return null;
+                });
             }
         });
 
@@ -246,6 +280,10 @@ public class MyInfo extends AppCompatActivity {
         TextView imageChange=findViewById(R.id.myInfoImageAddText);
         ImageButton imageChangeBtn=findViewById(R.id.myInfoImageAddButton);
         ImageView userImage=findViewById(R.id.myInfoImage);
+        Button logoutBtn = findViewById(R.id.myInfoLogoutBtn);
+        Button outBtn = findViewById(R.id.myInfoOutBtn);
+        logoutBtn.setVisibility(View.GONE);
+        outBtn.setVisibility(View.GONE);
         userImage.setVisibility(View.GONE);
         nameText.setVisibility(View.GONE);
         addressText.setVisibility(View.GONE);
@@ -263,6 +301,10 @@ public class MyInfo extends AppCompatActivity {
         TextView imageChange=findViewById(R.id.myInfoImageAddText);
         ImageButton imageChangeBtn=findViewById(R.id.myInfoImageAddButton);
         ImageView userImage=findViewById(R.id.myInfoImage);
+        Button logoutBtn = findViewById(R.id.myInfoLogoutBtn);
+        Button outBtn = findViewById(R.id.myInfoOutBtn);
+        logoutBtn.setVisibility(View.VISIBLE);
+        outBtn.setVisibility(View.VISIBLE);
         userImage.setVisibility(View.VISIBLE);
         nameText.setVisibility(View.VISIBLE);
         addressText.setVisibility(View.VISIBLE);

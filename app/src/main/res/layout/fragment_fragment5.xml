@@ -48,30 +48,16 @@
             android:text="마이페이지"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-        <Button
-            android:id="@+id/mainCancelBtn"
-            android:layout_width="@dimen/myPageCheckBtnWidth"
-            android:layout_height="@dimen/myPageCheckBtnHeight"
-            android:text="회원탈퇴"
-            android:visibility="gone"
-            android:background="@drawable/box_mint"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.9"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.9" />
 
         <Button
             android:id="@+id/mainLogoutBtn"
             android:layout_width="@dimen/myPageCheckBtnWidth"
             android:layout_height="@dimen/myPageCheckBtnHeight"
-            android:text="로그아웃"
-            android:visibility="gone"
+            android:text="산책 정보"
             android:background="@drawable/box_mint"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.1"
+            app:layout_constraintHorizontal_bias="0.23"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.9" />
@@ -91,9 +77,8 @@
             android:layout_width="@dimen/myPageCheckBtnWidth"
             android:layout_height="@dimen/myPageCheckBtnHeight"
             android:text="내 정보"
-            android:visibility="gone"
             android:background="@drawable/box_mint"
-            app:layout_constraintEnd_toStartOf="@+id/mainCancelBtn"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/mainLogoutBtn"
             app:layout_constraintTop_toTopOf="@+id/mainLogoutBtn" />
 
@@ -106,6 +91,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"/>
+
         <TextView
             android:id="@+id/myPageNoPetText"
             android:layout_width="@dimen/diaryFragmentNoPetTextWidth"

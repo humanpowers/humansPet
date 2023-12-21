@@ -1,8 +1,12 @@
 package com.example.humanspet;
 
+import android.animation.ArgbEvaluator;
+import android.animation.ValueAnimator;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -43,12 +47,17 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
         Glide.with(holder.itemView.getContext()).load(commentItemsArrayList.get(position).getImage()).centerCrop().override(200, 200).into(holder.image);
         holder.comment.setText(commentItemsArrayList.get(position).getComment());
         holder.name.setText(commentItemsArrayList.get(position).getName());
+        if(commentItemsArrayList.get(position).isPush()){
+            animateItemBackgroundColor(holder.itemView,Color.parseColor("#3303DAC5"),Color.parseColor("#0503DAC5"));
+        }
         if (mListener != null) {
             final int pos = position;
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    animateItemBackgroundColor(holder.itemView, Color.parseColor("#dddddddd"),Color.parseColor("#0503DAC5"));
                     mListener.onImageButtonClicker(pos);
+
                 }
             });
         }
@@ -80,5 +89,22 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
                 }
             });
         }
+    }
+
+    private void animateItemBackgroundColor(final View view, int startColor, int endColor) {
+        ValueAnimator colorAnimation = ValueAnimator.ofObject(
+                new ArgbEvaluator(),
+                startColor,
+                endColor
+        );
+        colorAnimation.setDuration(3000); // 1초 동안 애니메이션 실행
+        colorAnimation.setInterpolator(new DecelerateInterpolator());
+        colorAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animator) {
+                view.setBackgroundColor((int) animator.getAnimatedValue());
+            }
+        });
+        colorAnimation.start();
     }
 }

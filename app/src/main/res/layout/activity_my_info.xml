@@ -132,6 +132,34 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.9" />
+
+    <Button
+        android:id="@+id/myInfoLogoutBtn"
+        android:layout_width="@dimen/myInfoCheckBtnWidth"
+        android:layout_height="@dimen/myInfoCheckBtnHeight"
+        android:text="로그아웃"
+        android:background="@drawable/box_mint"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/myInfoCheckBtn"
+        app:layout_constraintEnd_toStartOf="@id/myInfoCheckBtn"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/myInfoCheckBtn"
+        app:layout_constraintVertical_bias="0.9" />
+
+    <Button
+        android:id="@+id/myInfoOutBtn"
+        android:layout_width="@dimen/myInfoCheckBtnWidth"
+        android:layout_height="@dimen/myInfoCheckBtnHeight"
+        android:text="회원탈퇴"
+        android:background="@drawable/box_mint"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/myInfoCheckBtn"
+        app:layout_constraintStart_toEndOf="@id/myInfoCheckBtn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/myInfoCheckBtn"
+        app:layout_constraintVertical_bias="0.9" />
+
+
     <TextView
         android:id="@+id/myInfoImageAddText"
         android:layout_width="wrap_content"

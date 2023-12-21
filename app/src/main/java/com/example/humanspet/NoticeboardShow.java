@@ -200,12 +200,20 @@ public class NoticeboardShow extends AppCompatActivity {
                                                 String commentSt="";
                                                 for(int j=0;j<responseSp[2].length()-1;j++){
                                                     commentSt+=commentSp[j];
+                                                }if(i==responseArray.size()-1){
+                                                    CommentItem commentItem =new CommentItem(responseSp[1],"http://"+apiClient.goUri(imageSt),commentSt,true);
+                                                    commentText.setText("최신댓글: "+commentSt);
+                                                    recyclerView.scrollToPosition(responseArray.size()-1);
+                                                    commentItemArrayList.add(commentItem);
+                                                    commentAdapter.notifyDataSetChanged();
+                                                }else{
+                                                    CommentItem commentItem =new CommentItem(responseSp[1],"http://"+apiClient.goUri(imageSt),commentSt,false);
+                                                    commentText.setText("최신댓글: "+commentSt);
+                                                    recyclerView.scrollToPosition(responseArray.size()-1);
+                                                    commentItemArrayList.add(commentItem);
+                                                    commentAdapter.notifyDataSetChanged();
                                                 }
-                                                CommentItem commentItem =new CommentItem(responseSp[1],"http://"+apiClient.goUri(imageSt),commentSt);
-                                                commentText.setText("최신댓글: "+commentSt);
-                                                recyclerView.scrollToPosition(responseArray.size()-1);
-                                                commentItemArrayList.add(commentItem);
-                                                commentAdapter.notifyDataSetChanged();
+
                                             }
 
                                         }
@@ -363,10 +371,24 @@ public class NoticeboardShow extends AppCompatActivity {
                             for(int j=0;j<responseSp[2].length()-1;j++){
                                 commentSt+=commentSp[j];
                             }
-                            CommentItem commentItem =new CommentItem(responseSp[1],"http://"+apiClient.goUri(imageSt),commentSt);
-                            commentText.setText("최신댓글: "+commentSt);
-                            commentItemArrayList.add(commentItem);
-                            commentAdapter.notifyDataSetChanged();
+                            if(type.equals("push")){
+                                if(i==responseArray.size()-1){
+                                    CommentItem commentItem =new CommentItem(responseSp[1],"http://"+apiClient.goUri(imageSt),commentSt,true);
+                                    commentText.setText("최신댓글: "+commentSt);
+                                    commentItemArrayList.add(commentItem);
+                                    commentAdapter.notifyDataSetChanged();
+                                }else{
+                                    CommentItem commentItem =new CommentItem(responseSp[1],"http://"+apiClient.goUri(imageSt),commentSt,false);
+                                    commentText.setText("최신댓글: "+commentSt);
+                                    commentItemArrayList.add(commentItem);
+                                    commentAdapter.notifyDataSetChanged();
+                                }
+                            }else{
+                                CommentItem commentItem =new CommentItem(responseSp[1],"http://"+apiClient.goUri(imageSt),commentSt,false);
+                                commentText.setText("최신댓글: "+commentSt);
+                                commentItemArrayList.add(commentItem);
+                                commentAdapter.notifyDataSetChanged();
+                            }
                         }
                         if(type.equals("push")) {
                             int index=0;
@@ -443,6 +465,12 @@ public class NoticeboardShow extends AppCompatActivity {
                 intent.putExtra("otherName",responseSp[0]);
                 intent.putExtra("image",responseSp[9]);
                 startActivity(intent);
+            }
+        });
+        commentAdapter.setOnClickListener(new CommentAdapter.RecyclerViewClickListener() {
+            @Override
+            public void onImageButtonClicker(int position) {
+
             }
         });
 
@@ -536,8 +564,6 @@ public class NoticeboardShow extends AppCompatActivity {
     private void resetViewPosition() {
         page.animate().translationY(0).setDuration(300).start();
     }
-
-
 
     public void startView(){
         TextView title = findViewById(R.id.noticeboardShowTitle);
