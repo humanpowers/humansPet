@@ -11,6 +11,9 @@
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="com.example.permission.UPDATE_WIDGET" />
+    <permission
+        android:name="com.example.permission.UPDATE_WIDGET"
+        android:protectionLevel="signature" />
 
     <application
         android:name=".GlobalApplication"
@@ -29,9 +32,11 @@
 
         <receiver
             android:name=".Widget"
+            android:enabled="true"
             android:exported="false">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="com.example.UPDATE_WIDGET" />
             </intent-filter>
 
             <meta-data
@@ -39,10 +44,15 @@
                 android:resource="@xml/widget_info" />
         </receiver>
 
+
         <service
             android:name=".WalkingBackground"
             android:enabled="true"
-            android:exported="true" />
+            android:exported="false">
+            <intent-filter>
+                <action android:name="custom-action" />
+            </intent-filter>
+        </service>
 
         <activity
             android:name=".NoticeboardShow"
@@ -79,6 +89,8 @@
             android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="custom-action" />
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="com.example.UPDATE_WIDGET" />
             </intent-filter>
         </activity>
         <activity
@@ -124,7 +136,13 @@
         </service>
         <service
             android:name=".WidgetUpdateService"
-            android:exported="false" />
+            android:enabled="true"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.example.UPDATE_WIDGET" />
+            </intent-filter>
+        </service>
+
     </application>
 
 </manifest>

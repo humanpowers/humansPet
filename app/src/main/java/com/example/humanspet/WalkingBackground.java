@@ -26,14 +26,18 @@ import com.google.android.gms.location.LocationServices;
 import java.util.ArrayList;
 
 public class WalkingBackground extends Service {
+    String TAG = "산책 백그라운드";
+    double latitude;
+    double longitude;
     ArrayList<CoordinateItem> coordinateArrayList=new ArrayList<>();
     private final LocationCallback mLocationCallback = new LocationCallback() {
         @Override
         public void onLocationResult(LocationResult locationResult) {
             super.onLocationResult(locationResult);
+
             if (locationResult != null && locationResult.getLastLocation() != null) {
-                double latitude = locationResult.getLastLocation().getLatitude();
-                double longitude = locationResult.getLastLocation().getLongitude();
+                latitude = locationResult.getLastLocation().getLatitude();
+                longitude = locationResult.getLastLocation().getLongitude();
                 Log.d("산책", latitude + ", " + longitude);
                 CoordinateItem coordinateItem = new CoordinateItem(latitude,longitude);
                 coordinateArrayList.add(coordinateItem);
@@ -85,6 +89,7 @@ public class WalkingBackground extends Service {
     }
 
     private void stopLocationService() {
+        Log.d(TAG, "stopLocationService: Stopping");
         LocationServices.getFusedLocationProviderClient(this).removeLocationUpdates(mLocationCallback);
         stopForeground(true);
         stopSelf();
@@ -111,4 +116,9 @@ public class WalkingBackground extends Service {
         return null;
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG, "onDestroy: ");
+    }
 }

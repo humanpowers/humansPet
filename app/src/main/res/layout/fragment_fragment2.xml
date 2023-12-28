@@ -146,7 +146,7 @@
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:src="@drawable/calendar_back"
-            android:background="#FFFFFFFF"
+            android:background="#00FFFFFF"
             android:visibility="gone"
             android:scaleType="centerInside"
             android:layout_marginRight="10dp"

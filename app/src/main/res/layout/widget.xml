@@ -29,6 +29,13 @@
                 android:layout_height="30dp"
                 android:src="@drawable/run"/>
             <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="거리"
+                android:textStyle="bold"
+                android:textColor="#000000"
+                />
+            <TextView
                 android:id="@+id/widgetDistance"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -36,13 +43,7 @@
                 android:textStyle="bold"
                 android:textColor="#000000"
                 />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="거리"
-                android:textStyle="bold"
-                android:textColor="#000000"
-                />
+
 
 
         </LinearLayout>
@@ -60,6 +61,13 @@
                 android:layout_height="30dp"
                 android:src="@drawable/walking_time"/>
             <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="시간"
+                android:textStyle="bold"
+                android:textColor="#000000"
+                />
+            <TextView
                 android:id="@+id/widgetTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -67,13 +75,7 @@
                 android:textStyle="bold"
                 android:textColor="#000000"
                 />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="시간"
-                android:textStyle="bold"
-                android:textColor="#000000"
-                />
+
 
         </LinearLayout>
 
@@ -90,6 +92,13 @@
                 android:layout_height="30dp"
                 android:src="@drawable/walking_speed"/>
             <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="속도"
+                android:textStyle="bold"
+                android:textColor="#000000"
+                />
+            <TextView
                 android:id="@+id/widgetSpeed"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -97,13 +106,7 @@
                 android:textStyle="bold"
                 android:textColor="#000000"
                 />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="속도"
-                android:textStyle="bold"
-                android:textColor="#000000"
-                />
+
 
         </LinearLayout>
 
@@ -120,6 +123,13 @@
                 android:layout_height="30dp"
                 android:src="@drawable/walking_calorie"/>
             <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="칼로리"
+                android:textStyle="bold"
+                android:textColor="#000000"
+                />
+            <TextView
                 android:id="@+id/widgetCalories"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -127,13 +137,7 @@
                 android:textStyle="bold"
                 android:textColor="#000000"
                 />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="칼로리"
-                android:textStyle="bold"
-                android:textColor="#000000"
-                />
+
 
         </LinearLayout>
 

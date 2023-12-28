@@ -28,6 +28,8 @@
         android:layout_gravity="center"
         android:layout_marginBottom="@dimen/diaryInfoItemImageMargin"
         android:text="진우개"
+        android:textColor="#000000"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="@+id/diaryItemImage"
         app:layout_constraintStart_toStartOf="@+id/diaryItemImage"
         app:layout_constraintTop_toBottomOf="@+id/diaryItemImage" />

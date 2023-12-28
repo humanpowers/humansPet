@@ -109,6 +109,7 @@ public class Walking extends Fragment implements OnMapReadyCallback {
     View captureScreenShot;
     ImageView testImage;
     String result;
+    double speed;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -293,6 +294,8 @@ public class Walking extends Fragment implements OnMapReadyCallback {
                                     nameSt+=nameSp[j];
                                 }
                                 petName=nameSt;
+                                editor.putString("selectPet",petName);
+                                editor.commit();
                                 View mapView = getView().findViewById(R.id.mapView);
                                 if (mapView != null) {
                                     mapView.setVisibility(View.VISIBLE);
@@ -300,6 +303,8 @@ public class Walking extends Fragment implements OnMapReadyCallback {
                                 mapReady();
                             }
                         });
+                    }else{
+                        mapReady();
                     }
                 }
             }
@@ -339,7 +344,8 @@ public class Walking extends Fragment implements OnMapReadyCallback {
                     public void onResponse(Call<String> call, Response<String> response) {
                         Log.d(TAG, "onResponse: "+response.body());
                         if(response.body().equals("성공")){
-                            Toast.makeText(getContext(), "저장되었습니다. 저장된 사진은 마이페이지에서 확인하실 수 있습니다.", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(getContext(),WalkingDiary.class);
+                            startActivity(intent);
                         }
                     }
 
@@ -372,7 +378,7 @@ public class Walking extends Fragment implements OnMapReadyCallback {
                         path.setCoords(overLay);
                         path.setMap(naverMap);
                         totalDistance+=distance(coordinateItems.get(i-1).getLatitude(),coordinateItems.get(i-1).getLongitude(),latitude,longitude);
-                        double speed=distance(coordinateItems.get(i-1).getLatitude(),coordinateItems.get(i-1).getLongitude(),latitude,longitude);
+                        speed=distance(coordinateItems.get(i-1).getLatitude(),coordinateItems.get(i-1).getLongitude(),latitude,longitude);
                         distanceText.setText(String.format("%.0f",totalDistance)+"m");
                         speedText.setText(Integer.toString((int)speed*3600/1000)+"km/h");
                         double calorie=(int)speed*17*70/1/60/100;
@@ -387,10 +393,15 @@ public class Walking extends Fragment implements OnMapReadyCallback {
                     naverMap.setMinZoom(10.0);
                 }
 
-                Log.d(TAG, "onReceive: "+totalCalorie);
+                getContext().startService(new Intent(context, WidgetUpdateService.class));
+                Log.d(TAG, "onReceive: "+totalDistance);
                 Intent getIntent = new Intent("com.example.UPDATE_WIDGET");
-                intent.putExtra("speedValue", totalDistance); // 여기에서 실제 값을 설정합니다.
-                getActivity().sendBroadcast(getIntent,"com.example.permission.UPDATE_WIDGET");
+                getIntent.putExtra("distanceValue", totalDistance);
+                getIntent.putExtra("speedValue",(int)speed*3600/1000);
+                getIntent.putExtra("timeValue",timeText.getText().toString());
+                getIntent.putExtra("calorieValue",totalCalorie);
+                getContext().sendBroadcast(getIntent, "com.example.permission.UPDATE_WIDGET");
+
             }
 
         }
@@ -543,6 +554,7 @@ public class Walking extends Fragment implements OnMapReadyCallback {
             SharedPreferences.Editor editor = preferences.edit();
             editor.putBoolean("run",false);
             editor.putBoolean("pet",false);
+            editor.putString("selectPet","");
             editor.commit();
             stopLocationService();
         }

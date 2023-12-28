@@ -463,6 +463,9 @@ public class Diary extends Fragment  {
                 if(diaryCount==0){
                     TextView diaryGoneText=v.findViewById(R.id.diaryGoneText);
                     diaryGoneText.setVisibility(View.VISIBLE);
+                }else{
+                    TextView diaryGoneText=v.findViewById(R.id.diaryGoneText);
+                    diaryGoneText.setVisibility(View.GONE);
                 }
                 calendarBackBtn.setVisibility(View.GONE);
             }

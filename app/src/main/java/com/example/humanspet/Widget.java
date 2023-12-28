@@ -28,13 +28,13 @@ public class Widget extends AppWidgetProvider {
         intent.setAction("com.example.UPDATE_WIDGET");
         intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
         views.setOnClickPendingIntent(R.id.widgetDistance, PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT));
-
         // AppWidgetManager를 사용하여 위젯을 업데이트합니다.
         appWidgetManager.updateAppWidget(appWidgetId, views);
     }
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
+        Log.d(TAG, "onUpdate");
         // There may be multiple widgets active, so update all of them
         for (int appWidgetId : appWidgetIds) {
             updateAppWidget(context, appWidgetManager, appWidgetId);
@@ -43,11 +43,13 @@ public class Widget extends AppWidgetProvider {
 
     @Override
     public void onEnabled(Context context) {
+        Log.d(TAG, "onEnabled");
         // Enter relevant functionality for when the first widget is created
     }
 
     @Override
     public void onDisabled(Context context) {
+        Log.d(TAG, "onDisabled");
         // Enter relevant functionality for when the last widget is disabled
     }
 
@@ -56,14 +58,23 @@ public class Widget extends AppWidgetProvider {
         super.onReceive(context, intent);
 
         if ("com.example.UPDATE_WIDGET".equals(intent.getAction())) {
-            int speedValue = intent.getIntExtra("speedValue", 0);
+            double distanceValue = intent.getDoubleExtra("distanceValue", 0.0);
+            double calorieValue = intent.getDoubleExtra("calorieValue",0.0);
+            String timeValue = intent.getStringExtra("timeValue");
+            int speedValue = intent.getIntExtra("speedValue",0);
+
+            Log.d(TAG, "onReceive: " + distanceValue);
 
             RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget);
-            views.setTextViewText(R.id.widgetDistance, speedValue + "km/h");
-
+            views.setTextViewText(R.id.widgetDistance, String.format("%.0f",distanceValue)+"m");
+            views.setTextViewText(R.id.widgetCalories,String.format("%.0f",calorieValue)+"kcal");
+            views.setTextViewText(R.id.widgetTime,timeValue);
+            views.setTextViewText(R.id.widgetSpeed,speedValue+"km/h");
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
             ComponentName componentName = new ComponentName(context, Widget.class);
             appWidgetManager.updateAppWidget(componentName, views);
         }
     }
+
+
 }
