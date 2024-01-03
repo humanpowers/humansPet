@@ -64,6 +64,8 @@ public class WalkingDiary extends AppCompatActivity {
     ImageButton calendarBtn,calendarBackBtn;
     private SharedPreferences sharedPreferences;
     private long selectedDate;
+    boolean calendarBackBoolean;
+    TextView selectDateText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +78,7 @@ public class WalkingDiary extends AppCompatActivity {
         calendarBackBtn=findViewById(R.id.walkingDiaryCalendarBack);
         diaryGoneText=findViewById(R.id.walkingDiaryGoneText);
         diaryCalendarText=findViewById(R.id.walkingDiaryCalendarText);
+        selectDateText=findViewById(R.id.walkingDiarySelectDate);
 
         preferences=getSharedPreferences("USER",MODE_PRIVATE);
         userId=preferences.getString("USERID","");
@@ -253,15 +256,23 @@ public class WalkingDiary extends AppCompatActivity {
                 mapCalorie.setText(walkingDiaryItems.get(position).getCalorie());
                 mapDistance.setText(walkingDiaryItems.get(position).getDistance());
                 mapTime.setText(walkingDiaryItems.get(position).getTime());
+                selectDateText.setText(walkingDiaryItems.get(position).getDate());
+
             }
         });
 
         mapCancelBtn=findViewById(R.id.walkingDiaryMapCancel);
+        mapCancelBtn.bringToFront();
         mapCancelBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mapOff();
                 mapBoolean=false;
+                if(calendarBackBoolean==false){
+                    calendarBackBtn.setVisibility(View.GONE);
+                }else{
+                    calendarBackBtn.setVisibility(View.VISIBLE);
+                }
             }
         });
 
@@ -367,6 +378,7 @@ public class WalkingDiary extends AppCompatActivity {
                 calendarView.setOnDateChangedListener(new OnDateSelectedListener() {
                     @Override
                     public void onDateSelected(MaterialCalendarView widget, CalendarDay date, boolean selected) {
+                        calendarBackBoolean=true;
                         calendarBackBtn.setVisibility(View.VISIBLE);
                         diaryGoneText.setVisibility(View.GONE);
                         int year=date.getYear();
@@ -449,6 +461,7 @@ public class WalkingDiary extends AppCompatActivity {
         calendarBackBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                calendarBackBoolean=false;
                 int size=walkingDiaryItems.size();
                 for(int i=0;i<size;i++){
                     walkingDiaryItems.remove(0);
@@ -514,6 +527,8 @@ public class WalkingDiary extends AppCompatActivity {
         TextView calendarText = findViewById(R.id.walkingDiaryCalendarText);
         ImageButton calendarBack = findViewById(R.id.walkingDiaryCalendarBack);
         ImageButton calendarBtn = findViewById(R.id.walkingDiaryCalendarButton);
+        TextView dateText = findViewById(R.id.walkingDiarySelectDate);
+        dateText.setVisibility(View.VISIBLE);
         calendarText.setVisibility(View.GONE);
         calendarBack.setVisibility(View.GONE);
         calendarBtn.setVisibility(View.GONE);
@@ -537,6 +552,8 @@ public class WalkingDiary extends AppCompatActivity {
         TextView calendarText = findViewById(R.id.walkingDiaryCalendarText);
         ImageButton calendarBack = findViewById(R.id.walkingDiaryCalendarBack);
         ImageButton calendarBtn = findViewById(R.id.walkingDiaryCalendarButton);
+        TextView dateText = findViewById(R.id.walkingDiarySelectDate);
+        dateText.setVisibility(View.GONE);
         calendarText.setVisibility(View.VISIBLE);
         calendarBack.setVisibility(View.VISIBLE);
         calendarBtn.setVisibility(View.VISIBLE);

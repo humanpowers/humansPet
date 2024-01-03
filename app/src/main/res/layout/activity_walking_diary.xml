@@ -62,12 +62,13 @@
         android:id="@+id/walkingDiaryMapCancel"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:src="@drawable/human_cancel"
+        android:src="@drawable/cancel_btn"
         android:scaleType="centerCrop"
-        android:background="#ffffffff"
+        android:background="#00ffffff"
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="@+id/walkingDiaryMap"
-        app:layout_constraintBottom_toTopOf="@id/walkingDiaryMap"
+        app:layout_constraintTop_toTopOf="@id/walkingDiaryMap"
+        android:layout_margin="10dp"
         />
 
     <ImageView
@@ -252,5 +253,20 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"/>
+
+    <TextView
+        android:id="@+id/walkingDiarySelectDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/walkingDiaryMap"
+        app:layout_constraintRight_toRightOf="@+id/walkingDiaryMap"
+        app:layout_constraintLeft_toLeftOf="@+id/walkingDiaryMap"
+        android:textStyle="bold"
+        android:text="날짜"
+        android:textSize="25dp"
+        android:textColor="#000000"
+        android:visibility="gone"
+        android:layout_marginBottom="30dp"
+        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
