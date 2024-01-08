@@ -139,7 +139,7 @@
                     android:id="@+id/walkingCalories"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="0kcal"
+                    android:text="0cal"
                     />
                 <TextView
                     android:layout_width="wrap_content"

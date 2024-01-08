@@ -3,7 +3,6 @@ package com.example.humanspet;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
@@ -65,14 +64,16 @@ public class Widget extends AppWidgetProvider {
 
             Log.d(TAG, "onReceive: " + distanceValue);
 
-            RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget);
-            views.setTextViewText(R.id.widgetDistance, String.format("%.0f",distanceValue)+"m");
-            views.setTextViewText(R.id.widgetCalories,String.format("%.0f",calorieValue)+"kcal");
-            views.setTextViewText(R.id.widgetTime,timeValue);
-            views.setTextViewText(R.id.widgetSpeed,speedValue+"km/h");
-            AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
-            ComponentName componentName = new ComponentName(context, Widget.class);
-            appWidgetManager.updateAppWidget(componentName, views);
+//            RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget);
+//            views.setTextViewText(R.id.widgetDistance, String.format("%.0f",distanceValue)+"m");
+//            views.setTextViewText(R.id.widgetCalories,String.format("%.0f",calorieValue)+"kcal");
+//            views.setTextViewText(R.id.widgetTime,timeValue);
+//            views.setTextViewText(R.id.widgetSpeed,speedValue+"km/h");
+//            AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+//            ComponentName componentName = new ComponentName(context, Widget.class);
+//            appWidgetManager.updateAppWidget(componentName, views);
+
+
         }
     }
 

@@ -2,6 +2,7 @@ package com.example.humanspet;
 
 import static android.content.Context.MODE_PRIVATE;
 
+import android.Manifest;
 import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -12,6 +13,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.icu.text.SimpleDateFormat;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Messenger;
@@ -28,6 +30,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.viewmodel.CreationExtras;
@@ -68,8 +71,10 @@ import retrofit2.Response;
 
 public class Walking extends Fragment implements OnMapReadyCallback {
     String TAG = "산책";
-    private static final int REQUEST_CODE_LOCATION_PERMISSION = 1;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1000;
+    private static final int REQUEST_CODE_LOCATION_PERMISSION = 100;
+    private static final int REQUEST_CODE_BACKGROUND_LOCATION_PERMISSION = 101;
+
     private FusedLocationSource locationSource;
     private NaverMap naverMap;
     private Button startBtn,saveBtn,selectBtn;
@@ -110,6 +115,8 @@ public class Walking extends Fragment implements OnMapReadyCallback {
     ImageView testImage;
     String result;
     double speed;
+    double previousDistance;
+    int petWeight;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -117,7 +124,7 @@ public class Walking extends Fragment implements OnMapReadyCallback {
         View v = inflater.inflate(R.layout.fragment_fragment4, container, false);
 
         handler = new Handler();
-
+        requestLocationPermission();
         startBtn = v.findViewById(R.id.walkingStartButton);
         timeText = v.findViewById(R.id.walkingTime);
         distanceText=v.findViewById(R.id.walkingDistance);
@@ -134,7 +141,7 @@ public class Walking extends Fragment implements OnMapReadyCallback {
 
         path = new PathOverlay();
 
-        locationSource = new FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE);
+        locationSource = new FusedLocationSource(this, REQUEST_CODE_LOCATION_PERMISSION);
 
         mapFragment = (MapFragment) getChildFragmentManager().findFragmentById(R.id.mapView);
         if (mapFragment == null) {
@@ -150,9 +157,11 @@ public class Walking extends Fragment implements OnMapReadyCallback {
             double speed=distance(xDistance,yDistance,lat,lon);
             distanceText.setText(String.format("%.0f",totalDistance)+"m");
             speedText.setText(Integer.toString((int)speed*3600/1000)+"km/h");
-            int calorie=(int)speed*17*70/1/60/100;
-            totalCalorie+=calorie;
-            calorieText.setText(String.format("%.0f",totalCalorie)+"kcal");
+            if(totalCalorie<1.0){
+                calorieText.setText(String.format("%.0f",totalCalorie*1000)+"cal");
+            }else{
+                calorieText.setText(String.format("%.2f",totalCalorie)+"kcal");
+            }
             startBtn.setText("정지");
             startTimer();
         }else{
@@ -191,9 +200,11 @@ public class Walking extends Fragment implements OnMapReadyCallback {
                     double speed=distance(xDistance,yDistance,lat,lon);
                     distanceText.setText(String.format("%.0f",totalDistance)+"m");
                     speedText.setText(Integer.toString((int)speed*3600/1000)+"km/h");
-                    int calorie=(int)speed*17*70/1/60/100;
-                    totalCalorie+=calorie;
-                    calorieText.setText(String.format("%.0f",totalCalorie)+"kcal");
+                    if(totalCalorie<1.0){
+                        calorieText.setText(String.format("%.0f",totalCalorie*1000)+"cal");
+                    }else{
+                        calorieText.setText(String.format("%.2f",totalCalorie)+"kcal");
+                    }
                     // 타이머 시작 또는 재개
                     path.setMap(null);
                     overLay.clear();
@@ -294,6 +305,7 @@ public class Walking extends Fragment implements OnMapReadyCallback {
                                     nameSt+=nameSp[j];
                                 }
                                 petName=nameSt;
+                                petWeight= Integer.parseInt(responseSp[4]);
                                 editor.putString("selectPet",petName);
                                 editor.commit();
                                 View mapView = getView().findViewById(R.id.mapView);
@@ -368,7 +380,7 @@ public class Walking extends Fragment implements OnMapReadyCallback {
             if(isRunning){
                 overLay.clear();
                 totalDistance=0.0;
-                totalCalorie=0;
+                totalCalorie=0.0;
                 for(int i=0;i<coordinateItems.size();i++){
                     double latitude=coordinateItems.get(i).getLatitude();
                     double longitude=coordinateItems.get(i).getLongitude();
@@ -377,14 +389,22 @@ public class Walking extends Fragment implements OnMapReadyCallback {
                     if(i>=1){
                         path.setCoords(overLay);
                         path.setMap(naverMap);
-                        totalDistance+=distance(coordinateItems.get(i-1).getLatitude(),coordinateItems.get(i-1).getLongitude(),latitude,longitude);
+                        double distance=distance(coordinateItems.get(i-1).getLatitude(),coordinateItems.get(i-1).getLongitude(),latitude,longitude);
+                        totalDistance+=distance;
                         speed=distance(coordinateItems.get(i-1).getLatitude(),coordinateItems.get(i-1).getLongitude(),latitude,longitude);
                         distanceText.setText(String.format("%.0f",totalDistance)+"m");
                         speedText.setText(Integer.toString((int)speed*3600/1000)+"km/h");
-                        double calorie=(int)speed*17*70/1/60/100;
-                        totalCalorie+=calorie;
-                        calorieText.setText(String.format("%.0f",totalCalorie)+"kcal");
+                        if(previousDistance!=totalDistance){
+                            totalCalorie+=0.8/0.453*petWeight/3600;
+                        }
+                        Log.d(TAG, "onReceive: totalCalorie: "+totalCalorie);
+                        if(totalCalorie<1.0){
+                            calorieText.setText(String.format("%.0f",totalCalorie*1000)+"cal");
+                        }else{
+                            calorieText.setText(String.format("%.2f",totalCalorie)+"kcal");
+                        }
                     }
+                    previousDistance=totalDistance;
                 }
                 LatLng[] bounds = getBounds(overLay);
                 if (bounds != null && isAdded()) {
@@ -393,19 +413,32 @@ public class Walking extends Fragment implements OnMapReadyCallback {
                     naverMap.setMinZoom(10.0);
                 }
 
-                getContext().startService(new Intent(context, WidgetUpdateService.class));
                 Log.d(TAG, "onReceive: "+totalDistance);
-                Intent getIntent = new Intent("com.example.UPDATE_WIDGET");
-                getIntent.putExtra("distanceValue", totalDistance);
-                getIntent.putExtra("speedValue",(int)speed*3600/1000);
-                getIntent.putExtra("timeValue",timeText.getText().toString());
-                getIntent.putExtra("calorieValue",totalCalorie);
-                getContext().sendBroadcast(getIntent, "com.example.permission.UPDATE_WIDGET");
+//                Intent getIntent = new Intent("com.example.UPDATE_WIDGET");
+//                getIntent.putExtra("distanceValue", totalDistance);
+//                getIntent.putExtra("speedValue",(int)speed*3600/1000);
+//                getIntent.putExtra("timeValue",timeText.getText().toString());
+//                getIntent.putExtra("calorieValue",totalCalorie);
+//                getContext().sendBroadcast(getIntent, "com.example.permission.UPDATE_WIDGET");
+
+                Intent serviceIntent = new Intent(getActivity(), WidgetUpdateService.class);
+                if (getActivity() != null) {
+                    serviceIntent.setAction("com.example.Widget");
+                    serviceIntent.putExtra("distanceValue", totalDistance);
+                    serviceIntent.putExtra("speedValue",(int)speed*3600/1000);
+                    serviceIntent.putExtra("timeValue",timeText.getText().toString());
+                    serviceIntent.putExtra("calorieValue",totalCalorie);
+                    getActivity().startService(serviceIntent);
+                }
+
+//                PendingIntent pendingIntent = PendingIntent.getService(context.getApplicationContext(), 0, serviceIntent, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
 
             }
 
         }
     };
+
+
 
     public static class ImageUtils {
         public static File persistImage(Context context, Bitmap bitmap, String name) {
@@ -465,7 +498,11 @@ public class Walking extends Fragment implements OnMapReadyCallback {
         if (!isLocationServiceRunning()) {
             Intent intent = new Intent(getContext(), WalkingBackground.class);
             intent.setAction(Constants.ACTION_START_LOCATION_SERVICE);
-            getActivity().startService(intent);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                getActivity().startForegroundService(intent);
+            }else{
+                getActivity().startService(intent);
+            }
             Toast.makeText(getContext(), "서비스 시작", Toast.LENGTH_SHORT).show();
         }
     }
@@ -477,7 +514,11 @@ public class Walking extends Fragment implements OnMapReadyCallback {
             editor.putBoolean("run",false);
             editor.commit();
             intent.setAction(Constants.ACTION_STOP_LOCATION_SERVICE);
-            getActivity().startService(intent);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                getActivity().startForegroundService(intent);
+            }else{
+                getActivity().startService(intent);
+            }
             Toast.makeText(getContext(), "서비스 정지", Toast.LENGTH_SHORT).show();
         }
     }
@@ -507,6 +548,7 @@ public class Walking extends Fragment implements OnMapReadyCallback {
     private static double rad2deg(double rad){
         return (rad * 180 / Math.PI);
     }
+
 
     @Override
     public void onStart() {
@@ -608,27 +650,92 @@ public class Walking extends Fragment implements OnMapReadyCallback {
     public CreationExtras getDefaultViewModelCreationExtras() {
         return super.getDefaultViewModelCreationExtras();
     }
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,  @NonNull int[] grantResults) {
-        if (locationSource.onRequestPermissionsResult(requestCode, permissions, grantResults)) {
-            if (!locationSource.isActivated()) { // 권한 거부됨
-                naverMap.setLocationTrackingMode(LocationTrackingMode.None);
-            }
-            return;
-        }
-        if (requestCode == REQUEST_CODE_LOCATION_PERMISSION && permissions.length > 0 && grantResults.length > 0) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                startLocationService();
+    private void requestLocationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (getActivity().checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                // 위치 권한이 이미 허용되어 있음
             } else {
-                Context context = getContext();
-                if (context != null) {
-                    Toast.makeText(context, "Location permission denied!", Toast.LENGTH_SHORT).show();
-                }
+                // 위치 권한이 허용되어 있지 않음
+                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE_LOCATION_PERMISSION);
+            }
+        } else {
+            // 안드로이드 버전이 마시멜로우 미만일 경우에는 바로 실행
+            startLocationService();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        Log.d("권한확인", "onRequestPermissionsResult: 들어옴");
+        if (requestCode == REQUEST_CODE_LOCATION_PERMISSION && grantResults.length > 0) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Log.d("권한확인", "onRequestPermissionsResult: 1번");
+                // 위치 권한이 허용되었을 때
+                showAppUsageLimitedDialog();
+            } else if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
+                Log.d("권한확인", "onRequestPermissionsResult: 2번");
+                // 사용자가 권한 요청을 거부한 경우
+                showPermissionExplanationDialog();
+            } else {
+                Log.d("권한확인", "Show App Usage Limited Dialog");
+                // 사용자가 "앱 사용 중에만 허용"을 선택한 경우 또는 영구적으로 거부한 경우
+                // 여기에서 추가적인 로직을 수행할 수 있음
+                // 예를 들어 사용자에게 앱 사용 중에만 제한된 기능이 있다는 안내를 표시하고,
+                // 추가적인 백그라운드 위치 권한을 요청하는 다이얼로그를 표시할 수 있음
+                showAppUsageLimitedDialog();
             }
         }
-        super.onRequestPermissionsResult(
-                requestCode, permissions, grantResults);
     }
+
+
+    private void showAppUsageLimitedDialog() {
+        Log.d("권한확인", "showAppUsageLimitedDialog() called");
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle("앱 사용 중에만 위치 권한 허용")
+                .setMessage("앱 사용 중에만 위치 기능을 이용할 수 있습니다. 추가로 위치(시작 후 홈버튼을 눌렀을때)를 수집하려면 위치 권한을 항상 허용해주세요.")
+                .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // 확인 버튼을 누르면 백그라운드 위치 권한을 요청
+                        requestBackgroundLocationPermission();
+                    }
+                })
+                .show();
+    }
+
+    private void showPermissionExplanationDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle("위치 권한 필요")
+                .setMessage("이 앱은 정상적으로 작동하기 위해 위치 권한이 필요합니다. 위치 권한을 부여해주세요.")
+                .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // 확인 버튼을 누르면 권한 요청 다이얼로그를 다시 띄움
+                        requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE_LOCATION_PERMISSION);
+                    }
+                })
+                .setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // 사용자가 취소한 경우에 대한 처리
+                        // 필요에 따라 추가 구현 가능
+                    }
+                })
+                .show();
+    }
+
+    private void requestBackgroundLocationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            // 사용자에게 백그라운드 위치 정보 항상 허용 권한을 요청하는 코드를 추가
+            // 따로 요청해야 하는 경우를 고려하여 ActivityCompat.requestPermissions() 또는 다른 적절한 방법을 사용합니다.
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_BACKGROUND_LOCATION}, REQUEST_CODE_BACKGROUND_LOCATION_PERMISSION);
+
+        }
+    }
+
+
+
+
 
     public void mapReady(){
         LinearLayout linearLayout = getView().findViewById(R.id.walkingLinear);

@@ -12,6 +12,7 @@ import android.os.Build;
 import android.os.IBinder;
 import android.os.Looper;
 import android.util.Log;
+import android.widget.RemoteViews;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
@@ -30,6 +31,10 @@ public class WalkingBackground extends Service {
     double latitude;
     double longitude;
     ArrayList<CoordinateItem> coordinateArrayList=new ArrayList<>();
+    RemoteViews custom_layout;
+    NotificationCompat.Builder builder;
+
+
     private final LocationCallback mLocationCallback = new LocationCallback() {
         @Override
         public void onLocationResult(LocationResult locationResult) {
@@ -38,28 +43,46 @@ public class WalkingBackground extends Service {
             if (locationResult != null && locationResult.getLastLocation() != null) {
                 latitude = locationResult.getLastLocation().getLatitude();
                 longitude = locationResult.getLastLocation().getLongitude();
-                Log.d("산책", latitude + ", " + longitude);
+                Log.d(TAG,"현재위치 위도: "+ latitude + ", 경도: " + longitude);
                 CoordinateItem coordinateItem = new CoordinateItem(latitude,longitude);
                 coordinateArrayList.add(coordinateItem);
                 Intent intent = new Intent("custom-action");
                 intent.putExtra("coordinate", coordinateArrayList);
                 LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
+//                custom_layout.setTextViewText(R.id.walkingNotificationDistance,Double.toString(latitude));
             }
         }
     };
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+    }
+
+
     private void startLocationService() {
         String channelId = "location_notification_channel";
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        Context context = getApplicationContext();
+        String packageName = context.getPackageName();
+        custom_layout = new RemoteViews(packageName,R.layout.walking_notification);
+        RemoteViews custom_layout_expanded = new RemoteViews(packageName,R.layout.walking_notification_expanded);
+
         Intent resultIntent = new Intent();
         PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, resultIntent, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(), channelId);
-        builder.setSmallIcon(R.mipmap.eye);
-        builder.setContentTitle("Location Service");
+        builder = new NotificationCompat.Builder(getApplicationContext(), channelId);
+        builder.setSmallIcon(R.drawable.basic_profile);
+        builder.setContentTitle("위치 서비스");
         builder.setDefaults(NotificationCompat.DEFAULT_ALL);
-        builder.setContentText("Running");
         builder.setContentIntent(pendingIntent);
         builder.setAutoCancel(false);
         builder.setPriority(NotificationCompat.PRIORITY_MAX);
+        builder.setStyle(new NotificationCompat.DecoratedCustomViewStyle());
+        builder.setCustomContentView(custom_layout);
+        builder.setCustomBigContentView(custom_layout_expanded);
+
+
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             if (notificationManager != null && notificationManager.getNotificationChannel(channelId) == null) {
@@ -75,22 +98,24 @@ public class WalkingBackground extends Service {
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
             return;
         }
-        LocationServices.getFusedLocationProviderClient(this).requestLocationUpdates(locationRequest, mLocationCallback, Looper.getMainLooper());
+
+        // Foreground Service로 위치 업데이트 요청
+        LocationServices.getFusedLocationProviderClient(this)
+                .requestLocationUpdates(locationRequest, mLocationCallback, Looper.getMainLooper());
+
+        // Foreground Service 시작
         startForeground(Constants.LOCATION_SERVICE_ID, builder.build());
     }
 
     private void stopLocationService() {
         Log.d(TAG, "stopLocationService: Stopping");
+
+        // 위치 업데이트 중지
         LocationServices.getFusedLocationProviderClient(this).removeLocationUpdates(mLocationCallback);
+
+        // Foreground Service 정지
         stopForeground(true);
         stopSelf();
     }

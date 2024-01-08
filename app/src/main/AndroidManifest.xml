@@ -11,6 +11,7 @@
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="com.example.permission.UPDATE_WIDGET" />
+
     <permission
         android:name="com.example.permission.UPDATE_WIDGET"
         android:protectionLevel="signature" />
@@ -86,7 +87,8 @@
         <activity
             android:name=".MainPage"
             android:exported="false"
-            android:launchMode="singleTop">
+            android:launchMode="singleTop"
+            android:configChanges="orientation|screenSize|keyboardHidden">
             <intent-filter>
                 <action android:name="custom-action" />
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
@@ -139,7 +141,7 @@
             android:enabled="true"
             android:exported="false">
             <intent-filter>
-                <action android:name="com.example.UPDATE_WIDGET" />
+                <action android:name="com.example.Widget" />
             </intent-filter>
         </service>
 
