@@ -55,26 +55,6 @@ public class Widget extends AppWidgetProvider {
     @Override
     public void onReceive(Context context, Intent intent) {
         super.onReceive(context, intent);
-
-        if ("com.example.UPDATE_WIDGET".equals(intent.getAction())) {
-            double distanceValue = intent.getDoubleExtra("distanceValue", 0.0);
-            double calorieValue = intent.getDoubleExtra("calorieValue",0.0);
-            String timeValue = intent.getStringExtra("timeValue");
-            int speedValue = intent.getIntExtra("speedValue",0);
-
-            Log.d(TAG, "onReceive: " + distanceValue);
-
-//            RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget);
-//            views.setTextViewText(R.id.widgetDistance, String.format("%.0f",distanceValue)+"m");
-//            views.setTextViewText(R.id.widgetCalories,String.format("%.0f",calorieValue)+"kcal");
-//            views.setTextViewText(R.id.widgetTime,timeValue);
-//            views.setTextViewText(R.id.widgetSpeed,speedValue+"km/h");
-//            AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
-//            ComponentName componentName = new ComponentName(context, Widget.class);
-//            appWidgetManager.updateAppWidget(componentName, views);
-
-
-        }
     }
 
 

@@ -3,7 +3,10 @@ package com.example.humanspet;
 import static android.content.Context.MODE_PRIVATE;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.ActivityManager;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -22,8 +25,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RemoteViews;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,6 +34,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.viewmodel.CreationExtras;
@@ -49,7 +53,6 @@ import com.naver.maps.map.LocationTrackingMode;
 import com.naver.maps.map.MapFragment;
 import com.naver.maps.map.NaverMap;
 import com.naver.maps.map.OnMapReadyCallback;
-import com.naver.maps.map.overlay.Marker;
 import com.naver.maps.map.overlay.PathOverlay;
 import com.naver.maps.map.util.FusedLocationSource;
 
@@ -71,7 +74,6 @@ import retrofit2.Response;
 
 public class Walking extends Fragment implements OnMapReadyCallback {
     String TAG = "산책";
-    private static final int LOCATION_PERMISSION_REQUEST_CODE = 1000;
     private static final int REQUEST_CODE_LOCATION_PERMISSION = 100;
     private static final int REQUEST_CODE_BACKGROUND_LOCATION_PERMISSION = 101;
 
@@ -109,14 +111,16 @@ public class Walking extends Fragment implements OnMapReadyCallback {
     int selectPosition=0;
     String petName;
     CircleImageView petImage;
-    Marker marker;
     Bitmap mbitmap;
     View captureScreenShot;
-    ImageView testImage;
     String result;
     double speed;
     double previousDistance;
     int petWeight;
+    NotificationCompat.Builder builder;
+    RemoteViews custom_layout;
+    public MainPage mActivity;
+    Context mContext;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -132,7 +136,6 @@ public class Walking extends Fragment implements OnMapReadyCallback {
         calorieText=v.findViewById(R.id.walkingCalories);
         saveBtn=v.findViewById(R.id.walkingSaveButton);
         petImage=v.findViewById(R.id.walkingSelectPetImage);
-        testImage=v.findViewById(R.id.testImage);
 
         preferences = getActivity().getSharedPreferences("RUNNING",MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
@@ -294,6 +297,8 @@ public class Walking extends Fragment implements OnMapReadyCallback {
                         selectBtn.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
+                                ViewGroup dialogParentView = (ViewGroup) dialogView.getParent();
+                                dialogParentView.removeView(dialogView);
                                 ApiClient apiClient = new ApiClient();
                                 String responseSt= String.valueOf(responseArray.get(selectPosition));
                                 String[] responseSp=responseSt.split(", ");
@@ -369,42 +374,88 @@ public class Walking extends Fragment implements OnMapReadyCallback {
             }
         });
 
+        petImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                for(int i=0;i<responseArray.size();i++){
+                    String responseSt= String.valueOf(responseArray.get(i));
+                    String[] responseSp=responseSt.split(", ");
+                    String[] nameSp=responseSp[0].split("");
+                    String nameSt="";
+                    for(int j=1;j<responseSp[0].length();j++){
+                        nameSt+=nameSp[j];
+                    }
+                    DiaryInfoItem diaryInfoItem =new DiaryInfoItem(responseSp[1],nameSt);
+                    diaryInfoItemArrayList.add(diaryInfoItem);
+                }
+
+                AlertDialog dialog = dialogBuilder.create(); // AlertDialog로 변경
+                dialog.show();
+
+                selectBtn=dialogView.findViewById(R.id.walkingDialogSelectButton);
+                selectBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        ApiClient apiClient = new ApiClient();
+                        String responseSt= String.valueOf(responseArray.get(selectPosition));
+                        String[] responseSp=responseSt.split(", ");
+                        Glide.with(getActivity()).load("http://"+apiClient.goUri(responseSp[1])).thumbnail(Glide.with(getActivity()).load(R.raw.loadinggif)).override(200,200).into(petImage);
+                        dialog.dismiss();
+                        String[] nameSp=responseSp[0].split("");
+                        String nameSt="";
+                        for(int j=1;j<responseSp[0].length();j++){
+                            nameSt+=nameSp[j];
+                        }
+                        petName=nameSt;
+                        petWeight= Integer.parseInt(responseSp[4]);
+                        editor.putString("selectPet",petName);
+                        editor.commit();
+                        View mapView = getView().findViewById(R.id.mapView);
+                        if (mapView != null) {
+                            mapView.setVisibility(View.VISIBLE);
+                        }
+                        mapReady();
+                    }
+                });
+            }
+        });
+
         return v;
     }
 
-    private BroadcastReceiver mAlertReceiver = new BroadcastReceiver() {
+    private final BroadcastReceiver mAlertReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            coordinateItems= (ArrayList<CoordinateItem>) intent.getSerializableExtra("coordinate");
-            isRunning=preferences.getBoolean("run",false);
-            if(isRunning){
+            coordinateItems = (ArrayList<CoordinateItem>) intent.getSerializableExtra("coordinate");
+            isRunning = preferences.getBoolean("run", false);
+            if (isRunning) {
                 overLay.clear();
-                totalDistance=0.0;
-                totalCalorie=0.0;
-                for(int i=0;i<coordinateItems.size();i++){
-                    double latitude=coordinateItems.get(i).getLatitude();
-                    double longitude=coordinateItems.get(i).getLongitude();
-                    LatLng latLng = new LatLng(latitude,longitude);
+                totalDistance = 0.0;
+                totalCalorie = 0.0;
+                for (int i = 0; i < coordinateItems.size(); i++) {
+                    double latitude = coordinateItems.get(i).getLatitude();
+                    double longitude = coordinateItems.get(i).getLongitude();
+                    LatLng latLng = new LatLng(latitude, longitude);
                     overLay.add(latLng);
-                    if(i>=1){
+                    if (i >= 1) {
                         path.setCoords(overLay);
                         path.setMap(naverMap);
-                        double distance=distance(coordinateItems.get(i-1).getLatitude(),coordinateItems.get(i-1).getLongitude(),latitude,longitude);
-                        totalDistance+=distance;
-                        speed=distance(coordinateItems.get(i-1).getLatitude(),coordinateItems.get(i-1).getLongitude(),latitude,longitude);
-                        distanceText.setText(String.format("%.0f",totalDistance)+"m");
-                        speedText.setText(Integer.toString((int)speed*3600/1000)+"km/h");
-                        if(previousDistance!=totalDistance){
-                            totalCalorie+=0.8/0.453*petWeight/3600;
+                        double distance = distance(coordinateItems.get(i - 1).getLatitude(), coordinateItems.get(i - 1).getLongitude(), latitude, longitude);
+                        totalDistance += distance;
+                        speed = distance(coordinateItems.get(i - 1).getLatitude(), coordinateItems.get(i - 1).getLongitude(), latitude, longitude);
+                        distanceText.setText(String.format("%.0f", totalDistance) + "m");
+                        speedText.setText(Integer.toString((int) speed * 3600 / 1000) + "km/h");
+                        if (previousDistance != totalDistance) {
+                            totalCalorie += 0.8 / 0.453 * petWeight / 3600;
                         }
-                        Log.d(TAG, "onReceive: totalCalorie: "+totalCalorie);
-                        if(totalCalorie<1.0){
-                            calorieText.setText(String.format("%.0f",totalCalorie*1000)+"cal");
-                        }else{
-                            calorieText.setText(String.format("%.2f",totalCalorie)+"kcal");
+
+                        if (totalCalorie < 1.0) {
+                            calorieText.setText(String.format("%.0f", totalCalorie * 1000) + "cal");
+                        } else {
+                            calorieText.setText(String.format("%.2f", totalCalorie) + "kcal");
                         }
                     }
-                    previousDistance=totalDistance;
+                    previousDistance = totalDistance;
                 }
                 LatLng[] bounds = getBounds(overLay);
                 if (bounds != null && isAdded()) {
@@ -413,26 +464,54 @@ public class Walking extends Fragment implements OnMapReadyCallback {
                     naverMap.setMinZoom(10.0);
                 }
 
-                Log.d(TAG, "onReceive: "+totalDistance);
-//                Intent getIntent = new Intent("com.example.UPDATE_WIDGET");
-//                getIntent.putExtra("distanceValue", totalDistance);
-//                getIntent.putExtra("speedValue",(int)speed*3600/1000);
-//                getIntent.putExtra("timeValue",timeText.getText().toString());
-//                getIntent.putExtra("calorieValue",totalCalorie);
-//                getContext().sendBroadcast(getIntent, "com.example.permission.UPDATE_WIDGET");
-
-                Intent serviceIntent = new Intent(getActivity(), WidgetUpdateService.class);
+                Intent serviceIntent = new Intent(mContext, WidgetUpdateService.class);
                 if (getActivity() != null) {
                     serviceIntent.setAction("com.example.Widget");
                     serviceIntent.putExtra("distanceValue", totalDistance);
-                    serviceIntent.putExtra("speedValue",(int)speed*3600/1000);
-                    serviceIntent.putExtra("timeValue",timeText.getText().toString());
-                    serviceIntent.putExtra("calorieValue",totalCalorie);
+                    serviceIntent.putExtra("speedValue", (int) speed * 3600 / 1000);
+                    serviceIntent.putExtra("timeValue", timeText.getText().toString());
+                    serviceIntent.putExtra("calorieValue", totalCalorie);
                     getActivity().startService(serviceIntent);
                 }
+                String channelId = "location_notification_channel";
+                NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+                String packageName = context.getPackageName();
+                custom_layout = new RemoteViews(packageName, R.layout.walking_notification);
+                RemoteViews custom_layout_expanded = new RemoteViews(packageName, R.layout.walking_notification_expanded);
 
-//                PendingIntent pendingIntent = PendingIntent.getService(context.getApplicationContext(), 0, serviceIntent, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
-
+                Intent resultIntent = new Intent();
+                PendingIntent pendingIntent = PendingIntent.getActivity(mContext, 0, resultIntent, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
+                builder = new NotificationCompat.Builder(mContext, channelId);
+                builder.setSmallIcon(R.drawable.basic_profile);
+                builder.setContentTitle("위치 서비스");
+                builder.setDefaults(NotificationCompat.DEFAULT_ALL);
+                builder.setContentIntent(pendingIntent);
+                builder.setAutoCancel(false);
+                builder.setPriority(NotificationCompat.PRIORITY_MAX);
+                builder.setStyle(new NotificationCompat.DecoratedCustomViewStyle());
+                builder.setCustomContentView(custom_layout);
+                builder.setCustomBigContentView(custom_layout_expanded);
+                custom_layout.setTextViewText(R.id.walkingNotificationDistance, String.format("%.0f", totalDistance) + "m");
+                if (totalCalorie < 1.0) {
+                    custom_layout.setTextViewText(R.id.walkingNotificationCalories, String.format("%.0f", totalCalorie * 1000) + "cal");
+                } else {
+                    custom_layout.setTextViewText(R.id.walkingNotificationCalories, String.format("%.2f", totalCalorie) + "kcal");
+                }
+                custom_layout.setTextViewText(R.id.walkingNotificationTime,timeText.getText().toString());
+                custom_layout_expanded.setTextViewText(R.id.walkingNotificationExpandedDistance, String.format("%.0f", totalDistance) + "m");
+                if (totalCalorie < 1.0) {
+                    custom_layout_expanded.setTextViewText(R.id.walkingNotificationExpandedCalories, String.format("%.0f", totalCalorie * 1000) + "cal");
+                } else {
+                    custom_layout_expanded.setTextViewText(R.id.walkingNotificationExpandedCalories, String.format("%.2f", totalCalorie) + "kcal");
+                }
+                custom_layout_expanded.setTextViewText(R.id.walkingNotificationExpandedTime,timeText.getText().toString());
+                int notificationId = Constants.LOCATION_SERVICE_ID;
+                if(mContext!=null){
+                    notificationManager.notify(notificationId,builder.build());
+                }else{
+                    Log.d(TAG, "onReceive: mContext: null임");
+                    return;
+                }
             }
 
         }
@@ -549,6 +628,14 @@ public class Walking extends Fragment implements OnMapReadyCallback {
         return (rad * 180 / Math.PI);
     }
 
+    @Override
+    public void onAttach(Context context) {
+        mContext = context;
+        if (context instanceof Activity) {
+            mActivity = (MainPage) context;
+        }
+        super.onAttach(context);
+    }
 
     @Override
     public void onStart() {
@@ -599,6 +686,15 @@ public class Walking extends Fragment implements OnMapReadyCallback {
             editor.putString("selectPet","");
             editor.commit();
             stopLocationService();
+            Intent serviceIntent = new Intent(getActivity(), WidgetUpdateService.class);
+            if (getActivity() != null) {
+                serviceIntent.setAction("com.example.Widget");
+                serviceIntent.putExtra("distanceValue", 0.0);
+                serviceIntent.putExtra("speedValue",0.0);
+                serviceIntent.putExtra("timeValue","00:00:00");
+                serviceIntent.putExtra("calorieValue",0.0);
+                getActivity().startService(serviceIntent);
+            }
         }
         Log.d(TAG, "onDestroy: 호출");
         mapFragment.onDestroy();

@@ -86,9 +86,11 @@ public class WalkingBackground extends Service {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             if (notificationManager != null && notificationManager.getNotificationChannel(channelId) == null) {
-                NotificationChannel notificationChannel = new NotificationChannel(channelId, "Location Service", NotificationManager.IMPORTANCE_HIGH);
+                NotificationChannel notificationChannel = new NotificationChannel(channelId, "Location Service", NotificationManager.IMPORTANCE_LOW);
+                notificationChannel.enableVibration(true);
                 notificationChannel.setDescription("This channel is used by location service");
                 notificationManager.createNotificationChannel(notificationChannel);
+
             }
         }
 

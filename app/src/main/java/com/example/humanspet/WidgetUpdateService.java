@@ -40,7 +40,11 @@ public class WidgetUpdateService extends IntentService {
 
         RemoteViews views = new RemoteViews(this.getPackageName(), R.layout.widget);
         views.setTextViewText(R.id.widgetDistance, String.format("%.0f",distanceValue)+"m");
-        views.setTextViewText(R.id.widgetCalories,String.format("%.0f",calorieValue)+"kcal");
+        if(calorieValue<1.0){
+            views.setTextViewText(R.id.widgetCalories,String.format("%.0f",calorieValue*1000)+"cal");
+        }else{
+            views.setTextViewText(R.id.widgetCalories,String.format("%.2f",calorieValue)+"kcal");
+        }
         views.setTextViewText(R.id.widgetTime,timeValue);
         views.setTextViewText(R.id.widgetSpeed,speedValue+"km/h");
         AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
