@@ -93,11 +93,19 @@ public class MyInfo extends AppCompatActivity {
                                         Log.d(TAG, "onResponse: "+userResponse.body());
                                         if(userResponse.body().equals("성공")){
                                             animationView.setVisibility(View.GONE);
-                                            Glide.with(MyInfo.this)
-                                                    .load(userImageRealUri)
-                                                    .diskCacheStrategy(DiskCacheStrategy.NONE)
-                                                    .skipMemoryCache(true)
-                                                    .into(userImage);
+                                            if(userImageRealUri.equals(null)){
+                                                Glide.with(MyInfo.this)
+                                                        .load(R.drawable.basic_profile)
+                                                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+                                                        .skipMemoryCache(true)
+                                                        .into(userImage);
+                                            }else{
+                                                Glide.with(MyInfo.this)
+                                                        .load(userImageRealUri)
+                                                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+                                                        .skipMemoryCache(true)
+                                                        .into(userImage);
+                                            }
                                         }
                                     }
 

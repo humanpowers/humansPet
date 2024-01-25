@@ -5,14 +5,14 @@ import static android.content.Context.MODE_PRIVATE;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.humanspet.Interface.GetChattingRoomInterface;
 
@@ -50,6 +50,15 @@ public class Chatting extends Fragment {
         chatAdapter =new ChattingRoomAdapter(chatItemArrayList);
         recyclerView.setAdapter(chatAdapter);
 
+        return v;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        chatItemArrayList.clear();
+
         GetChattingRoomInterface api=ApiClient.getApiClient().create(GetChattingRoomInterface.class);
         Call<ArrayList> call = api.GetChattingRoom(userName);
         call.enqueue(new Callback<ArrayList>() {
@@ -75,19 +84,11 @@ public class Chatting extends Fragment {
         chatAdapter.setOnClickListener(new ChattingRoomAdapter.RecyclerViewClickListener() {
             @Override
             public void onImageButtonClicker(int position) {
-                String title=chatItemArrayList.get(position).getTitle();
                 Intent intent = new Intent(getActivity(),ChatRoom.class);
                 intent.putExtra("userId",userId);
                 intent.putExtra("otherName",chatItemArrayList.get(position).getTitle());
                 startActivity(intent);
             }
         });
-
-
-
-
-
-        return v;
     }
-
 }

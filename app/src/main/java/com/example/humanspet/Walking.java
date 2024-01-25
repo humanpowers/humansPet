@@ -81,7 +81,7 @@ public class Walking extends Fragment implements OnMapReadyCallback {
     private NaverMap naverMap;
     private Button startBtn,saveBtn,selectBtn;
     private TextView timeText,distanceText,speedText,calorieText;
-    private boolean isRunning = false;
+    boolean isRunning = false;
     private int hours = 0;
     private int minutes = 0;
     private int seconds = 0;
@@ -177,49 +177,9 @@ public class Walking extends Fragment implements OnMapReadyCallback {
             public void onClick(View view) {
                 isRunning=preferences.getBoolean("run",false);
                 if (isRunning) {
-                    editor.putBoolean("run",false);
-                    editor.putBoolean("pet",false);
-                    editor.commit();
-                    handler.removeCallbacks(timerRunnable);
-                    startBtn.setText("시작");
-                    stopLocationService();
-                    saveBtn.setVisibility(View.VISIBLE);
-                    naverMap.takeSnapshot(new NaverMap.SnapshotReadyCallback() {
-                        @Override
-                        public void onSnapshotReady(@NonNull Bitmap bitmap) {
-                            mbitmap=bitmap;
-                        }
-                    });
+                    isRunning(editor);
                 } else {
-                    saveBtn.setVisibility(View.GONE);
-                    count=0;
-                    timeCount=0;
-                    hours=0;
-                    minutes=0;
-                    seconds=0;
-                    totalDistance=0;
-                    totalCalorie=0;
-                    timeText.setText(String.format("%02d:%02d:%02d", hours, minutes, seconds));
-                    double speed=distance(xDistance,yDistance,lat,lon);
-                    distanceText.setText(String.format("%.0f",totalDistance)+"m");
-                    speedText.setText(Integer.toString((int)speed*3600/1000)+"km/h");
-                    if(totalCalorie<1.0){
-                        calorieText.setText(String.format("%.0f",totalCalorie*1000)+"cal");
-                    }else{
-                        calorieText.setText(String.format("%.2f",totalCalorie)+"kcal");
-                    }
-                    // 타이머 시작 또는 재개
-                    path.setMap(null);
-                    overLay.clear();
-                    editor.putBoolean("run",true);
-                    editor.putBoolean("pet",true);
-                    editor.commit();
-                    startBtn.setText("정지");
-                    startTimer();
-                    startLocationService();
-                    Date currentDate = new Date();
-                    SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                    result = outputFormat.format(currentDate);
+                    noRunning(editor);
                 }
             }
         });
@@ -241,15 +201,19 @@ public class Walking extends Fragment implements OnMapReadyCallback {
                 handler.postDelayed(this, 1000); // 1초마다 실행
             }
         };
-        LocalBroadcastManager.getInstance(getContext()).registerReceiver(
+        LocalBroadcastManager.getInstance(mContext).registerReceiver(
                 mAlertReceiver, new IntentFilter("custom-action")
         );
 
-        dialogView = (ConstraintLayout) View.inflate(getContext(),R.layout.walking_pet_dialog,null);
-        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getContext());
+        LocalBroadcastManager.getInstance(mContext).registerReceiver(
+                btnReceiver, new IntentFilter("btn-click")
+        );
+
+        dialogView = (ConstraintLayout) View.inflate(mContext,R.layout.walking_pet_dialog,null);
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(mContext);
         dialogBuilder.setView(dialogView);
         recyclerView = dialogView.findViewById(R.id.walkingDialogRecyclerView);
-        linearLayoutManager = new LinearLayoutManager(getActivity(), RecyclerView.HORIZONTAL, false);
+        linearLayoutManager = new LinearLayoutManager(mActivity, RecyclerView.HORIZONTAL, false);
         recyclerView.setLayoutManager(linearLayoutManager);
 
         diaryInfoAdapter =new DiaryInfoAdapter(diaryInfoItemArrayList);
@@ -297,8 +261,6 @@ public class Walking extends Fragment implements OnMapReadyCallback {
                         selectBtn.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                ViewGroup dialogParentView = (ViewGroup) dialogView.getParent();
-                                dialogParentView.removeView(dialogView);
                                 ApiClient apiClient = new ApiClient();
                                 String responseSt= String.valueOf(responseArray.get(selectPosition));
                                 String[] responseSp=responseSt.split(", ");
@@ -377,53 +339,83 @@ public class Walking extends Fragment implements OnMapReadyCallback {
         petImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                for(int i=0;i<responseArray.size();i++){
-                    String responseSt= String.valueOf(responseArray.get(i));
-                    String[] responseSp=responseSt.split(", ");
-                    String[] nameSp=responseSp[0].split("");
-                    String nameSt="";
-                    for(int j=1;j<responseSp[0].length();j++){
-                        nameSt+=nameSp[j];
-                    }
-                    DiaryInfoItem diaryInfoItem =new DiaryInfoItem(responseSp[1],nameSt);
-                    diaryInfoItemArrayList.add(diaryInfoItem);
-                }
-
-                AlertDialog dialog = dialogBuilder.create(); // AlertDialog로 변경
-                dialog.show();
-
-                selectBtn=dialogView.findViewById(R.id.walkingDialogSelectButton);
-                selectBtn.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        ApiClient apiClient = new ApiClient();
-                        String responseSt= String.valueOf(responseArray.get(selectPosition));
+                if(isRunning){
+                    Toast.makeText(mActivity, "산책이 진행중일때는 펫을 바꿀 수 없습니다.", Toast.LENGTH_SHORT).show();
+                }else{
+                    ViewGroup dialogParentView = (ViewGroup) dialogView.getParent();
+                    dialogParentView.removeView(dialogView);
+                    for(int i=0;i<responseArray.size();i++){
+                        String responseSt= String.valueOf(responseArray.get(i));
                         String[] responseSp=responseSt.split(", ");
-                        Glide.with(getActivity()).load("http://"+apiClient.goUri(responseSp[1])).thumbnail(Glide.with(getActivity()).load(R.raw.loadinggif)).override(200,200).into(petImage);
-                        dialog.dismiss();
                         String[] nameSp=responseSp[0].split("");
                         String nameSt="";
                         for(int j=1;j<responseSp[0].length();j++){
                             nameSt+=nameSp[j];
                         }
-                        petName=nameSt;
-                        petWeight= Integer.parseInt(responseSp[4]);
-                        editor.putString("selectPet",petName);
-                        editor.commit();
-                        View mapView = getView().findViewById(R.id.mapView);
-                        if (mapView != null) {
-                            mapView.setVisibility(View.VISIBLE);
-                        }
-                        mapReady();
+                        DiaryInfoItem diaryInfoItem =new DiaryInfoItem(responseSp[1],nameSt);
+                        diaryInfoItemArrayList.add(diaryInfoItem);
                     }
-                });
+
+                    AlertDialog dialog = dialogBuilder.create(); // AlertDialog로 변경
+                    dialog.show();
+
+                    selectBtn=dialogView.findViewById(R.id.walkingDialogSelectButton);
+                    selectBtn.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            ApiClient apiClient = new ApiClient();
+                            String responseSt= String.valueOf(responseArray.get(selectPosition));
+                            String[] responseSp=responseSt.split(", ");
+                            Glide.with(getActivity()).load("http://"+apiClient.goUri(responseSp[1])).thumbnail(Glide.with(getActivity()).load(R.raw.loadinggif)).override(200,200).into(petImage);
+                            dialog.dismiss();
+                            String[] nameSp=responseSp[0].split("");
+                            String nameSt="";
+                            for(int j=1;j<responseSp[0].length();j++){
+                                nameSt+=nameSp[j];
+                            }
+                            petName=nameSt;
+                            petWeight= Integer.parseInt(responseSp[4]);
+                            editor.putString("selectPet",petName);
+                            editor.commit();
+                            View mapView = getView().findViewById(R.id.mapView);
+                            if (mapView != null) {
+                                mapView.setVisibility(View.VISIBLE);
+                            }
+                            mapReady();
+                        }
+                    });
+                }
             }
         });
 
+
         return v;
     }
+    
+    private final BroadcastReceiver btnReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.d(TAG, "onReceive: 들어왔을까요?");
+            String btnClick = intent.getStringExtra("btnClick");
+            Log.d(TAG, "onReceive: "+btnClick);
+            preferences = getActivity().getSharedPreferences("RUNNING",MODE_PRIVATE);
+            SharedPreferences.Editor editor = preferences.edit();
+            if(btnClick.equals("버튼 누름")){
+                if (isRunning) {
+                    isRunning(editor);
+                } else {
+                    noRunning(editor);
+                }
+            }
+        }
+    };
 
     private final BroadcastReceiver mAlertReceiver = new BroadcastReceiver() {
+        private PendingIntent getPendingIntent(Context context) {
+            Intent intent = new Intent(context, NotificationService.class);
+            intent.setAction("BUTTON_CLICK_ACTION");
+            return PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
+        }
         @Override
         public void onReceive(Context context, Intent intent) {
             coordinateItems = (ArrayList<CoordinateItem>) intent.getSerializableExtra("coordinate");
@@ -479,6 +471,11 @@ public class Walking extends Fragment implements OnMapReadyCallback {
                 custom_layout = new RemoteViews(packageName, R.layout.walking_notification);
                 RemoteViews custom_layout_expanded = new RemoteViews(packageName, R.layout.walking_notification_expanded);
 
+                Intent buttonIntent = new Intent("BUTTON_CLICK_ACTION");
+                PendingIntent buttonPendingIntent = getPendingIntent(mContext);
+                custom_layout_expanded.setOnClickPendingIntent(R.id.walkingNotificationExpandedBtn, buttonPendingIntent);
+
+
                 Intent resultIntent = new Intent();
                 PendingIntent pendingIntent = PendingIntent.getActivity(mContext, 0, resultIntent, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
                 builder = new NotificationCompat.Builder(mContext, channelId);
@@ -516,6 +513,11 @@ public class Walking extends Fragment implements OnMapReadyCallback {
 
         }
     };
+
+
+
+
+
 
 
 
@@ -830,14 +832,61 @@ public class Walking extends Fragment implements OnMapReadyCallback {
     }
 
 
-
-
-
     public void mapReady(){
         LinearLayout linearLayout = getView().findViewById(R.id.walkingLinear);
         Button startBtn= getView().findViewById(R.id.walkingStartButton);
         linearLayout.setVisibility(View.VISIBLE);
         startBtn.setVisibility(View.VISIBLE);
+    }
+
+    public void isRunning(SharedPreferences.Editor editor){
+        editor.putBoolean("run",false);
+        editor.putBoolean("pet",false);
+        editor.commit();
+        handler.removeCallbacks(timerRunnable);
+        startBtn.setText("시작");
+        stopLocationService();
+        saveBtn.setVisibility(View.VISIBLE);
+        naverMap.takeSnapshot(new NaverMap.SnapshotReadyCallback() {
+            @Override
+            public void onSnapshotReady(@NonNull Bitmap bitmap) {
+                mbitmap=bitmap;
+            }
+        });
+        isRunning=false;
+    }
+
+    public void noRunning(SharedPreferences.Editor editor){
+        saveBtn.setVisibility(View.GONE);
+        count=0;
+        timeCount=0;
+        hours=0;
+        minutes=0;
+        seconds=0;
+        totalDistance=0;
+        totalCalorie=0;
+        timeText.setText(String.format("%02d:%02d:%02d", hours, minutes, seconds));
+        double speed=distance(xDistance,yDistance,lat,lon);
+        distanceText.setText(String.format("%.0f",totalDistance)+"m");
+        speedText.setText(Integer.toString((int)speed*3600/1000)+"km/h");
+        if(totalCalorie<1.0){
+            calorieText.setText(String.format("%.0f",totalCalorie*1000)+"cal");
+        }else{
+            calorieText.setText(String.format("%.2f",totalCalorie)+"kcal");
+        }
+        // 타이머 시작 또는 재개
+        path.setMap(null);
+        overLay.clear();
+        editor.putBoolean("run",true);
+        editor.putBoolean("pet",true);
+        editor.commit();
+        isRunning=true;
+        startBtn.setText("정지");
+        startTimer();
+        startLocationService();
+        Date currentDate = new Date();
+        SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        result = outputFormat.format(currentDate);
     }
 
 }

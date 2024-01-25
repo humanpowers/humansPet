@@ -6,12 +6,28 @@
     android:orientation="vertical">
 
 
+    <TextView
+        android:id="@+id/chatDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:text="2020년 01월 01일 월요일"
+        android:textColor="#000000"
+        android:textStyle="bold"
+        android:layout_margin="5dp"
+        android:padding="5dp"
+        android:background="@drawable/box_white_v2"
+        />
+
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:weightSum="10"
         android:gravity="right">
+
         <LinearLayout
             android:layout_width="0dp"
             android:layout_weight="10"
@@ -22,7 +38,7 @@
                 android:id="@+id/chatName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="end"
+                android:layout_gravity="right"
                 android:layout_marginTop="@dimen/diaryDiaryItemMarginTop"
                 android:text="이름"
                 android:textColor="#000000"
@@ -56,9 +72,8 @@
                     android:layout_height="wrap_content"
                     android:text="시간"
                     android:textSize="9sp"
-                    android:layout_marginEnd="10dp"
                     android:layout_gravity="bottom"
-                    android:gravity="bottom"
+                    android:layout_marginEnd="10dp"
                     android:textColor="#000000"
                     android:textStyle="bold"
                     />
@@ -72,22 +87,22 @@
                     android:layout_marginTop="@dimen/diaryDiaryItemMarginTop"
                     android:includeFontPadding="false"
                     android:lineSpacingExtra="2sp"
-                    android:maxWidth="250dp"
                     android:text="메시지"
                     android:textColor="#000000"
                     android:textStyle="bold"/>
 
             </LinearLayout>
         </LinearLayout>
+
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/chatItemImage"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_margin="10dp"
+            android:layout_width="@dimen/myChatImageWidth"
+            android:layout_height="@dimen/myChatImageHeight"
+            android:layout_margin="@dimen/myChatImageMargin"
+            android:scaleType="centerCrop"
             app:civ_border_color="@color/teal_200"
             app:civ_border_overlay="false"
-            app:civ_border_width="2dp"
-            android:scaleType="centerCrop" />
+            app:civ_border_width="2dp" />
     </LinearLayout>
 
 

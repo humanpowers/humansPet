@@ -111,7 +111,7 @@ public class WalkingBackground extends Service {
         startForeground(Constants.LOCATION_SERVICE_ID, builder.build());
     }
 
-    private void stopLocationService() {
+    public void stopLocationService() {
         Log.d(TAG, "stopLocationService: Stopping");
 
         // 위치 업데이트 중지

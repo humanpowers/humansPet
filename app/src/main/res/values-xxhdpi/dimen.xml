@@ -109,9 +109,9 @@
     <dimen name="myPageCheckBtnWidth">100dp</dimen>
     <dimen name="myPageCheckBtnHeight">50dp</dimen>
 
-    <dimen name="myChatImageWidth">50dp</dimen>
-    <dimen name="myChatImageHeight">50dp</dimen>
-    <dimen name="myChatImageMargin">15dp</dimen>
+    <dimen name="myChatImageWidth">30dp</dimen>
+    <dimen name="myChatImageHeight">30dp</dimen>
+    <dimen name="myChatImageMargin">10dp</dimen>
 
     <dimen name="noticeboardImageHeight">40dp</dimen>
     <dimen name="noticeboardImageWidth">40dp</dimen>

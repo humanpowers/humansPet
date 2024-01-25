@@ -50,6 +50,7 @@ public class ChatRoom extends AppCompatActivity {
     String message;
     ApiClient apiClient = new ApiClient();
     String image;
+    Boolean entranceBoolean=false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,13 +97,18 @@ public class ChatRoom extends AppCompatActivity {
                     for(int j=1;j<nameSp.length;j++){
                         nameSt+=nameSp[j];
                     }
-                    String messageSt="";
-                    String[] messageSp=getChatSp[3].split("");
-                    for(int j=0;j<messageSp.length-1;j++){
-                        messageSt+=messageSp[j];
+                    String timeSt="";
+                    String[] timeSp=getChatSp[5].split("");
+                    for(int j=0;j<timeSp.length-1;j++){
+                        timeSt+=timeSp[j];
                     }
-                    ChatItem chatItem= new ChatItem("http://"+apiClient.goUri(getChatSp[1]),nameSt,messageSt,getChatSp[2]);
-                    chatArrayList.add(chatItem);
+                    if(nameSt.equals(userName)){
+                        ChatItem chatItem= new ChatItem("http://"+apiClient.goUri(getChatSp[1]),nameSt,getChatSp[3],timeSt,getChatSp[2],getChatSp[4]);
+                        chatArrayList.add(chatItem);
+                    }else{
+                        ChatItem chatItem= new ChatItem("http://"+apiClient.goUri(getChatSp[1]),nameSt,getChatSp[3],timeSt,getChatSp[2],getChatSp[4]);
+                        chatArrayList.add(chatItem);
+                    }
                     chattingAdapter.notifyDataSetChanged();
                 }
                 recyclerView.scrollToPosition(chatArrayList.size()-1);
@@ -138,10 +144,32 @@ public class ChatRoom extends AppCompatActivity {
                 }else{
                     long now = System.currentTimeMillis();
                     Date date = new Date(now);
-                    SimpleDateFormat format = new SimpleDateFormat("MM:dd");
+                    SimpleDateFormat format = new SimpleDateFormat("yyyy년 MM월 dd일");
                     String todayDate=format.format(date);
+                    SimpleDateFormat outputFormat = new SimpleDateFormat("HH:mm");
+                    String todayTime = outputFormat.format(date);
+                    String[] timeSp=todayTime.split("");
+                    String hour = timeSp[0]+timeSp[1];
+                    String realTime="";
+                    if(Integer.parseInt(hour)>12){
+                        realTime="오후"+" "+Integer.toString(Integer.parseInt(hour)-12)+timeSp[2]+timeSp[3]+timeSp[4];
+                    }else if(Integer.parseInt(hour)==12){
+                        realTime="오후"+" "+timeSp[0]+timeSp[1]+timeSp[2]+timeSp[3]+timeSp[4];
+                    }else if(Integer.parseInt(hour)==24){
+                        realTime="오전"+" "+Integer.toString(Integer.parseInt(hour)-12)+timeSp[2]+timeSp[3]+timeSp[4];
+                    }else{
+                        realTime="오전"+" "+timeSp[0]+timeSp[1]+timeSp[2]+timeSp[3]+timeSp[4];
+                    }
+                    String read = "";
+                    if(entranceBoolean){
+                        read="읽음";
+                    }else{
+                        read="않읽음";
+                    }
+                    Log.d(TAG, "onClick: "+read);
+
                     ChatInterface api = ApiClient.getApiClient().create(ChatInterface.class);
-                    Call<String> call = api.ChattingAdd(userId,userName,userImage,messageEditText.getText().toString(),todayDate,otherName);
+                    Call<String> call = api.ChattingAdd(userId,userName,userImage,messageEditText.getText().toString(),todayDate,otherName,realTime,read);
                     call.enqueue(new Callback<String>() {
                         @Override
                         public void onResponse(Call<String> call, Response<String> response) {
@@ -192,6 +220,9 @@ public class ChatRoom extends AppCompatActivity {
     protected void onPause() {
         Log.d(TAG,"onPause호출");
         super.onPause();
+        new Thread(() -> {
+        out.println("소켓종료"+"!@!"+otherName);
+        }).start();
     }
 
     @Override
@@ -242,7 +273,7 @@ public class ChatRoom extends AppCompatActivity {
                 Log.d(TAG, "doInBackground: " + Thread.currentThread().getName() + out);
                 in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
-                out.println(userName);
+                out.println(userName+"!!@!!"+otherName);
                 while ((message = in.readLine()) != null) {
                     Log.d(TAG, "doInBackground: in됨: "+in);
                     updateChatView(message);
@@ -260,36 +291,77 @@ public class ChatRoom extends AppCompatActivity {
             @Override
             public void run() {
                 String[] messageSp=message.split(":");
-
-                long now = System.currentTimeMillis();
-                Date date = new Date(now);
-                SimpleDateFormat format = new SimpleDateFormat("MM:dd");
-                String todayDate=format.format(date);
-                Log.d(TAG, "run 이름: "+messageSp[0]);
-                Log.d(TAG, "run 메시지: "+messageSp[1]);
-                Log.d(TAG, "run 날짜: "+todayDate);
-                ChatItem chatItem= new ChatItem("http://"+apiClient.goUri(messageSp[2]),messageSp[0],messageSp[1],todayDate);
-                chatArrayList.add(chatItem);
-                Log.d(TAG, "run: "+chatArrayList);
-                recyclerView.scrollToPosition(chatArrayList.size()-1);
-                chattingAdapter.notifyDataSetChanged();
-
-                ChattingRoomInterface roomApi=ApiClient.getApiClient().create(ChattingRoomInterface.class);
-                Call<String> roomCall=roomApi.ChattingRoomAdd(userName,otherName);
-                roomCall.enqueue(new Callback<String>() {
-                    @Override
-                    public void onResponse(Call<String> call, Response<String> response) {
-
+                if(messageSp.length==2){
+                    Log.d(TAG, "run:길이가 2일때 "+messageSp[0]+"!!!"+messageSp[1]);
+                    if(messageSp[0].equals(otherName)&&messageSp[1].equals(userName)){
+                        Log.d(TAG, "run: 상대 접속");
+                        entranceBoolean=true;
+                        for(int i=0;i<chatArrayList.size();i++){
+                            chatArrayList.get(i).setRead("1");
+                        }
+                        chattingAdapter.notifyDataSetChanged();
                     }
-
-                    @Override
-                    public void onFailure(Call<String> call, Throwable t) {
-
+                }else if(messageSp.length==1){
+                    Log.d(TAG, "run: 1자리"+message);
+                    if(message.equals("이미접속")){
+                        Log.d(TAG, "run: 이미 접속중이다.");
+                        entranceBoolean=true;
+                    }else{
+                        Log.d(TAG, "run: 소켓종료 들어옴");
+                        entranceBoolean=false;
                     }
-                });
+                }else{
+                    long now = System.currentTimeMillis();
+                    Date date = new Date(now);
+                    SimpleDateFormat outputFormat = new SimpleDateFormat("HH:mm");
+                    String time=outputFormat.format(date);
+                    String[] timeSp=time.split("");
+                    String hour = timeSp[0]+timeSp[1];
+                    String realTime="";
+                    if(Integer.parseInt(hour)>12){
+                        realTime="오후"+" "+Integer.toString(Integer.parseInt(hour)-12)+timeSp[2]+timeSp[3]+timeSp[4];
+                    }else if(Integer.parseInt(hour)==12){
+                        realTime="오후"+" "+timeSp[0]+timeSp[1]+timeSp[2]+timeSp[3]+timeSp[4];
+                    }else if(Integer.parseInt(hour)==24){
+                        realTime="오전"+" "+Integer.toString(Integer.parseInt(hour)-12)+timeSp[2]+timeSp[3]+timeSp[4];
+                    }else{
+                        realTime="오전"+" "+timeSp[0]+timeSp[1]+timeSp[2]+timeSp[3]+timeSp[4];
+                    }
+                    SimpleDateFormat format = new SimpleDateFormat("yyyy년 MM월 dd일");
+                    String todayDate=format.format(date);
+                    Log.d(TAG, "run 이름: "+messageSp[0]);
+                    Log.d(TAG, "run 메시지: "+messageSp[1]);
+                    Log.d(TAG, "run 시간: "+time);
+                    if(messageSp[0].equals(userName)){
+                        if(entranceBoolean){
+                            ChatItem chatItem= new ChatItem("http://"+apiClient.goUri(messageSp[2]),messageSp[0],messageSp[1],realTime,todayDate,"1");
+                            chatArrayList.add(chatItem);
+                        }else{
+                            ChatItem chatItem= new ChatItem("http://"+apiClient.goUri(messageSp[2]),messageSp[0],messageSp[1],realTime,todayDate,"0");
+                            chatArrayList.add(chatItem);
+                        }
+                    }else{
+                        ChatItem chatItem= new ChatItem("http://"+apiClient.goUri(messageSp[2]),messageSp[0],messageSp[1],realTime,todayDate,"1");
+                        chatArrayList.add(chatItem);
+                    }
+                    Log.d(TAG, "run: "+chatArrayList);
+                    recyclerView.scrollToPosition(chatArrayList.size()-1);
+                    chattingAdapter.notifyDataSetChanged();
 
+                    ChattingRoomInterface roomApi=ApiClient.getApiClient().create(ChattingRoomInterface.class);
+                    Call<String> roomCall=roomApi.ChattingRoomAdd(userName,otherName);
+                    roomCall.enqueue(new Callback<String>() {
+                        @Override
+                        public void onResponse(Call<String> call, Response<String> response) {
 
+                        }
 
+                        @Override
+                        public void onFailure(Call<String> call, Throwable t) {
+
+                        }
+                    });
+                }
             }
         });
     }

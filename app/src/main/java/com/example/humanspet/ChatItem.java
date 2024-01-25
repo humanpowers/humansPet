@@ -6,12 +6,32 @@ public class ChatItem {
     private String name;
     private String message;
     private String date;
+    private String time;
+    private String read;
 
-    public ChatItem(String image, String name, String message, String date) {
+    public ChatItem(String image, String name, String message,String time, String date,String read) {
         this.image = image;
         this.name = name;
         this.message = message;
         this.date = date;
+        this.time=time;
+        this.read=read;
+    }
+
+    public String getRead() {
+        return read;
+    }
+
+    public void setRead(String read) {
+        this.read = read;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
     }
 
     public String getImage() {

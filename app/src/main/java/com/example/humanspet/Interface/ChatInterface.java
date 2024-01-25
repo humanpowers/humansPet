@@ -1,6 +1,5 @@
 package com.example.humanspet.Interface;
 
-import okhttp3.MultipartBody;
 import retrofit2.Call;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
@@ -15,6 +14,8 @@ public interface ChatInterface {
             @Part("image") String image,
             @Part("message") String message,
             @Part("date") String date,
-            @Part("otherName") String otherName
+            @Part("otherName") String otherName,
+            @Part("time") String time,
+            @Part("read") String read
     );
 }
