@@ -341,8 +341,13 @@ public class ChatRoom extends AppCompatActivity {
                             chatArrayList.add(chatItem);
                         }
                     }else{
-                        ChatItem chatItem= new ChatItem("http://"+apiClient.goUri(messageSp[2]),messageSp[0],messageSp[1],realTime,todayDate,"1");
-                        chatArrayList.add(chatItem);
+                        if(otherName.equals(messageSp[0])){
+                            ChatItem chatItem= new ChatItem("http://"+apiClient.goUri(messageSp[2]),messageSp[0],messageSp[1],realTime,todayDate,"1");
+                            chatArrayList.add(chatItem);
+                        }else{
+                            Log.d(TAG, "run: 상대가 아님");
+                        }
+                        
                     }
                     Log.d(TAG, "run: "+chatArrayList);
                     recyclerView.scrollToPosition(chatArrayList.size()-1);

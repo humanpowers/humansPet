@@ -35,7 +35,7 @@
     <item
         android:id="@+id/btn_fragmentE"
         android:enabled="true"
-        android:icon="@drawable/ic_info"
+        android:icon="@drawable/mypageimage"
         android:title="마이페이지"
         app:showAsAction="always"
         />
