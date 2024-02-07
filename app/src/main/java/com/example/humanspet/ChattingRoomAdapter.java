@@ -42,6 +42,13 @@ public class ChattingRoomAdapter extends RecyclerView.Adapter<ChattingRoomAdapte
         holder.title.setText(chattingRoomItemArrayList.get(position).getTitle());
         holder.content.setText(chattingRoomItemArrayList.get(position).getContent());
         holder.date.setText(chattingRoomItemArrayList.get(position).getDate());
+        if(chattingRoomItemArrayList.get(position).getRead()!=0){
+            holder.readCount.setText(Integer.toString(chattingRoomItemArrayList.get(position).getRead()));
+            holder.readCount.setVisibility(View.VISIBLE);
+        }else{
+            holder.readCount.setText(Integer.toString(chattingRoomItemArrayList.get(position).getRead()));
+            holder.readCount.setVisibility(View.GONE);
+        }
         if(mListener!=null){
             final int pos=position;
             holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -64,12 +71,14 @@ public class ChattingRoomAdapter extends RecyclerView.Adapter<ChattingRoomAdapte
         TextView title;
         TextView content;
         TextView date;
+        TextView readCount;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             image=itemView.findViewById(R.id.chatImage);
             title=itemView.findViewById(R.id.chatTitleText);
             content=itemView.findViewById(R.id.chatContentText);
             date=itemView.findViewById(R.id.chatDateText);
+            readCount=itemView.findViewById(R.id.chatReadCount);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

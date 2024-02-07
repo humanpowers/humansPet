@@ -342,6 +342,7 @@ public class Walking extends Fragment implements OnMapReadyCallback {
                 if(isRunning){
                     Toast.makeText(mActivity, "산책이 진행중일때는 펫을 바꿀 수 없습니다.", Toast.LENGTH_SHORT).show();
                 }else{
+                    diaryInfoItemArrayList.clear();
                     ViewGroup dialogParentView = (ViewGroup) dialogView.getParent();
                     dialogParentView.removeView(dialogView);
                     for(int i=0;i<responseArray.size();i++){

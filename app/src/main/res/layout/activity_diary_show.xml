@@ -73,6 +73,7 @@
         android:layout_width="@dimen/diaryShowImageWidth"
         android:layout_height="@dimen/diaryShowImageHeight"
         android:layout_marginTop="@dimen/diaryShowImageMarginTop"
+        android:background="@drawable/box_white_mint"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"

@@ -467,6 +467,7 @@ public class NoticeboardShow extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
         commentAdapter.setOnClickListener(new CommentAdapter.RecyclerViewClickListener() {
             @Override
             public void onImageButtonClicker(int position) {

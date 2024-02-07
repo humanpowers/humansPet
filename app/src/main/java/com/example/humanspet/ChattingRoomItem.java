@@ -1,23 +1,33 @@
 package com.example.humanspet;
 
 public class ChattingRoomItem {
-    int image;
+    String image;
     String title;
     String content;
     String date;
+    int read;
 
-    public ChattingRoomItem(int image, String title, String content, String date) {
+    public ChattingRoomItem(String image, String title, String content, String date,int read) {
         this.image = image;
         this.title = title;
         this.content = content;
         this.date = date;
+        this.read=read;
     }
 
-    public int getImage() {
+    public int getRead() {
+        return read;
+    }
+
+    public void setRead(int read) {
+        this.read = read;
+    }
+
+    public String getImage() {
         return image;
     }
 
-    public void setImage(int image) {
+    public void setImage(String image) {
         this.image = image;
     }
 

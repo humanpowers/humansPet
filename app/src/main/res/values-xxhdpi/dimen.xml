@@ -61,8 +61,8 @@
     <dimen name="addDiaryContentMarginTop">20dp</dimen>
     <dimen name="addDiaryContentPadding">16dp</dimen>
 
-    <dimen name="diaryDiaryItemImageWidth">100dp</dimen>
-    <dimen name="diaryDiaryItemImageHeight">100dp</dimen>
+    <dimen name="diaryDiaryItemImageWidth">70dp</dimen>
+    <dimen name="diaryDiaryItemImageHeight">70dp</dimen>
     <dimen name="diaryDiaryItemImageMargin">10dp</dimen>
     <dimen name="diaryDiaryItemMarginTop">10dp</dimen>
     <dimen name="diaryDiaryItemTitleWidth">250dp</dimen>

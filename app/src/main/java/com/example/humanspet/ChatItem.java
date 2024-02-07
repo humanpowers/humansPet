@@ -8,14 +8,24 @@ public class ChatItem {
     private String date;
     private String time;
     private String read;
+    private String imageChatting;
 
-    public ChatItem(String image, String name, String message,String time, String date,String read) {
+    public ChatItem(String image, String name, String message,String time, String date,String read,String imageChatting) {
         this.image = image;
         this.name = name;
         this.message = message;
         this.date = date;
         this.time=time;
         this.read=read;
+        this.imageChatting=imageChatting;
+    }
+
+    public String getImageChatting() {
+        return imageChatting;
+    }
+
+    public void setImageChatting(String imageChatting) {
+        this.imageChatting = imageChatting;
     }
 
     public String getRead() {

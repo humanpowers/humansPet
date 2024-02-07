@@ -80,9 +80,17 @@ public class ChattingAdapter extends RecyclerView.Adapter<ChattingAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull ChattingAdapter.ViewHolder holder, int position) {
-        Glide.with(holder.itemView.getContext()).load(chatItemArrayList.get(position).getImage()).centerCrop().override(100, 100).into(holder.image);
+        Glide.with(holder.itemView.getContext()).load(chatItemArrayList.get(position).getImage()).centerCrop().thumbnail(Glide.with(holder.itemView.getContext()).load(R.raw.loadinggif)).override(100, 100).into(holder.image);
         holder.name.setText(chatItemArrayList.get(position).getName());
-        holder.message.setText(chatItemArrayList.get(position).getMessage());
+        if(chatItemArrayList.get(position).getImageChatting().equals("1")){
+            holder.message.setVisibility(View.GONE);
+            holder.sendImage.setVisibility(View.VISIBLE);
+            Glide.with(holder.itemView.getContext()).load(chatItemArrayList.get(position).getMessage()).centerCrop().thumbnail(Glide.with(holder.itemView.getContext()).load(R.raw.loadinggif)).override(300, 300).into(holder.sendImage);
+        }else{
+            holder.message.setVisibility(View.VISIBLE);
+            holder.sendImage.setVisibility(View.GONE);
+            holder.message.setText(chatItemArrayList.get(position).getMessage());
+        }
         holder.time.setText(chatItemArrayList.get(position).getTime());
         if(holder.getItemViewType()==3||holder.getItemViewType()==4){
             holder.date.setText(chatItemArrayList.get(position).getDate());
@@ -140,6 +148,7 @@ public class ChattingAdapter extends RecyclerView.Adapter<ChattingAdapter.ViewHo
         ImageView image;
         TextView date;
         TextView read;
+        ImageView sendImage;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             image=itemView.findViewById(R.id.chatItemImage);
@@ -148,6 +157,7 @@ public class ChattingAdapter extends RecyclerView.Adapter<ChattingAdapter.ViewHo
             time=itemView.findViewById(R.id.chatTime);
             date=itemView.findViewById(R.id.chatDate);
             read=itemView.findViewById(R.id.chatRead);
+            sendImage=itemView.findViewById(R.id.chatSendImage);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
