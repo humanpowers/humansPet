@@ -32,6 +32,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -74,13 +75,16 @@ public class Diary extends Fragment  {
     ArrayList diaryArrayList=new ArrayList();
     LottieAnimationView animationView;
     private boolean fabMain_status = false;
-    private SharedPreferences sharedPreferences;
+    private SharedPreferences sharedPreferences,diaryPreferences;
     TextView diaryCalendarText,diaryGoneText;
     private FloatingActionButton fabMain;
     private FloatingActionButton fabCamera;
     private FloatingActionButton fabEdit;
     private long selectedDate;
     View v;
+    GridLayoutManager gridLayoutManager;
+    ImageButton gridBtn,verticalBtn;
+    SharedPreferences.Editor diaryEditor;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -105,10 +109,14 @@ public class Diary extends Fragment  {
         userId=preferences.getString("USERID","");
         Log.d(TAG, "onCreateView: userid"+userId);
 
+        diaryPreferences = getActivity().getSharedPreferences("DIARY",MODE_PRIVATE);
+        diaryEditor = diaryPreferences.edit();
+
         diaryCalendarText=v.findViewById(R.id.diaryCalendarText);
 
         recyclerView=v.findViewById(R.id.diaryRecyclerView);
         linearLayoutManager=new LinearLayoutManager(getActivity(), RecyclerView.HORIZONTAL, false);
+        gridLayoutManager = new GridLayoutManager(getActivity(),2);
         recyclerView.setLayoutManager(linearLayoutManager);
 
         diaryInfoAdapter =new DiaryInfoAdapter(diaryInfoItemArrayList);
@@ -155,7 +163,12 @@ public class Diary extends Fragment  {
 
                 diaryRecyclerView=v.findViewById(R.id.diaryDiaryRecyclerView);
                 diaryLinearLayoutManager=new LinearLayoutManager(getActivity(),RecyclerView.VERTICAL,false);
-                diaryRecyclerView.setLayoutManager(diaryLinearLayoutManager);
+                String diaryType = diaryPreferences.getString("TYPE","1");
+                if(diaryType.equals("1")){
+                    diaryRecyclerView.setLayoutManager(diaryLinearLayoutManager);
+                }else{
+                    diaryRecyclerView.setLayoutManager(gridLayoutManager);
+                }
 
                 diaryDiaryAdapter=new DiaryDiaryAdapter(diaryDiaryItemArrayList);
                 diaryRecyclerView.setAdapter(diaryDiaryAdapter);
@@ -181,7 +194,8 @@ public class Diary extends Fragment  {
                     Log.d(TAG, "onResponse: name: "+petNameSt);
                     Log.d(TAG, "onResponse: content: "+petResponseSp[1]);
                     if(petNameSt.equals(petName)){
-                        DiaryDiaryItem diaryDiaryItem =new DiaryDiaryItem(petResponseSp[2],petResponseSp[3],petTitleSt,petResponseSp[1]);
+                        diaryType = diaryPreferences.getString("TYPE","1");
+                        DiaryDiaryItem diaryDiaryItem =new DiaryDiaryItem(petResponseSp[2],petResponseSp[3],petTitleSt,petResponseSp[1],diaryType);
                         diaryDiaryItemArrayList.add(diaryDiaryItem);
                         diaryArrayList.add(String.valueOf(petResponseArray.get(i)));
                         Log.d(TAG, "onResponse: 다이어리어레이리스트"+diaryDiaryItemArrayList);
@@ -407,7 +421,8 @@ public class Diary extends Fragment  {
                             Log.d(TAG, "dialogDateSt: "+i+petResponseSp[3]);
                             Log.d(TAG, "selectDateSt: "+i+selectDateSt);
                             if(petResponseSp[3].equals(selectDateSt)&&petNameSt.equals(petName)){
-                                DiaryDiaryItem diaryDiaryItem =new DiaryDiaryItem(petResponseSp[2],petResponseSp[3],petTitleSt,petResponseSp[1]);
+                                String diaryType = diaryPreferences.getString("TYPE","1");
+                                DiaryDiaryItem diaryDiaryItem =new DiaryDiaryItem(petResponseSp[2],petResponseSp[3],petTitleSt,petResponseSp[1],diaryType);
                                 diaryDiaryItemArrayList.add(diaryDiaryItem);
                                 diaryCount++;
                                 diaryDiaryAdapter.notifyDataSetChanged();
@@ -452,7 +467,8 @@ public class Diary extends Fragment  {
                     Log.d(TAG, "onResponse: name: "+petNameSt);
                     Log.d(TAG, "onResponse: content: "+petResponseSp[1]);
                     if(petNameSt.equals(petName)){
-                        DiaryDiaryItem diaryDiaryItem =new DiaryDiaryItem(petResponseSp[2],petResponseSp[3],petTitleSt,petResponseSp[1]);
+                        String diaryType = diaryPreferences.getString("TYPE","1");
+                        DiaryDiaryItem diaryDiaryItem =new DiaryDiaryItem(petResponseSp[2],petResponseSp[3],petTitleSt,petResponseSp[1],diaryType);
                         diaryDiaryItemArrayList.add(diaryDiaryItem);
                         diaryArrayList.add(String.valueOf(petResponseArray.get(i)));
                         Log.d(TAG, "onResponse: 다이어리어레이리스트"+diaryDiaryItemArrayList);
@@ -460,6 +476,7 @@ public class Diary extends Fragment  {
                         diaryCount++;
                     }
                 }
+                diaryCalendarText.setText("원하는 날짜를 선택해주세요.");
                 if(diaryCount==0){
                     TextView diaryGoneText=v.findViewById(R.id.diaryGoneText);
                     diaryGoneText.setVisibility(View.VISIBLE);
@@ -468,6 +485,35 @@ public class Diary extends Fragment  {
                     diaryGoneText.setVisibility(View.GONE);
                 }
                 calendarBackBtn.setVisibility(View.GONE);
+            }
+        });
+
+        verticalBtn = v.findViewById(R.id.diaryDiaryVerticalButton);
+        gridBtn = v.findViewById(R.id.diaryDiaryGridButton);
+
+        verticalBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                diaryRecyclerView.setLayoutManager(diaryLinearLayoutManager);
+                for(int i=0;i<diaryDiaryItemArrayList.size();i++){
+                    diaryDiaryItemArrayList.get(i).setType("1");
+                }
+                diaryEditor.putString("TYPE","1");
+                diaryEditor.commit();
+                diaryDiaryAdapter.notifyDataSetChanged();
+            }
+        });
+
+        gridBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                diaryRecyclerView.setLayoutManager(gridLayoutManager);
+                for(int i=0;i<diaryDiaryItemArrayList.size();i++){
+                    diaryDiaryItemArrayList.get(i).setType("2");
+                }
+                diaryEditor.putString("TYPE","2");
+                diaryEditor.commit();
+                diaryDiaryAdapter.notifyDataSetChanged();
             }
         });
 
@@ -535,7 +581,12 @@ public class Diary extends Fragment  {
 
                 diaryRecyclerView=v.findViewById(R.id.diaryDiaryRecyclerView);
                 diaryLinearLayoutManager=new LinearLayoutManager(getActivity(),RecyclerView.VERTICAL,false);
-                diaryRecyclerView.setLayoutManager(diaryLinearLayoutManager);
+                String diaryType = diaryPreferences.getString("TYPE","1");
+                if(diaryType.equals("1")){
+                    diaryRecyclerView.setLayoutManager(diaryLinearLayoutManager);
+                }else{
+                    diaryRecyclerView.setLayoutManager(gridLayoutManager);
+                }
 
                 diaryDiaryAdapter=new DiaryDiaryAdapter(diaryDiaryItemArrayList);
                 diaryRecyclerView.setAdapter(diaryDiaryAdapter);
@@ -571,7 +622,8 @@ public class Diary extends Fragment  {
                             Log.d(TAG, "onResponse: name: "+petNameSt);
                             Log.d(TAG, "onResponse: content: "+petResponseSp[1]);
                             if(petNameSt.equals(petName)){
-                                DiaryDiaryItem diaryDiaryItem =new DiaryDiaryItem(petResponseSp[2],petResponseSp[3],petTitleSt,petResponseSp[1]);
+                                String diaryType = diaryPreferences.getString("TYPE","1");
+                                DiaryDiaryItem diaryDiaryItem =new DiaryDiaryItem(petResponseSp[2],petResponseSp[3],petTitleSt,petResponseSp[1],diaryType);
                                 diaryDiaryItemArrayList.add(diaryDiaryItem);
                                 diaryArrayList.add(String.valueOf(petResponseArray.get(i)));
                                 Log.d(TAG, "onResponse: 다이어리어레이리스트"+diaryDiaryItemArrayList);
@@ -674,6 +726,12 @@ public class Diary extends Fragment  {
         RecyclerView recyclerView=v.findViewById(R.id.diaryRecyclerView);
         View diaryContour = v.findViewById(R.id.diaryContour);
         ImageButton calendarImage=v.findViewById(R.id.diaryCalendarButton);
+        ImageButton diaryGridBtn = v.findViewById(R.id.diaryDiaryGridButton);
+        ImageButton diaryVerticalBtn = v.findViewById(R.id.diaryDiaryVerticalButton);
+        View diaryMainContour = v.findViewById(R.id.diaryMainContour);
+        diaryMainContour.setVisibility(View.VISIBLE);
+        diaryGridBtn.setVisibility(View.VISIBLE);
+        diaryVerticalBtn.setVisibility(View.VISIBLE);
         calendarImage.setVisibility(View.VISIBLE);
         diaryContour.setVisibility(View.VISIBLE);
         calendarText.setVisibility(View.VISIBLE);
@@ -693,6 +751,12 @@ public class Diary extends Fragment  {
         View diaryContour = v.findViewById(R.id.diaryContour);
         RecyclerView recyclerView=v.findViewById(R.id.diaryRecyclerView);
         ImageButton calendarImage=v.findViewById(R.id.diaryCalendarButton);
+        ImageButton diaryGridBtn = v.findViewById(R.id.diaryDiaryGridButton);
+        ImageButton diaryVerticalBtn = v.findViewById(R.id.diaryDiaryVerticalButton);
+        View diaryMainContour = v.findViewById(R.id.diaryMainContour);
+        diaryMainContour.setVisibility(View.GONE);
+        diaryGridBtn.setVisibility(View.GONE);
+        diaryVerticalBtn.setVisibility(View.GONE);
         calendarImage.setVisibility(View.GONE);
         diaryContour.setVisibility(View.GONE);
         calendarText.setVisibility(View.GONE);

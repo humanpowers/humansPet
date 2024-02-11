@@ -68,6 +68,11 @@
     <dimen name="diaryDiaryItemTitleWidth">250dp</dimen>
     <dimen name="diaryDiaryItemTitleHeight">50dp</dimen>
 
+    <dimen name="diaryDiaryGridItemTitleWidth">160dp</dimen>
+    <dimen name="diaryDiaryGridItemImageWidth">160dp</dimen>
+    <dimen name="diaryDiaryGridItemImageHeight">70dp</dimen>
+
+
     <dimen name="diaryInfoItemImageWidth">60dp</dimen>
     <dimen name="diaryInfoItemImageHeight">60dp</dimen>
     <dimen name="diaryInfoItemImageMargin">15dp</dimen>
@@ -95,9 +100,9 @@
 
     <dimen name="diaryFragmentRecyclerViewMargin">10dp</dimen>
     <dimen name="diaryFragmentRecyclerViewHeight">123dp</dimen>
-    <dimen name="diaryFragmentRecyclerViewMarginTop">32dp</dimen>
+    <dimen name="diaryFragmentRecyclerViewMarginTop">50dp</dimen>
     <dimen name="diaryFragmentDivisionMarginTop">50dp</dimen>
-    <dimen name="diaryFragmentDiaryRecyclerViewHeight">560dp</dimen>
+    <dimen name="diaryFragmentDiaryRecyclerViewHeight">545dp</dimen>
     <dimen name="diaryFragmentDiaryRecyclerViewMarginBotton">50dp</dimen>
     <dimen name="diaryFragmentNoPetTextWidth">280dp</dimen>
     <dimen name="diaryFragmentNoPetTextHeight">50dp</dimen>

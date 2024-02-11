@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Diary">
+    tools:context=".Diary"
+    >
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -18,22 +19,36 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/fragmentTitleMarginStart"
+            android:layout_marginTop="10dp"
             android:textSize="@dimen/fragmentTitleTextSize"
+            android:textStyle="bold"
+            android:textColor="#000000"
             android:text="다이어리"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:id="@+id/diaryMainContour"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="#6603DAC5"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toTopOf="@id/diaryRecyclerView"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/diaryRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="@dimen/diaryFragmentRecyclerViewHeight"
             android:layout_marginStart="@dimen/diaryFragmentRecyclerViewMargin"
-            android:layout_marginTop="@dimen/diaryFragmentRecyclerViewMarginTop"
             android:layout_marginEnd="@dimen/diaryFragmentRecyclerViewMargin"
+            android:layout_marginTop="15dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@id/diaryTitleText"/>
 
         <View
             android:id="@+id/diaryContour"
@@ -57,6 +72,32 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent" />
+
+        <ImageButton
+            android:id="@+id/diaryDiaryVerticalButton"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:scaleType="centerCrop"
+            android:background="#00ffffff"
+            android:layout_marginRight="15dp"
+            android:src="@drawable/diary_vertical"
+            android:visibility="gone"
+            app:layout_constraintTop_toTopOf="@id/diaryDiaryGridButton"
+            app:layout_constraintEnd_toStartOf="@id/diaryDiaryGridButton"
+            />
+
+        <ImageButton
+            android:id="@+id/diaryDiaryGridButton"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:scaleType="centerCrop"
+            android:background="#00ffffff"
+            android:layout_margin="10dp"
+            android:src="@drawable/diary_grid"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            />
 
         <TextView
             android:id="@+id/diaryNoPetText"

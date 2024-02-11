@@ -1,6 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@drawable/box_mint"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:layout_margin="10dp">
+
+
+        <TextView
+            android:id="@+id/diaryDiaryTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="@dimen/diaryDiaryItemMarginTop"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:textColor="#000000"
+            android:text="진우개" />
+
+        <ImageView
+            android:id="@+id/diaryDiaryImage"
+            android:layout_width="@dimen/diaryDiaryGridItemImageWidth"
+            android:layout_height="@dimen/diaryDiaryGridItemImageHeight"
+            android:layout_marginEnd="@dimen/diaryDiaryItemImageMargin"
+            android:layout_marginStart="@dimen/diaryDiaryItemImageMargin"
+            android:layout_marginTop="@dimen/diaryDiaryItemImageMargin"
+            android:layout_marginBottom="@dimen/diaryDiaryItemImageMargin"
+            android:scaleType="centerCrop"
+            tools:srcCompat="@tools:sample/avatars"/>
+
+        <TextView
+            android:id="@+id/diaryDiaryContent"
+            android:layout_width="@dimen/diaryDiaryGridItemTitleWidth"
+            android:layout_height="@dimen/diaryDiaryItemTitleHeight"
+            android:layout_marginTop="@dimen/diaryDiaryItemMarginTop"
+            android:layout_margin="10dp"
+            android:layout_gravity="left"
+            android:maxLines="2"
+            android:ellipsize="end"
+            android:textSize="13sp"
+            android:textColor="#000000"
+            android:text="진우개" />
+
+        <TextView
+            android:id="@+id/diaryDiaryDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="날짜"
+            android:layout_gravity="bottom"
+            android:layout_marginEnd="10dp"
+            android:textStyle="bold"
+            android:textSize="12sp"
+            android:textColor="#000000"
+            android:layout_margin="10dp"
+            />
+
+
+    </LinearLayout>
+
+
+
+
+</LinearLayout>

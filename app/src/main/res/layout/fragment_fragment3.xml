@@ -12,23 +12,28 @@
         tools:context=".MainPage">
 
         <TextView
-            android:id="@+id/noticeBoardTitleText"
+            android:id="@+id/chattingTitleText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/fragmentTitleMarginStart"
+            android:layout_marginTop="10dp"
             android:textSize="@dimen/fragmentTitleTextSize"
+            android:textStyle="bold"
+            android:textColor="#000000"
             android:text="채팅"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-        <LinearLayout
-            android:id="@+id/spinnerLinear"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_gravity="center"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/noticeBoardTitleText"/>
+
+        <View
+            android:id="@+id/chattingMainContour"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="#6603DAC5"
+            android:layout_marginTop="10dp"
+            app:layout_constraintTop_toBottomOf="@id/chattingTitleText"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/chatRecyclerView"
@@ -36,7 +41,7 @@
             android:layout_height="match_parent"
             android:layout_marginTop="50dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/spinnerLinear" />
+            app:layout_constraintTop_toBottomOf="@id/chattingTitleText" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>

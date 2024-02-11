@@ -226,6 +226,7 @@ public class Walking extends Fragment implements OnMapReadyCallback {
                 if(response.body().size()==0){
                     AlertDialog.Builder dlg = new AlertDialog.Builder(getContext());
                     dlg.setMessage("등록된 펫이 없습니다.");
+                    dlg.setCancelable(false);
                     dlg.setPositiveButton("확인", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
@@ -256,6 +257,7 @@ public class Walking extends Fragment implements OnMapReadyCallback {
                         }
                         AlertDialog dialog = dialogBuilder.create(); // AlertDialog로 변경
                         dialog.show();
+                        dialog.setCancelable(false);
 
                         selectBtn=dialogView.findViewById(R.id.walkingDialogSelectButton);
                         selectBtn.setOnClickListener(new View.OnClickListener() {
@@ -359,6 +361,7 @@ public class Walking extends Fragment implements OnMapReadyCallback {
 
                     AlertDialog dialog = dialogBuilder.create(); // AlertDialog로 변경
                     dialog.show();
+                    dialog.setCancelable(false);
 
                     selectBtn=dialogView.findViewById(R.id.walkingDialogSelectButton);
                     selectBtn.setOnClickListener(new View.OnClickListener() {

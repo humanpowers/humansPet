@@ -28,6 +28,15 @@ public class DiaryDiaryAdapter extends RecyclerView.Adapter<DiaryDiaryAdapter.Vi
     private RecyclerViewClickListener mListener;
     ApiClient apiClient=new ApiClient();
 
+    @Override
+    public int getItemViewType(int position) {
+        if(diaryDiaryItemArrayList.get(position).getType().equals("1")){
+            return 1;
+        }else{
+            return 2;
+        }
+    }
+
     public void setOnClickListener(RecyclerViewClickListener listener){
         this.mListener=listener;
     }
@@ -35,7 +44,12 @@ public class DiaryDiaryAdapter extends RecyclerView.Adapter<DiaryDiaryAdapter.Vi
     @NonNull
     @Override
     public DiaryDiaryAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.diary_diary_item,parent,false);
+        View view;
+        if(viewType==1){
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.diary_diary_item,parent,false);
+        }else{
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.diary_diary_item_grid,parent,false);
+        }
         return new ViewHolder(view);
     }
 

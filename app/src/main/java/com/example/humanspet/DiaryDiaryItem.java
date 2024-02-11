@@ -5,12 +5,22 @@ public class DiaryDiaryItem {
     String date;
     String title;
     String content;
+    String type;
 
-    public DiaryDiaryItem(String image, String date, String title,String content) {
+    public DiaryDiaryItem(String image, String date, String title,String content,String type) {
         this.image = image;
         this.date = date;
         this.title = title;
         this.content = content;
+        this.type = type;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public String getContent() {

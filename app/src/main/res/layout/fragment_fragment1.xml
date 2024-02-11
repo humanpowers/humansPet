@@ -30,6 +30,8 @@
         android:layout_marginTop="10dp"
         android:textSize="@dimen/fragmentTitleTextSize"
         android:text="게시판"
+        android:textStyle="bold"
+        android:textColor="#000000"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

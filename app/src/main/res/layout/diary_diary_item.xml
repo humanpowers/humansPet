@@ -31,24 +31,46 @@
             android:layout_height="wrap_content"
             android:layout_gravity="left"
             android:layout_marginTop="@dimen/diaryDiaryItemMarginTop"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:textColor="#000000"
             android:text="진우개" />
-    <TextView
-        android:id="@+id/diaryDiaryContent"
-        android:layout_width="@dimen/diaryDiaryItemTitleWidth"
-        android:layout_height="@dimen/diaryDiaryItemTitleHeight"
-        android:layout_marginTop="@dimen/diaryDiaryItemMarginTop"
-        android:layout_gravity="left"
-        android:maxLines="2"
-        android:ellipsize="end"
-        android:text="진우개" />
-        <TextView
-            android:id="@+id/diaryDiaryDate"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="날짜"
-            android:layout_gravity="end"
-            android:layout_marginEnd="10dp"
-            />
+            android:orientation="horizontal"
+            android:baselineAligned="true">
+
+            <TextView
+                android:id="@+id/diaryDiaryContent"
+                android:layout_width="@dimen/diaryDiaryItemTitleWidth"
+                android:layout_height="@dimen/diaryDiaryItemTitleHeight"
+                android:layout_marginTop="@dimen/diaryDiaryItemMarginTop"
+                android:layout_gravity="left"
+                android:maxLines="2"
+                android:ellipsize="end"
+                android:textSize="13sp"
+                android:textColor="#000000"
+                android:text="진우개" />
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/diaryDiaryDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="날짜"
+                android:layout_gravity="bottom"
+                android:layout_marginEnd="10dp"
+                android:textStyle="bold"
+                android:textSize="12sp"
+                android:textColor="#000000"
+                />
+
+
+        </LinearLayout>
     </LinearLayout>
     </LinearLayout>
     <View
