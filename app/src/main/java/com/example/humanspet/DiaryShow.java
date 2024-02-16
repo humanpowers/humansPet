@@ -1,8 +1,5 @@
 package com.example.humanspet;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -11,11 +8,14 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.bumptech.glide.Glide;
@@ -32,11 +32,11 @@ public class DiaryShow extends AppCompatActivity {
     ImageView imageView;
     TextView titleText;
     EditText contentText;
-    Button checkBtn,deleteBtn,correctionBtn,cancelBtn,finishBtn;
     ApiClient apiClient=new ApiClient();
     private SharedPreferences preferences;
     String beforeContent="";
     LottieAnimationView animationView;
+    ImageButton checkBtn,cancelBtn,deleteBtn,correctionBtn,finishBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -137,7 +137,7 @@ public class DiaryShow extends AppCompatActivity {
                     }
                 });
                 Toast.makeText(DiaryShow.this, "본문을 클릭하여 수정해주세요.", Toast.LENGTH_SHORT).show();
-                checkBtn.setVisibility(View.GONE);
+                checkBtn.setVisibility(View.INVISIBLE);
                 correctionBtn.setVisibility(View.GONE);
                 deleteBtn.setVisibility(View.GONE);
                 finishBtn.setVisibility(View.VISIBLE);
@@ -157,8 +157,8 @@ public class DiaryShow extends AppCompatActivity {
                                 checkBtn.setVisibility(View.VISIBLE);
                                 correctionBtn.setVisibility(View.VISIBLE);
                                 deleteBtn.setVisibility(View.VISIBLE);
-                                finishBtn.setVisibility(View.GONE);
-                                cancelBtn.setVisibility(View.GONE);
+                                finishBtn.setVisibility(View.INVISIBLE);
+                                cancelBtn.setVisibility(View.INVISIBLE);
                                 diaryShowTextCount.setVisibility(View.GONE);
                             }
                         });
@@ -198,8 +198,8 @@ public class DiaryShow extends AppCompatActivity {
                                         checkBtn.setVisibility(View.VISIBLE);
                                         correctionBtn.setVisibility(View.VISIBLE);
                                         deleteBtn.setVisibility(View.VISIBLE);
-                                        finishBtn.setVisibility(View.GONE);
-                                        cancelBtn.setVisibility(View.GONE);
+                                        finishBtn.setVisibility(View.INVISIBLE);
+                                        cancelBtn.setVisibility(View.INVISIBLE);
                                     }
                                 }
 

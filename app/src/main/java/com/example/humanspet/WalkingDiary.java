@@ -267,6 +267,9 @@ public class WalkingDiary extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 mapOff();
+                if(diaryCalendarText.equals("원하는 날짜를 선택해주세요.")){
+                    calendarBackBtn.setVisibility(View.GONE);
+                }
                 mapBoolean=false;
                 if(calendarBackBoolean==false){
                     calendarBackBtn.setVisibility(View.GONE);

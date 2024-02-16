@@ -19,7 +19,6 @@ import android.icu.text.SimpleDateFormat;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Messenger;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -98,7 +97,6 @@ public class Walking extends Fragment implements OnMapReadyCallback {
     double lon;
     MapFragment mapFragment;
     PathOverlay path;
-    private Messenger mServiceMessenger = null;
     ArrayList<CoordinateItem> coordinateItems=new ArrayList<>();
     private SharedPreferences preferences,userPreferences;
     ConstraintLayout dialogView;
@@ -154,6 +152,7 @@ public class Walking extends Fragment implements OnMapReadyCallback {
 
         // 맵이 준비되면 콜백 호출
         mapFragment.getMapAsync(this);
+
         isRunning=preferences.getBoolean("run",false);
         if(isRunning){
             timeText.setText(String.format("%02d:%02d:%02d", hours, minutes, seconds));
@@ -274,7 +273,8 @@ public class Walking extends Fragment implements OnMapReadyCallback {
                                     nameSt+=nameSp[j];
                                 }
                                 petName=nameSt;
-                                petWeight= Integer.parseInt(responseSp[4]);
+                                String[] petWeightSp = responseSp[4].split("");
+                                petWeight= Integer.parseInt(petWeightSp[0]);
                                 editor.putString("selectPet",petName);
                                 editor.commit();
                                 View mapView = getView().findViewById(R.id.mapView);

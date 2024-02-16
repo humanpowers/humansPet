@@ -85,6 +85,7 @@ public class Diary extends Fragment  {
     GridLayoutManager gridLayoutManager;
     ImageButton gridBtn,verticalBtn;
     SharedPreferences.Editor diaryEditor;
+    String petImage;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -155,6 +156,7 @@ public class Diary extends Fragment  {
                     nameSt+=nameSp[j];
                 }
                 petName=nameSt;
+                petImage=responseSp[1];
                 SharedPreferences.Editor editor = preferences.edit();
                 editor.remove("PETNAME");
                 editor.putString("PETNAME",petName);
@@ -259,6 +261,7 @@ public class Diary extends Fragment  {
                 }else{
                     Intent intent = new Intent(getActivity(),DiaryAdd.class);
                     intent.putExtra("petName",petName);
+                    intent.putExtra("petImage","http://"+apiClient.goUri(petImage));
                     endView(v);
                     startActivity(intent);
                 }
@@ -404,7 +407,7 @@ public class Diary extends Fragment  {
                             diaryDiaryAdapter.notifyDataSetChanged();
                         }
                         int diaryCount=0;
-                        for(int i=0;i<petResponseArray.size();i++){
+                        for(int i=petResponseArray.size()-1;i>=0;i--){
                             String petResponseSt= String.valueOf(petResponseArray.get(i));
                             String[] petResponseSp=petResponseSt.split(", ");
                             String[] petTitleSp=petResponseSp[0].split("");
@@ -555,9 +558,11 @@ public class Diary extends Fragment  {
             @Override
             public void onResponse(Call<ArrayList> call, Response<ArrayList> response) {
                 Log.d(TAG, "onResponse: "+response.body());
+                TextView noPet = v.findViewById(R.id.diaryNoPetText);
                 if(response.body().size()==0){
-                    TextView noPet = v.findViewById(R.id.diaryNoPetText);
                     noPet.setVisibility(View.VISIBLE);
+                }else{
+                    noPet.setVisibility(View.GONE);
                 }
                 responseArray=response.body();
                 for(int i=0;i<responseArray.size();i++){
@@ -573,6 +578,7 @@ public class Diary extends Fragment  {
 
                     if(petName.equals("")){
                         petName=nameSt;
+                        petImage=responseSp[1];
                         editor.putString("PETNAME",petName);
                         editor.commit();
                     }

@@ -46,20 +46,20 @@
     <dimen name="myInfoCheckBtnWidth">100dp</dimen>
     <dimen name="myInfoCheckBtnHeight">50dp</dimen>
 
-    <dimen name="addDiaryImageWidth">255dp</dimen>
-    <dimen name="addDiaryImageHeight">255dp</dimen>
+    <dimen name="addDiaryImageWidth">20dp</dimen>
+    <dimen name="addDiaryImageHeight">20dp</dimen>
     <dimen name="addDiaryImageMarginTop">8dp</dimen>
-    <dimen name="addDiaryCheckBtnHeight">50dp</dimen>
-    <dimen name="addDiaryCheckBtnWidth">100dp</dimen>
+    <dimen name="addDiaryCheckBtnHeight">25dp</dimen>
+    <dimen name="addDiaryCheckBtnWidth">25dp</dimen>
     <dimen name="addDiaryCheckBtnMarginTop">50dp</dimen>
     <dimen name="addDiaryCheckBtnMarginBottom">20dp</dimen>
     <dimen name="addDiaryTitleTextSize">20sp</dimen>
-    <dimen name="addDiaryTitleMarginTop">30dp</dimen>
-    <dimen name="addDiaryTitleEditWidth">200dp</dimen>
+    <dimen name="addDiaryTitleMarginTop">60dp</dimen>
     <dimen name="addDiaryContentWidth">300dp</dimen>
     <dimen name="addDiaryContentHeight">300dp</dimen>
     <dimen name="addDiaryContentMarginTop">20dp</dimen>
-    <dimen name="addDiaryContentPadding">16dp</dimen>
+    <dimen name="addDiaryContentPadding">10dp</dimen>
+    <dimen name="addDiaryTitlePadding">10dp</dimen>
 
     <dimen name="diaryDiaryItemImageWidth">70dp</dimen>
     <dimen name="diaryDiaryItemImageHeight">70dp</dimen>
@@ -68,9 +68,9 @@
     <dimen name="diaryDiaryItemTitleWidth">250dp</dimen>
     <dimen name="diaryDiaryItemTitleHeight">50dp</dimen>
 
-    <dimen name="diaryDiaryGridItemTitleWidth">160dp</dimen>
-    <dimen name="diaryDiaryGridItemImageWidth">160dp</dimen>
-    <dimen name="diaryDiaryGridItemImageHeight">70dp</dimen>
+    <dimen name="diaryDiaryGridItemTitleWidth">170dp</dimen>
+    <dimen name="diaryDiaryGridItemImageWidth">170dp</dimen>
+    <dimen name="diaryDiaryGridItemImageHeight">90dp</dimen>
 
 
     <dimen name="diaryInfoItemImageWidth">60dp</dimen>
@@ -79,8 +79,8 @@
     <dimen name="diaryInfoItemImageMarginSide">10dp</dimen>
     <dimen name="diaryInfoItemNameMarginTop">7dp</dimen>
 
-    <dimen name="diaryShowCheckBtnWidth">100dp</dimen>
-    <dimen name="diaryShowCheckBtnHeight">50dp</dimen>
+    <dimen name="diaryShowCheckBtnWidth">25dp</dimen>
+    <dimen name="diaryShowCheckBtnHeight">25dp</dimen>
     <dimen name="diaryShowCheckBtnTextSize">20dp</dimen>
     <dimen name="diaryShowCheckBtnMarginTop">20dp</dimen>
     <dimen name="diaryShowCheckBtnMarginBottom">20dp</dimen>

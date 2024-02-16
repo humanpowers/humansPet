@@ -4,136 +4,144 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#eeeeee"
     tools:context=".DiaryShow">
 
-    <Button
-        android:id="@+id/showDiaryCheckButton"
-        android:layout_width="@dimen/diaryShowCheckBtnWidth"
-        android:layout_height="@dimen/diaryShowCheckBtnHeight"
-        android:background="@drawable/box_mint"
-        android:text="확인"
-        android:textSize="@dimen/diaryShowCheckBtnTextSize"
+    <ImageButton
+        android:id="@+id/showDiaryFinishButton"
+        android:layout_width="@dimen/addDiaryCheckBtnWidth"
+        android:layout_height="@dimen/addDiaryCheckBtnHeight"
+        android:background="#00FFFFFF"
+        android:scaleType="centerCrop"
+        android:src="@drawable/check_btn"
+        android:visibility="invisible"
+        android:layout_margin="10dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/showDiaryDeleteButton"
-        app:layout_constraintTop_toTopOf="@+id/showDiaryDeleteButton" />
-
-    <TextView
-        android:id="@+id/showDiaryTitleText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="제목"
-        android:layout_marginTop="@dimen/diaryShowTitleMarginTop"
-        android:textSize="@dimen/diaryShowTitleTextSize"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.15"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
+        android:id="@+id/showDiaryTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="다이어리 보기"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:textColor="#000000"
+        app:layout_constraintTop_toTopOf="@id/showDiaryFinishButton"
+        app:layout_constraintLeft_toRightOf="@id/showDiaryCheckButton"
+        app:layout_constraintRight_toLeftOf="@id/showDiaryFinishButton"
+        />
+
+
+    <ImageButton
+        android:id="@+id/showDiaryCheckButton"
+        android:layout_width="@dimen/addDiaryCheckBtnWidth"
+        android:layout_height="@dimen/addDiaryCheckBtnHeight"
+        android:layout_margin="10dp"
+        android:src="@drawable/back"
+        android:scaleType="centerCrop"
+        android:background="#00FFFFFF"
+        app:tint="@color/human_color"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/showDiaryMainContour"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="#6603DAC5"
+        android:layout_marginTop="10dp"
+        app:layout_constraintTop_toBottomOf="@id/showDiaryTitle"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        />
+
+    <TextView
         android:id="@+id/showDiaryTitleEdit"
-        android:layout_width="@dimen/diaryShowTitleEditWidth"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:text=""
-        android:maxLength="30"
-        android:textSize="@dimen/diaryShowTitleTextSize"
+        android:hint="제목"
+        android:maxLines="1"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:padding="@dimen/addDiaryTitlePadding"
+        android:maxLength="29"
+        android:background="#eeeeee"
+        android:textSize="18sp"
         android:textColor="#000000"
-        app:layout_constraintBottom_toBottomOf="@+id/showDiaryTitleText"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/showDiaryTitleText"
-        app:layout_constraintTop_toTopOf="@+id/showDiaryTitleText"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@id/showDiaryMainContour"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
         tools:ignore="SpeakableTextPresentCheck"/>
+
 
     <ScrollView
         android:id="@+id/scrollView2"
-        android:layout_width="300dp"
-        android:layout_height="300dp"
-        android:layout_marginTop="@dimen/diaryShowContentMarginTop"
-        android:background="#eeeeee"
-        android:padding="@dimen/diaryShowContentPadding"
-        app:layout_constraintEnd_toEndOf="@+id/showDiaryImage"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="@+id/showDiaryImage"
+        android:layout_width="match_parent"
+        android:layout_height="420dp"
+        android:layout_weight="1"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        app:layout_constraintEnd_toEndOf="@+id/showDiaryTitleEdit"
+        app:layout_constraintHorizontal_bias="0.6"
+        app:layout_constraintStart_toStartOf="@+id/showDiaryTitleEdit"
         app:layout_constraintTop_toBottomOf="@+id/showDiaryImage">
 
         <EditText
             android:id="@+id/showDiaryContentEdit"
             android:layout_width="@dimen/diaryShowContentWidth"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="@null"
-            android:gravity="top"
+            android:background="#eeeeee"
+            android:hint="내용"
             android:maxLength="500"
-            android:textColor="#000000" />
+            android:gravity="top"
+            android:padding="@dimen/addDiaryContentPadding"
+            android:textSize="15sp"
+            android:textColor="#000000"/>
 
     </ScrollView>
 
     <ImageView
         android:id="@+id/showDiaryImage"
-        android:layout_width="@dimen/diaryShowImageWidth"
-        android:layout_height="@dimen/diaryShowImageHeight"
-        android:layout_marginTop="@dimen/diaryShowImageMarginTop"
-        android:background="@drawable/box_white_mint"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/showDiaryTitleEdit"
-        android:scaleType="centerInside"
-        tools:srcCompat="@tools:sample/avatars" />
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:scaleType="fitCenter"
+        android:background="#eeeeee"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        app:layout_constraintTop_toBottomOf="@id/showDiaryTitleEdit"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        />
 
-    <Button
+    <ImageButton
         android:id="@+id/showDiaryDeleteButton"
         android:layout_width="@dimen/diaryShowCheckBtnWidth"
         android:layout_height="@dimen/diaryShowCheckBtnHeight"
-        android:layout_marginTop="@dimen/diaryShowCheckBtnMarginTop"
-        android:layout_marginBottom="@dimen/diaryShowCheckBtnMarginBottom"
-        android:background="@drawable/box_mint"
-        android:text="삭제"
-        android:textSize="@dimen/diaryShowCheckBtnTextSize"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-/>
+        android:background="#00ffffff"
+        android:src="@drawable/delete_image"
+        android:scaleType="centerCrop"
+        android:layout_marginRight="10dp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/showDiaryCheckButton"
+        />
 
-    <Button
-        android:id="@+id/showDiaryCancelButton"
-        android:layout_width="@dimen/diaryShowCheckBtnWidth"
-        android:layout_height="@dimen/diaryShowCheckBtnHeight"
-        android:layout_marginBottom="20dp"
-        android:background="@drawable/box_mint"
-        android:visibility="gone"
-        android:text="취소"
-        android:textSize="@dimen/diaryShowCheckBtnTextSize"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.25"
-        app:layout_constraintStart_toStartOf="parent" />
 
-    <Button
-        android:id="@+id/showDiaryFinishButton"
-        android:layout_width="@dimen/diaryShowCheckBtnWidth"
-        android:layout_height="@dimen/diaryShowCheckBtnHeight"
-        android:layout_marginBottom="20dp"
-        android:background="@drawable/box_mint"
-        android:visibility="gone"
-        android:text="완료"
-        android:textSize="@dimen/diaryShowCheckBtnTextSize"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.75"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <Button
+    <ImageButton
         android:id="@+id/showDiaryCorrectionButton"
         android:layout_width="@dimen/diaryShowCheckBtnWidth"
         android:layout_height="@dimen/diaryShowCheckBtnHeight"
-        android:background="@drawable/box_mint"
-        android:text="수정"
-        android:textSize="@dimen/diaryShowCheckBtnTextSize"
-        app:layout_constraintEnd_toStartOf="@+id/showDiaryDeleteButton"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/showDiaryDeleteButton" />
+        android:background="#00ffffff"
+        android:src="@drawable/modify_image"
+        android:scaleType="centerCrop"
+        android:layout_marginRight="10dp"
+        app:layout_constraintTop_toTopOf="@id/showDiaryDeleteButton"
+        app:layout_constraintRight_toLeftOf="@id/showDiaryDeleteButton"
+
+        />
 
     <TextView
         android:id="@+id/diaryShowCountText"
@@ -143,6 +151,20 @@
         android:visibility="gone"
         app:layout_constraintStart_toEndOf="@+id/scrollView2"
         app:layout_constraintBottom_toBottomOf="@+id/scrollView2" />
+
+    <ImageButton
+        android:id="@+id/showDiaryCancelButton"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:background="#00ffffff"
+        android:src="@drawable/x_image"
+        android:scaleType="centerCrop"
+        android:layout_marginRight="10dp"
+        android:visibility="invisible"
+        app:layout_constraintTop_toTopOf="@id/showDiaryFinishButton"
+        app:layout_constraintRight_toLeftOf="@id/showDiaryFinishButton"
+        />
+
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/showDiaryLottie"
         android:layout_width="@dimen/diaryFragmentLottieWidth"

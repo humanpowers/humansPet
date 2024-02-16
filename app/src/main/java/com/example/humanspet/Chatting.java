@@ -242,7 +242,7 @@ public class Chatting extends Fragment {
         protected Void doInBackground(Void... voids) {
             try {
                 Log.d(TAG, "doInBackground: " + Thread.currentThread().getName() + ": 소켓쓰레드");
-                socket = new Socket("18.225.32.239", 8888); // 서버 IP 주소와 포트 번호를 서버에 맞게 변경
+                socket = new Socket("3.16.161.235", 8888); // 서버 IP 주소와 포트 번호를 서버에 맞게 변경
                 Log.d(TAG, "doInBackground: " + Thread.currentThread().getName() + ": 소켓아래");
                 out = new PrintWriter(socket.getOutputStream(), true);
                 Log.d(TAG, "doInBackground: " + Thread.currentThread().getName() + out);

@@ -2,6 +2,7 @@ package com.example.humanspet;
 
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,6 +15,7 @@ public class MainPage extends AppCompatActivity {
     String TAG="메인";
     BottomNavigationView bottomNavigationView;
     Fragment first,second,third,fourth,fifth;
+    long backPressedTime=0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,6 +92,22 @@ public class MainPage extends AppCompatActivity {
            }
        });
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    public void onBackPressed(){
+        if(backPressedTime+3000>System.currentTimeMillis()){
+            super.onBackPressed();
+            finish();
+        }else{
+            Toast.makeText(this, "한번 더 뒤로가기 버튼을 누르면 종료됩니다.", Toast.LENGTH_SHORT).show();
+        }
+        backPressedTime=System.currentTimeMillis();
     }
 
 }

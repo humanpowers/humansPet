@@ -126,12 +126,13 @@ public class ChattingAdapter extends RecyclerView.Adapter<ChattingAdapter.ViewHo
         }
         if (mListener != null) {
             final int pos = position;
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
+            holder.sendImage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     mListener.onImageButtonClicker(pos);
                 }
             });
+
         }
     }
 
@@ -158,18 +159,6 @@ public class ChattingAdapter extends RecyclerView.Adapter<ChattingAdapter.ViewHo
             date=itemView.findViewById(R.id.chatDate);
             read=itemView.findViewById(R.id.chatRead);
             sendImage=itemView.findViewById(R.id.chatSendImage);
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    int position = getAdapterPosition();
-                    if(position != RecyclerView.NO_POSITION){
-                        if(mListener!=null){
-                            mListener.onImageButtonClicker(position);
-                        }
-                    }
-
-                }
-            });
         }
     }
 }

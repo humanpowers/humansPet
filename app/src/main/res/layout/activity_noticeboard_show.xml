@@ -15,12 +15,13 @@
 
     <ImageButton
         android:id="@+id/noticeboardShowCancelButton"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_margin="5dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_margin="10dp"
         android:background="#00ffffff"
         android:scaleType="centerCrop"
         android:src="@drawable/back"
+        app:tint="@color/human_color"
         android:visibility="gone"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -33,15 +34,17 @@
         android:text="게시판"
         android:textSize="20sp"
         android:visibility="gone"
+        android:textColor="#000000"
+        android:textStyle="bold"
         app:layout_constraintEnd_toStartOf="@+id/noticeboardShowSendButton"
         app:layout_constraintStart_toEndOf="@+id/noticeboardShowCancelButton"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageButton
         android:id="@+id/noticeboardShowSendButton"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_margin="5dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_margin="10dp"
         android:background="#00ffffff"
         android:scaleType="centerCrop"
         android:src="@drawable/send"

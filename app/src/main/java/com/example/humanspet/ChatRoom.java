@@ -30,6 +30,7 @@ import com.example.humanspet.Interface.ChattingImageSendInterface;
 import com.example.humanspet.Interface.ChattingRoomInterface;
 import com.example.humanspet.Interface.GetChatting;
 import com.example.humanspet.Interface.MyInfoInterface;
+import com.github.chrisbanes.photoview.PhotoView;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -71,6 +72,9 @@ public class ChatRoom extends AppCompatActivity {
     ImageButton imageSendBtn;
     LinearLayout textLinear,imageLinear;
     String imageName;
+    ImageButton imageCancelBtn;
+    PhotoView imagePhotoView;
+    Boolean imageBoolean;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +82,7 @@ public class ChatRoom extends AppCompatActivity {
         setContentView(R.layout.activity_chat_room);
         Log.d(TAG,"onCreate호출");
 
+        imageBoolean=false;
         preferences = getSharedPreferences("USER",MODE_PRIVATE);
         userName=preferences.getString("USERNAME","");
 
@@ -90,6 +95,8 @@ public class ChatRoom extends AppCompatActivity {
         imageSendBtn = findViewById(R.id.chattingImageSendButton);
         textLinear = findViewById(R.id.chattingTextLinear);
         imageLinear = findViewById(R.id.chattingImageLinear);
+        imagePhotoView = findViewById(R.id.chattingPhotoView);
+        imageCancelBtn = findViewById(R.id.chattingPhotoViewCancelBtn);
 
 
         MyInfoInterface getImage = ApiClient.getApiClient().create(MyInfoInterface.class);
@@ -281,6 +288,25 @@ public class ChatRoom extends AppCompatActivity {
             }
         });
 
+        chattingAdapter.setOnClickListener(new ChattingAdapter.RecyclerViewClickListener() {
+            @Override
+            public void onImageButtonClicker(int position) {
+                Log.d(TAG, "onImageButtonClicker: 사진클릭됨");
+                imageClick();
+                imageBoolean=true;
+                Glide.with(ChatRoom.this).load(chatArrayList.get(position).getMessage()).centerCrop().thumbnail(Glide.with(ChatRoom.this).load(R.raw.loadinggif)).override(1000, 1000).into(imagePhotoView);
+
+            }
+        });
+
+        imageCancelBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                imageCancel();
+                imageBoolean=false;
+            }
+        });
+
         imageSendBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -422,7 +448,7 @@ public class ChatRoom extends AppCompatActivity {
         protected Void doInBackground(Void... voids) {
             try {
                 Log.d(TAG, "doInBackground: " + Thread.currentThread().getName() + ": 소켓쓰레드");
-                socket = new Socket("18.225.32.239", 8888); // 서버 IP 주소와 포트 번호를 서버에 맞게 변경
+                socket = new Socket("3.16.161.235", 8888); // 서버 IP 주소와 포트 번호를 서버에 맞게 변경
                 Log.d(TAG, "doInBackground: " + Thread.currentThread().getName() + ": 소켓아래");
                 out = new PrintWriter(socket.getOutputStream(), true);
                 Log.d(TAG, "doInBackground: " + Thread.currentThread().getName() + out);
@@ -594,5 +620,36 @@ public class ChatRoom extends AppCompatActivity {
         String result= cursor.getString(column_index);
         cursor.close();
         return  result;
+    }
+
+    public void imageClick(){
+        TextView titleText = findViewById(R.id.chatTitle);
+        RecyclerView chatRecyclerView = findViewById(R.id.chattingRecyclerView);
+        LinearLayout chattingLinear = findViewById(R.id.chattingTextLinear);
+        LinearLayout chattingPhotoLinear = findViewById(R.id.chattingPhotoViewLinear);
+        titleText.setVisibility(View.GONE);
+        chatRecyclerView.setVisibility(View.GONE);
+        chattingLinear.setVisibility(View.GONE);
+        chattingPhotoLinear.setVisibility(View.VISIBLE);
+    }
+
+    public void imageCancel(){
+        TextView titleText = findViewById(R.id.chatTitle);
+        RecyclerView chatRecyclerView = findViewById(R.id.chattingRecyclerView);
+        LinearLayout chattingLinear = findViewById(R.id.chattingTextLinear);
+        LinearLayout chattingPhotoLinear = findViewById(R.id.chattingPhotoViewLinear);
+        titleText.setVisibility(View.VISIBLE);
+        chatRecyclerView.setVisibility(View.VISIBLE);
+        chattingLinear.setVisibility(View.VISIBLE);
+        chattingPhotoLinear.setVisibility(View.GONE);
+    }
+    @Override
+    public void onBackPressed(){
+        if(imageBoolean==true){
+            imageCancel();
+            imageBoolean=false;
+        }else{
+            finish();
+        }
     }
 }

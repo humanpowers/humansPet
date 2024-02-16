@@ -15,6 +15,9 @@ public interface DiaryDiaryAddInterface {
             @Part("title") String title,
             @Part("content") String content,
             @Part("date") String date,
+            @Part("address") String address,
+            @Part("latitude") String latitude,
+            @Part("longitude") String longitude,
             @Part MultipartBody.Part file
     );
 
