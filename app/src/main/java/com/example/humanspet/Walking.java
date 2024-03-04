@@ -15,6 +15,11 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
 import android.icu.text.SimpleDateFormat;
 import android.os.Build;
 import android.os.Bundle;
@@ -24,6 +29,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RemoteViews;
 import android.widget.TextView;
@@ -43,6 +49,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.humanspet.Interface.DiaryRecyclerViewInterface;
+import com.example.humanspet.Interface.WalkingMarkerInterface;
 import com.example.humanspet.Interface.WalkingPetInterface;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.naver.maps.geometry.LatLng;
@@ -52,11 +59,17 @@ import com.naver.maps.map.LocationTrackingMode;
 import com.naver.maps.map.MapFragment;
 import com.naver.maps.map.NaverMap;
 import com.naver.maps.map.OnMapReadyCallback;
+import com.naver.maps.map.overlay.Align;
+import com.naver.maps.map.overlay.Marker;
+import com.naver.maps.map.overlay.Overlay;
+import com.naver.maps.map.overlay.OverlayImage;
 import com.naver.maps.map.overlay.PathOverlay;
 import com.naver.maps.map.util.FusedLocationSource;
+import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -99,7 +112,7 @@ public class Walking extends Fragment implements OnMapReadyCallback {
     PathOverlay path;
     ArrayList<CoordinateItem> coordinateItems=new ArrayList<>();
     private SharedPreferences preferences,userPreferences;
-    ConstraintLayout dialogView;
+    ConstraintLayout dialogView,markerDialog;
     ArrayList<DiaryInfoItem> diaryInfoItemArrayList = new ArrayList<>();
     DiaryInfoAdapter diaryInfoAdapter;
     private LinearLayoutManager linearLayoutManager;
@@ -119,6 +132,12 @@ public class Walking extends Fragment implements OnMapReadyCallback {
     RemoteViews custom_layout;
     public MainPage mActivity;
     Context mContext;
+    ArrayList<WalkingMarkerItem> markerItems;
+    TextView markerDialogTitle,markerDialogContent;
+    ImageView markerDialogImage;
+    Button markerDialogCheckBtn,markerDialogMoveBtn;
+    Marker marker;
+    ArrayList<Marker> markers = new ArrayList<Marker>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -211,6 +230,9 @@ public class Walking extends Fragment implements OnMapReadyCallback {
         dialogView = (ConstraintLayout) View.inflate(mContext,R.layout.walking_pet_dialog,null);
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(mContext);
         dialogBuilder.setView(dialogView);
+        markerDialog = (ConstraintLayout) View.inflate(mContext,R.layout.walking_marker_dialog,null);
+        AlertDialog.Builder markerDialogBuilder = new AlertDialog.Builder(mContext);
+        markerDialogBuilder.setView(markerDialog);
         recyclerView = dialogView.findViewById(R.id.walkingDialogRecyclerView);
         linearLayoutManager = new LinearLayoutManager(mActivity, RecyclerView.HORIZONTAL, false);
         recyclerView.setLayoutManager(linearLayoutManager);
@@ -265,7 +287,7 @@ public class Walking extends Fragment implements OnMapReadyCallback {
                                 ApiClient apiClient = new ApiClient();
                                 String responseSt= String.valueOf(responseArray.get(selectPosition));
                                 String[] responseSp=responseSt.split(", ");
-                                Glide.with(getActivity()).load("http://"+apiClient.goUri(responseSp[1])).thumbnail(Glide.with(getActivity()).load(R.raw.loadinggif)).override(200,200).into(petImage);
+                                Glide.with(getActivity()).load("http://"+apiClient.goUri(responseSp[1])).thumbnail(Glide.with(getActivity()).load(R.raw.loadinggif)).override(1000,1000).into(petImage);
                                 dialog.dismiss();
                                 String[] nameSp=responseSp[0].split("");
                                 String nameSt="";
@@ -282,6 +304,82 @@ public class Walking extends Fragment implements OnMapReadyCallback {
                                     mapView.setVisibility(View.VISIBLE);
                                 }
                                 mapReady();
+
+                                for(int i=0;i<markerItems.size();i++){
+                                    if(markerItems.get(i).getName().equals(petName)&&markerItems.get(i).getAddress()!=null){
+                                        Log.d(TAG, "onClick: 몇번 들어오냐?");
+                                        int finalI = i;
+                                        new Thread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                try {
+                                                    Bitmap bitmap = Picasso.get().load("http://3.141.38.95"+markerItems.get(finalI).getImage()).get();
+                                                    bitmap=getRoundedBitmap(bitmap);
+                                                    // 이미지를 OverlayImage로 변환
+                                                    OverlayImage overlayImage = OverlayImage.fromBitmap(bitmap);
+                                                    // 마커에 이미지 적용
+                                                    getActivity().runOnUiThread(new Runnable() {
+                                                        @Override
+                                                        public void run() {
+//                                                            marker.setMap(null);
+                                                            marker = new Marker();
+                                                            markers.add(marker);
+                                                            marker.setWidth(100);
+                                                            marker.setHeight(100);
+                                                            marker.setPosition(new LatLng(Float.valueOf(markerItems.get(finalI).getLatitude()), Float.valueOf(markerItems.get(finalI).getLongitude())));
+                                                            marker.setCaptionText(markerItems.get(finalI).getTitle());
+                                                            marker.setCaptionAligns(Align.Top);
+                                                            marker.setMap(naverMap);
+                                                            marker.setCaptionOffset(10);
+//                                                            marker.setIcon(overlayImage); // 이미지 적용
+                                                            marker.setOnClickListener(new Overlay.OnClickListener() {
+                                                                @Override
+                                                                public boolean onClick(@NonNull Overlay overlay) {
+                                                                    if(markerDialog.getParent()!=null){
+                                                                        ViewGroup dialogParentView = (ViewGroup) markerDialog.getParent();
+                                                                        dialogParentView.removeView(markerDialog);
+                                                                    }
+                                                                    AlertDialog markerAlertDialog = markerDialogBuilder.create(); // AlertDialog로 변경
+                                                                    markerAlertDialog.show();
+                                                                    markerAlertDialog.setCancelable(false);
+                                                                    markerDialogTitle=markerAlertDialog.findViewById(R.id.markerDialogTitle);
+                                                                    markerDialogContent=markerAlertDialog.findViewById(R.id.markerDialogContent);
+                                                                    markerDialogImage=markerAlertDialog.findViewById(R.id.markerDialogImage);
+                                                                    markerDialogCheckBtn=markerAlertDialog.findViewById(R.id.markerDialogCheckButton);
+                                                                    markerDialogMoveBtn=markerAlertDialog.findViewById(R.id.markerDialogMoveButton);
+                                                                    markerDialogTitle.setText(markerItems.get(finalI).getTitle());
+                                                                    markerDialogContent.setText(markerItems.get(finalI).getContent());
+                                                                    Glide.with(getActivity()).load("http://"+apiClient.goUri(markerItems.get(finalI).getImage())).thumbnail(Glide.with(getActivity()).load(R.raw.loadinggif)).override(200,200).into(markerDialogImage);
+                                                                    markerDialogCheckBtn.setOnClickListener(new View.OnClickListener() {
+                                                                        @Override
+                                                                        public void onClick(View view) {
+                                                                            markerAlertDialog.dismiss();
+                                                                        }
+                                                                    });
+
+                                                                    markerDialogMoveBtn.setOnClickListener(new View.OnClickListener() {
+                                                                        @Override
+                                                                        public void onClick(View view) {
+                                                                            Intent intent = new Intent(getActivity(),DiaryShow.class);
+                                                                            intent.putExtra("title",markerItems.get(finalI).getTitle());
+                                                                            intent.putExtra("content",markerItems.get(finalI).getContent());
+                                                                            intent.putExtra("image",markerItems.get(finalI).getImage());
+                                                                            startActivity(intent);
+                                                                        }
+                                                                    });
+
+                                                                    return false;
+                                                                }
+                                                            });
+                                                        }
+                                                    });
+                                                } catch (IOException e) {
+                                                    e.printStackTrace();
+                                                }
+                                            }
+                                        }).start();
+                                    }
+                                }
                             }
                         });
                     }else{
@@ -305,10 +403,6 @@ public class Walking extends Fragment implements OnMapReadyCallback {
 
         captureScreenShot = v.findViewById(R.id.mapView);
         captureScreenShot.setDrawingCacheEnabled(true);
-
-
-
-
 
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -370,7 +464,7 @@ public class Walking extends Fragment implements OnMapReadyCallback {
                             ApiClient apiClient = new ApiClient();
                             String responseSt= String.valueOf(responseArray.get(selectPosition));
                             String[] responseSp=responseSt.split(", ");
-                            Glide.with(getActivity()).load("http://"+apiClient.goUri(responseSp[1])).thumbnail(Glide.with(getActivity()).load(R.raw.loadinggif)).override(200,200).into(petImage);
+                            Glide.with(getActivity()).load("http://"+apiClient.goUri(responseSp[1])).thumbnail(Glide.with(getActivity()).load(R.raw.loadinggif)).override(1000,1000).into(petImage);
                             dialog.dismiss();
                             String[] nameSp=responseSp[0].split("");
                             String nameSt="";
@@ -386,11 +480,92 @@ public class Walking extends Fragment implements OnMapReadyCallback {
                                 mapView.setVisibility(View.VISIBLE);
                             }
                             mapReady();
+                            for(int i=0;i<markers.size();i++){
+                                Marker markerRemove = markers.get(i);
+                                markerRemove.setMap(null);
+                            }
+                            markers.clear();
+
+                            for(int i=0;i<markerItems.size();i++){
+                                if(markerItems.get(i).getName().equals(petName)&&markerItems.get(i).getAddress()!=null){
+                                    Log.d(TAG, "onClick: 몇번 들어오냐?");
+                                    int finalI = i;
+                                    new Thread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            try {
+                                                Bitmap bitmap = Picasso.get().load("http://3.141.38.95"+markerItems.get(finalI).getImage()).get();
+                                                bitmap=getRoundedBitmap(bitmap);
+                                                // 이미지를 OverlayImage로 변환
+                                                OverlayImage overlayImage = OverlayImage.fromBitmap(bitmap);
+                                                // 마커에 이미지 적용
+                                                getActivity().runOnUiThread(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        Marker marker = new Marker();
+                                                        markers.add(marker);
+                                                        marker.setWidth(100);
+                                                        marker.setHeight(100);
+                                                        marker.setPosition(new LatLng(Float.valueOf(markerItems.get(finalI).getLatitude()), Float.valueOf(markerItems.get(finalI).getLongitude())));
+                                                        marker.setCaptionText(markerItems.get(finalI).getTitle());
+                                                        marker.setCaptionAligns(Align.Top);
+                                                        marker.setMap(naverMap);
+                                                        marker.setCaptionOffset(10);
+//                                                            marker.setIcon(overlayImage); // 이미지 적용
+                                                        marker.setOnClickListener(new Overlay.OnClickListener() {
+                                                            @Override
+                                                            public boolean onClick(@NonNull Overlay overlay) {
+                                                                if(markerDialog.getParent()!=null){
+                                                                    ViewGroup dialogParentView = (ViewGroup) markerDialog.getParent();
+                                                                    dialogParentView.removeView(markerDialog);
+                                                                }
+                                                                AlertDialog markerAlertDialog = markerDialogBuilder.create(); // AlertDialog로 변경
+                                                                markerAlertDialog.show();
+                                                                markerAlertDialog.setCancelable(false);
+                                                                markerDialogTitle=markerAlertDialog.findViewById(R.id.markerDialogTitle);
+                                                                markerDialogContent=markerAlertDialog.findViewById(R.id.markerDialogContent);
+                                                                markerDialogImage=markerAlertDialog.findViewById(R.id.markerDialogImage);
+                                                                markerDialogCheckBtn=markerAlertDialog.findViewById(R.id.markerDialogCheckButton);
+                                                                markerDialogMoveBtn=markerAlertDialog.findViewById(R.id.markerDialogMoveButton);
+                                                                markerDialogTitle.setText(markerItems.get(finalI).getTitle());
+                                                                markerDialogContent.setText(markerItems.get(finalI).getContent());
+                                                                Glide.with(getActivity()).load("http://"+apiClient.goUri(markerItems.get(finalI).getImage())).thumbnail(Glide.with(getActivity()).load(R.raw.loadinggif)).override(1000,1000).into(markerDialogImage);
+                                                                markerDialogCheckBtn.setOnClickListener(new View.OnClickListener() {
+                                                                    @Override
+                                                                    public void onClick(View view) {
+                                                                        markerAlertDialog.dismiss();
+                                                                    }
+                                                                });
+
+                                                                markerDialogMoveBtn.setOnClickListener(new View.OnClickListener() {
+                                                                    @Override
+                                                                    public void onClick(View view) {
+                                                                        Intent intent = new Intent(getActivity(),DiaryShow.class);
+                                                                        intent.putExtra("title",markerItems.get(finalI).getTitle());
+                                                                        intent.putExtra("content",markerItems.get(finalI).getContent());
+                                                                        intent.putExtra("image",markerItems.get(finalI).getImage());
+                                                                        startActivity(intent);
+                                                                    }
+                                                                });
+
+                                                                return false;
+                                                            }
+                                                        });
+                                                    }
+                                                });
+                                            } catch (IOException e) {
+                                                e.printStackTrace();
+                                            }
+                                        }
+                                    }).start();
+                                }
+                            }
                         }
                     });
                 }
             }
         });
+
 
 
         return v;
@@ -657,6 +832,25 @@ public class Walking extends Fragment implements OnMapReadyCallback {
         super.onResume();
         mapFragment.onResume();
         Log.d(TAG, "onResume: 호출");
+
+        WalkingMarkerInterface walkingMarkerInterface = ApiClient.getApiClient().create(WalkingMarkerInterface.class);
+        Call<ArrayList<WalkingMarkerItem>> markerCall = walkingMarkerInterface.walkingMarker(userId);
+        markerCall.enqueue(new Callback<ArrayList<WalkingMarkerItem>>() {
+            @Override
+            public void onResponse(Call<ArrayList<WalkingMarkerItem>> call, Response<ArrayList<WalkingMarkerItem>> response) {
+                if (response.isSuccessful()) {
+                    markerItems = response.body();
+
+                } else {
+                    Log.e(TAG, "onResponse: Error response, code: " + response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<WalkingMarkerItem>> call, Throwable t) {
+                Log.d(TAG, "onFailure: ",t);
+            }
+        });
     }
 
     @Override
@@ -891,6 +1085,28 @@ public class Walking extends Fragment implements OnMapReadyCallback {
         Date currentDate = new Date();
         SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         result = outputFormat.format(currentDate);
+    }
+    public Bitmap getRoundedBitmap(Bitmap bitmap) {
+        // 비트맵 크기 설정
+        int width = bitmap.getWidth();
+        int height = bitmap.getHeight();
+
+        // 원형 비트맵 생성
+        Bitmap output = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(output);
+
+        // 원형 모양의 마스크 생성
+        Paint paint = new Paint();
+        paint.setAntiAlias(true);
+        paint.setColor(Color.WHITE);
+        paint.setStyle(Paint.Style.FILL);
+        canvas.drawCircle(width / 2f, height / 2f, Math.min(width, height) / 2f, paint);
+
+        // 원형 모양의 마스크 위에 원본 비트맵을 그립니다.
+        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
+        canvas.drawBitmap(bitmap, 0, 0, paint);
+
+        return output;
     }
 
 }

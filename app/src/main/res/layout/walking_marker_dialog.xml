@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@drawable/box_white_v2"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:gravity="center"
+        >
+
+
+        <TextView
+            android:id="@+id/markerDialogTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="@dimen/diaryDiaryItemMarginTop"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:textColor="#000000"
+            android:text="진우개" />
+
+        <ImageView
+            android:id="@+id/markerDialogImage"
+            android:layout_width="@dimen/markerDialogImageWidth"
+            android:layout_height="@dimen/markerDialogImageHeight"
+            android:layout_marginEnd="@dimen/diaryDiaryItemImageMargin"
+            android:layout_marginStart="@dimen/diaryDiaryItemImageMargin"
+            android:layout_marginTop="@dimen/diaryDiaryItemImageMargin"
+            android:layout_marginBottom="@dimen/diaryDiaryItemImageMargin"
+            android:scaleType="centerCrop"
+            tools:srcCompat="@tools:sample/avatars"/>
+
+        <TextView
+            android:id="@+id/markerDialogContent"
+            android:layout_width="@dimen/diaryDiaryGridItemTitleWidth"
+            android:layout_height="@dimen/diaryDiaryItemTitleHeight"
+            android:layout_marginTop="@dimen/diaryDiaryItemMarginTop"
+            android:layout_margin="10dp"
+            android:layout_gravity="left"
+            android:maxLines="2"
+            android:ellipsize="end"
+            android:textSize="13sp"
+            android:textColor="#000000"
+            android:text="진우개" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="6"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:layout_marginBottom="10dp"
+            >
+            <Button
+                android:id="@+id/markerDialogCheckButton"
+                android:layout_width="50dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:background="@drawable/box_mint"
+                android:text="확인"
+                android:layout_gravity="start"
+                android:gravity="center"/>
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="2" />
+
+            <Button
+                android:id="@+id/markerDialogMoveButton"
+                android:layout_width="50dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:layout_gravity="bottom"
+                android:gravity="center"
+                android:background="@drawable/box_mint"
+                android:text="이동"
+                />
+
+        </LinearLayout>
+
+
+
+    </LinearLayout>
+
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

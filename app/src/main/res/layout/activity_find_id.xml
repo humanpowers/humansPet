@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#33dddddd"
+    tools:context=".FindId">
+
+    <TextView
+        android:id="@+id/findIdText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="아이디 찾기"
+        android:textSize="20sp"
+        android:layout_marginTop="25dp"
+        android:textStyle="bold"
+        android:textColor="#000000"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/findIdPreviousButton"
+        android:layout_width="60dp"
+        android:layout_height="40dp"
+        android:background="#00ffffff"
+        android:text="이전"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        android:textColor="#000000"
+        app:layout_constraintBottom_toBottomOf="@+id/findIdText"
+        app:layout_constraintEnd_toStartOf="@+id/findIdText"
+        app:layout_constraintHorizontal_bias="0.2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/findIdText" />
+
+
+
+
+    <EditText
+        android:id="@+id/findIdPhoneEdit"
+        android:layout_width="220dp"
+        android:layout_height="@dimen/registerEditHeight"
+        android:layout_marginTop="@dimen/findIdEditMarginTop"
+        android:background="@drawable/box_white_gray"
+        android:inputType="phone"
+        android:maxLength="13"
+        android:padding="5dp"
+        android:textSize="@dimen/registerEditTextSize"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintHorizontal_bias="0.1"
+        app:layout_constraintTop_toBottomOf="@+id/findIdText"/>
+
+
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/barrier2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="left" />
+
+    <Button
+        android:id="@+id/findIdPhoneCheckBtn"
+        android:layout_width="@dimen/registerCheckBtnWidth"
+        android:layout_height="@dimen/registerCheckBtnHeight"
+        android:background="@drawable/box_mint"
+        android:text="휴대폰 인증"
+        android:textColor="#000000"
+        android:textSize="@dimen/registerCheckBtnTextSize"
+        app:layout_constraintBottom_toBottomOf="@+id/findIdPhoneEdit"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/findIdPhoneEdit"
+        app:layout_constraintTop_toTopOf="@+id/findIdPhoneEdit" />
+
+    <TextView
+        android:id="@+id/findIdPhoneCheckText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:layout_marginTop="5dp"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="@+id/findIdPhoneEdit"
+        app:layout_constraintTop_toBottomOf="@+id/findIdPhoneEdit"/>
+
+
+    <TextView
+        android:id="@+id/findIdPhoneText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:text="휴대폰"
+        android:textColor="#000000"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/findIdPhoneEdit"
+        app:layout_constraintStart_toStartOf="@+id/findIdPhoneEdit" />
+
+    <EditText
+        android:id="@+id/findIdPhoneCodeEdit"
+        android:layout_width="220dp"
+        android:layout_height="@dimen/registerEditHeight"
+        android:background="@drawable/box_white_gray"
+        android:ems="10"
+        android:inputType="number"
+        android:maxLength="13"
+        android:padding="5dp"
+        android:hint="인증코드를 입력해주세요."
+        android:textSize="@dimen/registerEditTextSize"
+        android:layout_marginTop="@dimen/registerEditMarginTop"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="@+id/findIdPhoneEdit"
+        app:layout_constraintTop_toBottomOf="@+id/findIdPhoneEdit" />
+
+    <TextView
+        android:id="@+id/findIdPhoneCodeText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:text="인증 코드"
+        android:textColor="#000000"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/findIdPhoneCodeEdit"
+        app:layout_constraintStart_toStartOf="@+id/findIdPhoneCodeEdit" />
+
+    <Button
+        android:id="@+id/findIdPhoneCodeBtn"
+        android:layout_width="@dimen/registerCheckBtnWidth"
+        android:layout_height="@dimen/registerCheckBtnHeight"
+        android:background="@drawable/box_mint"
+        android:text="확인"
+        android:textColor="#000000"
+        android:textSize="@dimen/registerCheckBtnTextSize"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/findIdPhoneCodeEdit"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/findIdPhoneCodeEdit"
+        app:layout_constraintTop_toTopOf="@+id/findIdPhoneCodeEdit" />
+
+    <TextView
+        android:id="@+id/findIdPhoneCodeTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:visibility="invisible"
+        android:layout_marginRight="7dp"
+        android:textColor="@color/Red"
+        app:layout_constraintBottom_toBottomOf="@+id/findIdPhoneCodeEdit"
+        app:layout_constraintEnd_toEndOf="@+id/findIdPhoneCodeEdit"
+        app:layout_constraintTop_toTopOf="@+id/findIdPhoneCodeEdit" />
+
+    <Button
+        android:id="@+id/findIdFinishButton"
+        android:layout_width="350dp"
+        android:layout_height="40dp"
+        android:background="@drawable/box_gray"
+        android:inputType="textEmailAddress"
+        android:maxLength="25"
+        android:text="찾기"
+        android:textColor="#000000"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintVertical_bias="0.7" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

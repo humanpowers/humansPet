@@ -138,8 +138,8 @@ public class DiaryShow extends AppCompatActivity {
                 });
                 Toast.makeText(DiaryShow.this, "본문을 클릭하여 수정해주세요.", Toast.LENGTH_SHORT).show();
                 checkBtn.setVisibility(View.INVISIBLE);
-                correctionBtn.setVisibility(View.GONE);
-                deleteBtn.setVisibility(View.GONE);
+                correctionBtn.setVisibility(View.INVISIBLE);
+                deleteBtn.setVisibility(View.INVISIBLE);
                 finishBtn.setVisibility(View.VISIBLE);
                 cancelBtn.setVisibility(View.VISIBLE);
 

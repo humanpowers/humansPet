@@ -26,6 +26,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -87,10 +88,11 @@ public class DiaryAdd extends AppCompatActivity implements OnMapReadyCallback {
     private MapView diaryMap;
     Boolean mapBoolean;
     Boolean mapReady;
-    TextView imageText,mapText;
+    TextView imageText,mapText,selectMapText;
     ActivityResultLauncher<Intent> diaryLauncher;
     String petImage;
     String address,latitude,longitude;
+    Button selectAddressBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,6 +106,8 @@ public class DiaryAdd extends AppCompatActivity implements OnMapReadyCallback {
         selectMapBtn = findViewById(R.id.addDiaryMapButton);
         imageText=findViewById(R.id.addDiaryImageText);
         mapText=findViewById(R.id.addDiaryMapText);
+        selectMapText=findViewById(R.id.addDiarySelectMapText);
+        selectAddressBtn=findViewById(R.id.addDiarySelectAddressButton);
         mapBoolean=false;
         address="";
         latitude="";
@@ -279,6 +283,12 @@ public class DiaryAdd extends AppCompatActivity implements OnMapReadyCallback {
             }
         });
 
+        selectMapText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(DiaryAdd.this, selectMapText.getText().toString(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override
@@ -358,6 +368,7 @@ public class DiaryAdd extends AppCompatActivity implements OnMapReadyCallback {
                 Log.d(TAG, "onMapClick: latitude"+latLng.latitude);
                 Log.d(TAG, "onMapClick: longitude"+latLng.longitude);
                 Log.d(TAG, "onMapClick: pointF"+pointF);
+                Log.d(TAG, "onMapClick: petImage"+petImage);
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
@@ -384,8 +395,20 @@ public class DiaryAdd extends AppCompatActivity implements OnMapReadyCallback {
                         }
                     }
                 }).start();
+                selectAddressBtn.setVisibility(View.VISIBLE);
                 Location location = convertLatLngToLocation(latLng);
                 address=getAddress(location);
+                selectAddressBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        selectMapText.setText(address);
+                        diaryMap.setVisibility(View.GONE);
+                        cancelBtn.setVisibility(View.VISIBLE);
+                        checkBtn.setVisibility(View.VISIBLE);
+                        selectAddressBtn.setVisibility(View.GONE);
+                        mapBoolean=false;
+                    }
+                });
                 marker.setCaptionText(address);
                 marker.setCaptionAligns(Align.Top);
                 latitude= String.valueOf(latLng.latitude);
@@ -406,6 +429,7 @@ public class DiaryAdd extends AppCompatActivity implements OnMapReadyCallback {
             diaryMap.setVisibility(View.GONE);
             cancelBtn.setVisibility(View.VISIBLE);
             checkBtn.setVisibility(View.VISIBLE);
+            selectAddressBtn.setVisibility(View.GONE);
             mapBoolean=false;
         }else{
             finish();

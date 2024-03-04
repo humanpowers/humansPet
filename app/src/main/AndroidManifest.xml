@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" >
+    xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -26,15 +26,21 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.HumansPet"
         android:usesCleartextTraffic="true"
-        tools:targetApi="31" >
+        tools:targetApi="31">
+        <activity
+            android:name=".FindPassword"
+            android:exported="false" />
+        <activity
+            android:name=".FindId"
+            android:exported="false" />
+
         <service
             android:name=".NotificationService"
             android:enabled="true"
-            android:exported="true" >
+            android:exported="true">
             <intent-filter>
                 <action android:name="btn-click" />
             </intent-filter>
-
         </service>
 
         <activity
@@ -44,7 +50,7 @@
         <receiver
             android:name=".Widget"
             android:enabled="true"
-            android:exported="false" >
+            android:exported="false">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
                 <action android:name="com.example.UPDATE_WIDGET" />
@@ -58,7 +64,7 @@
         <service
             android:name=".WalkingBackground"
             android:enabled="true"
-            android:exported="false" >
+            android:exported="false">
             <intent-filter>
                 <action android:name="custom-action" />
             </intent-filter>
@@ -97,7 +103,7 @@
             android:name=".MainPage"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:exported="false"
-            android:launchMode="singleTop" >
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="custom-action" />
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
@@ -108,7 +114,7 @@
         <activity
             android:name=".Login"
             android:exported="true"
-            android:launchMode="singleTop" >
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -117,7 +123,7 @@
         </activity>
         <activity
             android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity"
-            android:exported="true" >
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -141,7 +147,7 @@
 
         <service
             android:name=".FirebaseMessage"
-            android:exported="true" >
+            android:exported="true">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
@@ -149,7 +155,7 @@
         <service
             android:name=".WidgetUpdateService"
             android:enabled="true"
-            android:exported="false" >
+            android:exported="false">
             <intent-filter>
                 <action android:name="com.example.Widget" />
             </intent-filter>

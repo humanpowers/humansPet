@@ -13,6 +13,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.text.style.ForegroundColorSpan;
@@ -20,6 +21,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -86,6 +89,8 @@ public class Diary extends Fragment  {
     ImageButton gridBtn,verticalBtn;
     SharedPreferences.Editor diaryEditor;
     String petImage;
+    private Handler handler;
+    private final int animationInterval = 4000;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -504,6 +509,8 @@ public class Diary extends Fragment  {
                 diaryEditor.putString("TYPE","1");
                 diaryEditor.commit();
                 diaryDiaryAdapter.notifyDataSetChanged();
+                verticalBtn.setColorFilter(ContextCompat.getColor(getContext(),R.color.human_color));
+                gridBtn.setColorFilter(ContextCompat.getColor(getContext(),R.color.gray));
             }
         });
 
@@ -517,8 +524,13 @@ public class Diary extends Fragment  {
                 diaryEditor.putString("TYPE","2");
                 diaryEditor.commit();
                 diaryDiaryAdapter.notifyDataSetChanged();
+                gridBtn.setColorFilter(ContextCompat.getColor(getContext(),R.color.human_color));
+                verticalBtn.setColorFilter(ContextCompat.getColor(getContext(),R.color.gray));
             }
         });
+
+        handler = new Handler();
+        handler.postDelayed(animationRunnable, animationInterval);
 
         return v;
     }
@@ -590,8 +602,12 @@ public class Diary extends Fragment  {
                 String diaryType = diaryPreferences.getString("TYPE","1");
                 if(diaryType.equals("1")){
                     diaryRecyclerView.setLayoutManager(diaryLinearLayoutManager);
+                    Log.d(TAG, "onImageButtonClicker: vertical이야");
+                    verticalBtn.setColorFilter(ContextCompat.getColor(getContext(),R.color.human_color));
                 }else{
                     diaryRecyclerView.setLayoutManager(gridLayoutManager);
+                    Log.d(TAG, "onImageButtonClicker: grid야");
+                    gridBtn.setColorFilter(ContextCompat.getColor(getContext(),R.color.human_color));
                 }
 
                 diaryDiaryAdapter=new DiaryDiaryAdapter(diaryDiaryItemArrayList);
@@ -713,6 +729,7 @@ public class Diary extends Fragment  {
     public void onDestroy() {
         super.onDestroy();
         Log.d(TAG, "onDestroy: 호출");
+        handler.removeCallbacks(animationRunnable);
     }
 
     String getRealPathFromUri(Uri uri){
@@ -807,4 +824,31 @@ public class Diary extends Fragment  {
         Bitmap compressedBitmap = BitmapFactory.decodeByteArray(byteArray,0,byteArray.length);
         return compressedBitmap;
     }
+
+    private Runnable animationRunnable = new Runnable() {
+        @Override
+        public void run() {
+            // 애니메이션 실행
+            Animation scaleUp = AnimationUtils.loadAnimation(getContext(), R.anim.scale_up);
+            final Animation scaleDown = AnimationUtils.loadAnimation(getContext(), R.anim.scale_down);
+
+            fabMain.startAnimation(scaleUp);
+
+            scaleUp.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {}
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    fabMain.startAnimation(scaleDown);
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {}
+            });
+
+            // 다음 애니메이션을 위해 타이머 재설정
+            handler.postDelayed(this, animationInterval);
+        }
+    };
 }

@@ -83,6 +83,7 @@
             android:layout_marginRight="15dp"
             android:src="@drawable/diary_vertical"
             android:visibility="gone"
+            app:tint="@color/gray"
             app:layout_constraintTop_toTopOf="@id/diaryDiaryGridButton"
             app:layout_constraintEnd_toStartOf="@id/diaryDiaryGridButton"
             />
@@ -96,6 +97,7 @@
             android:layout_margin="10dp"
             android:src="@drawable/diary_grid"
             android:visibility="gone"
+            app:tint="@color/gray"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             />

@@ -132,15 +132,28 @@
         android:id="@+id/joinRePwEdit"
         android:layout_width="@dimen/registerEditWidth"
         android:layout_height="@dimen/registerEditHeight"
-        android:layout_marginTop="@dimen/registerEditMarginTop"
+        android:layout_marginTop="44dp"
         android:background="@drawable/box_white_gray"
         android:inputType="textPassword"
         android:maxLength="15"
         android:padding="5dp"
         android:textSize="@dimen/registerEditTextSize"
         app:layout_constraintEnd_toEndOf="@+id/joinPwEdit"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/joinPwEdit"
         app:layout_constraintTop_toBottomOf="@+id/joinPasswordReCheck" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
+        android:text="비밀번호 재확인"
+        android:textColor="#000000"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/joinRePwEdit"
+        app:layout_constraintStart_toStartOf="@+id/joinRePwEdit" />
 
     <TextView
         android:id="@+id/joinPasswordCheck"
@@ -215,18 +228,6 @@
         android:textColor="#000000"
         app:layout_constraintBottom_toTopOf="@+id/joinPwEdit"
         app:layout_constraintStart_toStartOf="@+id/joinPwEdit" />
-
-    <TextView
-        android:id="@+id/textView4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
-        android:text="비밀번호 재확인"
-        android:textColor="#000000"
-        android:textSize="15sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/joinRePwEdit"
-        app:layout_constraintStart_toStartOf="@+id/joinRePwEdit" />
 
     <TextView
         android:id="@+id/joinNameText"

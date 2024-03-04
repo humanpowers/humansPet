@@ -40,7 +40,7 @@ import retrofit2.Response;
 
 public class Login extends AppCompatActivity {
     String TAG="로그인";
-    Button joinBtn;
+    Button joinBtn,findIdBtn,findPasswordBtn;
     private SharedPreferences preferences;
     CheckBox autoLoginCheckBox;
 
@@ -57,6 +57,9 @@ public class Login extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         getHashKey();
+
+        findIdBtn=findViewById(R.id.loginFindIdBtn);
+        findPasswordBtn = findViewById(R.id.loginFinwPasswordBtn);
 
         preferences = getSharedPreferences("USER",MODE_PRIVATE);
         String autologinCheck=preferences.getString("AUTOLOGIN","");
@@ -149,6 +152,22 @@ public class Login extends AppCompatActivity {
                         }
                     }
                 });
+
+        findIdBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent findIdIntent = new Intent(Login.this,FindId.class);
+                startActivity(findIdIntent);
+            }
+        });
+
+        findPasswordBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent findPasswordIntent = new Intent(Login.this,FindPassword.class);
+                startActivity(findPasswordIntent);
+            }
+        });
 
     }
 
