@@ -1,5 +1,7 @@
 package com.example.humanspet;
 
+import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
@@ -16,18 +18,35 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.humanspet.Interface.LoginInterface;
 import com.example.humanspet.Interface.MyInfoInterface;
+import com.example.humanspet.Interface.SocialRegisterInterface;
+import com.example.humanspet.Interface.UserCheckInterface;
+import com.example.humanspet.Interface.UserPeristalsisInterface;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.kakao.sdk.auth.model.OAuthToken;
 import com.kakao.sdk.user.UserApiClient;
 import com.kakao.sdk.user.model.User;
+import com.navercorp.nid.NaverIdLoginSDK;
+import com.navercorp.nid.oauth.NidOAuthErrorCode;
+import com.navercorp.nid.oauth.NidOAuthLogin;
+import com.navercorp.nid.oauth.OAuthLoginCallback;
+import com.navercorp.nid.profile.NidProfileCallback;
+import com.navercorp.nid.profile.data.NidProfileResponse;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -46,10 +65,13 @@ public class Login extends AppCompatActivity {
 
     EditText etId, etPassword;
     Button btnLogin;
-    ImageButton btnKakao;
+    ImageButton btnKakao,btnGoogle,btnNaver;
     PreferenceHelper preferenceHelper;
     private Long mLastClickTime = 0L;
     String token;
+    GoogleSignInOptions gso;
+    GoogleSignInClient mGoogleSignInClient;
+    ApiClient apiClient = new ApiClient();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,8 +80,18 @@ public class Login extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         getHashKey();
 
+        NaverIdLoginSDK.INSTANCE.initialize(Login.this,apiClient.getNaver_client_id(),apiClient.getNaver_client_secret(),apiClient.getNaver_client_name());
+
+
         findIdBtn=findViewById(R.id.loginFindIdBtn);
-        findPasswordBtn = findViewById(R.id.loginFinwPasswordBtn);
+        findPasswordBtn = findViewById(R.id.loginFindPasswordBtn);
+        btnGoogle = findViewById(R.id.loginGoogleLogin);
+
+        gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build();
+
+        mGoogleSignInClient = GoogleSignIn.getClient(Login.this, gso);
 
         preferences = getSharedPreferences("USER",MODE_PRIVATE);
         String autologinCheck=preferences.getString("AUTOLOGIN","");
@@ -140,6 +172,7 @@ public class Login extends AppCompatActivity {
                 }
             }
         });
+
         FirebaseMessaging.getInstance()
                 .getToken()
                 .addOnCompleteListener(new OnCompleteListener<String>() {
@@ -166,6 +199,22 @@ public class Login extends AppCompatActivity {
             public void onClick(View view) {
                 Intent findPasswordIntent = new Intent(Login.this,FindPassword.class);
                 startActivity(findPasswordIntent);
+            }
+        });
+
+        btnGoogle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                logout();
+                googleLogin();
+            }
+        });
+
+        btnNaver=findViewById(R.id.loginNaverLogin);
+        btnNaver.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                naverLogin();
             }
         });
 
@@ -259,10 +308,67 @@ public class Login extends AppCompatActivity {
                 if(user !=null){
                     Log.d(TAG,"invoke: id: "+user.getId());
                     editor.putString("USERID", user.getKakaoAccount().getEmail());
+                    editor.putString("USERNAME",user.getKakaoAccount().getProfile().getNickname());
                     editor.commit();
                     Log.d(TAG,"invoke: email: "+user.getKakaoAccount().getEmail());
                     Log.d(TAG,"invoke: photo: "+ user.getKakaoAccount().getProfile().getProfileImageUrl());
                     Log.d(TAG,user.getKakaoAccount().getProfile().getNickname());
+                    UserCheckInterface kakaoApi = ApiClient.getApiClient().create(UserCheckInterface.class);
+                    Call<String> kakaoCall =  kakaoApi.userCheck(user.getKakaoAccount().getEmail());
+                    kakaoCall.enqueue(new Callback<String>() {
+                        @Override
+                        public void onResponse(Call<String> call, Response<String> response) {
+                            Log.d(TAG, "onResponse: "+response.body());
+                            if(response.body().equals("연동")){
+                                AlertDialog.Builder alertDialog = new AlertDialog.Builder(Login.this);
+                                alertDialog.setTitle("연동");
+                                alertDialog.setMessage("이미 존재하는 계정입니다.\n연동하시겠습니까?");
+                                alertDialog.setPositiveButton("네", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        UserPeristalsisInterface peristalsisApi = ApiClient.getApiClient().create(UserPeristalsisInterface.class);
+                                        Call<String> peristalsisCall = peristalsisApi.userPeristalsis(user.getKakaoAccount().getEmail());
+                                        peristalsisCall.enqueue(new Callback<String>() {
+                                            @Override
+                                            public void onResponse(Call<String> call, Response<String> response) {
+                                                if(response.body().equals("완료")){
+                                                    Toast.makeText(Login.this, "연동 되었습니다.", Toast.LENGTH_SHORT).show();
+                                                    Intent intent = new Intent(Login.this,MainPage.class);
+                                                    startActivity(intent);
+                                                    finish();
+                                                }else{
+                                                    Log.d(TAG, "onResponse: 연동안됨");
+                                                }
+                                            }
+
+                                            @Override
+                                            public void onFailure(Call<String> call, Throwable t) {
+
+                                            }
+                                        });
+                                    }
+                                });
+                                alertDialog.setNegativeButton("아니요",null);
+                                alertDialog.show();
+                            }else if(response.body().equals("완료")){
+                                Intent intent = new Intent(Login.this,MainPage.class);
+                                startActivity(intent);
+                                finish();
+                            }else if(response.body().equals("처음")){
+                                kakaoRegister(user);
+                            }else if(response.body().equals("로그인")){
+                                Toast.makeText(Login.this, "환영합니다.", Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(Login.this,MainPage.class);
+                                startActivity(intent);
+                                finish();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<String> call, Throwable t) {
+
+                        }
+                    });
 
                 }else{
                     Log.d(TAG,"로그인 안됨");
@@ -271,13 +377,290 @@ public class Login extends AppCompatActivity {
                 return null;
             }
         });
-        Intent intent = new Intent(Login.this,MainPage.class);
-        startActivity(intent);
-        finish();
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
     }
+
+    public void googleLogin(){
+        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+        resultLauncher.launch(signInIntent);
+    }
+
+    private ActivityResultLauncher<Intent> resultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == Activity.RESULT_OK) {
+                    Intent data = result.getData();
+                    Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+                    handleSignInResult(task);
+                }
+            });
+
+    private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
+        try {
+            GoogleSignInAccount account = completedTask.getResult(ApiException.class);
+            if (account != null) {
+                preferences = getSharedPreferences("USER",MODE_PRIVATE);
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.putString("USERNAME",account.getFamilyName());
+                editor.putString("USERID", account.getEmail());
+                editor.commit();
+                String email = account.getEmail();
+                String familyName = account.getFamilyName();
+                Log.d(TAG, "handleSignInResult: email: "+email);
+                Log.d(TAG, "handleSignInResult: fmailyName: "+familyName);
+
+                UserCheckInterface googleApi = ApiClient.getApiClient().create(UserCheckInterface.class);
+                Call<String> googleCall =  googleApi.userCheck(account.getEmail());
+                googleCall.enqueue(new Callback<String>() {
+                    @Override
+                    public void onResponse(Call<String> call, Response<String> response) {
+                        if(response.body().equals("연동")){
+                            AlertDialog.Builder alertDialog = new AlertDialog.Builder(Login.this);
+                            alertDialog.setTitle("연동");
+                            alertDialog.setMessage("이미 존재하는 계정입니다.\n연동하시겠습니까?");
+                            alertDialog.setPositiveButton("네", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    UserPeristalsisInterface peristalsisApi = ApiClient.getApiClient().create(UserPeristalsisInterface.class);
+                                    Call<String> peristalsisCall = peristalsisApi.userPeristalsis(account.getEmail());
+                                    peristalsisCall.enqueue(new Callback<String>() {
+                                        @Override
+                                        public void onResponse(Call<String> call, Response<String> response) {
+                                            if(response.body().equals("완료")){
+                                                Toast.makeText(Login.this, "연동 되었습니다.", Toast.LENGTH_SHORT).show();
+                                                Intent intent = new Intent(Login.this,MainPage.class);
+                                                startActivity(intent);
+                                                finish();
+                                            }else{
+                                                Log.d(TAG, "onResponse: 연동안됨");
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onFailure(Call<String> call, Throwable t) {
+
+                                        }
+                                    });
+                                }
+                            });
+                            alertDialog.setNegativeButton("아니요",null);
+                            alertDialog.show();
+                        }else if(response.body().equals("완료")){
+                            Intent intent = new Intent(Login.this,MainPage.class);
+                            startActivity(intent);
+                            finish();
+                        }else if(response.body().equals("처음")){
+                            SocialRegisterInterface socialApi = ApiClient.getApiClient().create(SocialRegisterInterface.class);
+                            Call<String> socialCall = socialApi.socialRegister(account.getFamilyName(),account.getEmail(),"google");
+                            socialCall.enqueue(new Callback<String>() {
+                                @Override
+                                public void onResponse(Call<String> call, Response<String> response) {
+                                    if(response.body().equals("성공")){
+                                        Toast.makeText(Login.this,"환영합니다.",Toast.LENGTH_SHORT).show();
+                                        Intent intent = new Intent(Login.this,MainPage.class);
+                                        startActivity(intent);
+                                        finish();
+                                    }else if(response.body().equals("실패")){
+                                        Toast.makeText(Login.this, "회원가입에 실패하셨습니다.", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(Call<String> call, Throwable t) {
+
+                                }
+                            });
+
+                        }else if(response.body().equals("로그인")){
+                            Toast.makeText(Login.this, "환영합니다.", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(Login.this,MainPage.class);
+                            startActivity(intent);
+                            finish();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<String> call, Throwable t) {
+
+                    }
+                });
+
+                Intent intent = new Intent(Login.this,MainPage.class);
+                startActivity(intent);
+                finish();
+            }
+        } catch (ApiException e) {
+            Log.w("failed", "signInResult:failed code=" + e.getStatusCode());
+        }
+    }
+
+    private void logout() {
+        mGoogleSignInClient.signOut()
+                .addOnCompleteListener(this, task -> {
+                    // 로그아웃 성공시 실행
+                    // 로그아웃 이후의 이벤트들(토스트 메세지, 화면 종료)을 여기서 수행하면 됨
+                });
+    }
+
+    private void naverLogout(){
+        NaverIdLoginSDK.INSTANCE.logout();
+    }
+
+    private void naverLogin() {
+        NaverIdLoginSDK.INSTANCE.logout();
+        OAuthLoginCallback oauthLoginCallback = new OAuthLoginCallback() {
+            @Override
+            public void onSuccess() {
+                // 네이버 로그인 인증이 성공했을 때 수행할 코드 추가
+                Log.d(TAG, "onSuccess: "+NaverIdLoginSDK.INSTANCE.getAccessToken());
+                naverRegister();
+            }
+
+            @Override
+            public void onFailure(int httpStatus, String message) {
+                NidOAuthErrorCode errorCode = NaverIdLoginSDK.INSTANCE.getLastErrorCode();
+                String errorDescription = NaverIdLoginSDK.INSTANCE.getLastErrorDescription();
+                Log.d(TAG, "onFailure: "+"errorCode:" + errorCode + ", errorDesc:" + errorDescription);
+            }
+
+            @Override
+            public void onError(int errorCode, String message) {
+                onFailure(errorCode, message);
+            }
+        };
+
+        NaverIdLoginSDK.INSTANCE.authenticate(Login.this, oauthLoginCallback);
+    }
+
+    public void kakaoRegister(User user){
+        SocialRegisterInterface socialApi = ApiClient.getApiClient().create(SocialRegisterInterface.class);
+        Call<String> socialCall = socialApi.socialRegister(user.getKakaoAccount().getProfile().getNickname(),user.getKakaoAccount().getEmail(),"kakao");
+        socialCall.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+                if(response.body().equals("성공")){
+                    Toast.makeText(Login.this,"환영합니다.",Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(Login.this,MainPage.class);
+                    startActivity(intent);
+                    finish();
+                }else if(response.body().equals("실패")){
+                    Toast.makeText(Login.this, "회원가입에 실패하셨습니다.", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+
+            }
+        });
+    }
+
+    public void naverRegister(){
+        new NidOAuthLogin().callProfileApi(new NidProfileCallback<NidProfileResponse>() {
+            @Override
+            public void onSuccess(NidProfileResponse nidProfileResponse) {
+                String naverEmail = nidProfileResponse.getProfile().getEmail();
+                String naverName = nidProfileResponse.getProfile().getName();
+                preferences = getSharedPreferences("USER",MODE_PRIVATE);
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.putString("USERNAME", naverName);
+                editor.putString("USERID", naverEmail);
+                editor.commit();
+                UserCheckInterface naverApi = ApiClient.getApiClient().create(UserCheckInterface.class);
+                Call<String> naverCall =  naverApi.userCheck(naverEmail);
+                naverCall.enqueue(new Callback<String>() {
+                    @Override
+                    public void onResponse(Call<String> call, Response<String> response) {
+                        if(response.body().equals("연동")){
+                            AlertDialog.Builder alertDialog = new AlertDialog.Builder(Login.this);
+                            alertDialog.setTitle("연동");
+                            alertDialog.setMessage("이미 존재하는 계정입니다.\n연동하시겠습니까?");
+                            alertDialog.setPositiveButton("네", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    UserPeristalsisInterface peristalsisApi = ApiClient.getApiClient().create(UserPeristalsisInterface.class);
+                                    Call<String> peristalsisCall = peristalsisApi.userPeristalsis(naverEmail);
+                                    peristalsisCall.enqueue(new Callback<String>() {
+                                        @Override
+                                        public void onResponse(Call<String> call, Response<String> response) {
+                                            if(response.body().equals("완료")){
+                                                Toast.makeText(Login.this, "연동 되었습니다.", Toast.LENGTH_SHORT).show();
+                                                Intent intent = new Intent(Login.this,MainPage.class);
+                                                startActivity(intent);
+                                                finish();
+                                            }else{
+                                                Log.d(TAG, "onResponse: 연동안됨");
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onFailure(Call<String> call, Throwable t) {
+
+                                        }
+                                    });
+                                }
+                            });
+                            alertDialog.setNegativeButton("아니요",null);
+                            alertDialog.show();
+                        }else if(response.body().equals("완료")){
+                            Intent intent = new Intent(Login.this,MainPage.class);
+                            startActivity(intent);
+                            finish();
+                        }else if(response.body().equals("처음")){
+                            SocialRegisterInterface socialApi = ApiClient.getApiClient().create(SocialRegisterInterface.class);
+                            Call<String> socialCall = socialApi.socialRegister(naverName,naverEmail,"naver");
+                            socialCall.enqueue(new Callback<String>() {
+                                @Override
+                                public void onResponse(Call<String> call, Response<String> response) {
+                                    if(response.body().equals("성공")){
+                                        Toast.makeText(Login.this,"환영합니다.",Toast.LENGTH_SHORT).show();
+                                        Intent intent = new Intent(Login.this,MainPage.class);
+                                        startActivity(intent);
+                                        finish();
+                                    }else if(response.body().equals("실패")){
+                                        Toast.makeText(Login.this, "회원가입에 실패하셨습니다.", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(Call<String> call, Throwable t) {
+
+                                }
+                            });
+
+                        }else if(response.body().equals("로그인")){
+                            Toast.makeText(Login.this, "환영합니다.", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(Login.this,MainPage.class);
+                            startActivity(intent);
+                            finish();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<String> call, Throwable t) {
+
+                    }
+                });
+            }
+
+            @Override
+            public void onFailure(int i, @NonNull String s) {
+
+            }
+
+            @Override
+            public void onError(int i, @NonNull String s) {
+
+            }
+        });
+
+    }
+
+
+
+
 }

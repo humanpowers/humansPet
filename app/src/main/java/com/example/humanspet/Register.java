@@ -352,7 +352,7 @@ public class Register extends AppCompatActivity {
 
         Log.d(TAG, "registerMe: 레지스터 들어옴");
         RegisterInterface api = ApiClient.getApiClient().create(RegisterInterface.class);
-        Call<String> call = api.getUserRegist(name, email, password, phone);
+        Call<String> call = api.getUserRegist(name, email, password, phone , "game");
         call.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {

@@ -5,15 +5,13 @@ import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.POST;
 
-public interface RegisterInterface {
+public interface SocialRegisterInterface {
 
     @FormUrlEncoded
-    @POST("register.php")
-    Call<String> getUserRegist(
+    @POST("socialRegister.php")
+    Call<String> socialRegister(
             @Field("name") String name,
             @Field("email") String email,
-            @Field("password") String password,
-            @Field("phone") String phone,
             @Field("type") String type
     );
 }

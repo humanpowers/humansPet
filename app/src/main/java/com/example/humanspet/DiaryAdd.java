@@ -208,9 +208,14 @@ public class DiaryAdd extends AppCompatActivity implements OnMapReadyCallback {
                 String title=titleEdit.getText().toString();
                 contentEdit=findViewById(R.id.addDiaryContentEdit);
                 String content=contentEdit.getText().toString();
-                int lineCount = contentEdit.getLineCount();
-                if(lineCount>30){
-                    Toast.makeText(DiaryAdd.this,"본문은 30줄까지만 입력 가능합니다.",Toast.LENGTH_SHORT).show();
+                if(title.trim().equals("")){
+                    Toast.makeText(DiaryAdd.this,"제목을 입력해주세요.",Toast.LENGTH_SHORT).show();
+                }else if(content.trim().equals("")){
+                    Toast.makeText(DiaryAdd.this,"내용을 입력해주세요.",Toast.LENGTH_SHORT).show();
+                }else if(selectImage.getDrawable()==null){
+                    Toast.makeText(DiaryAdd.this,"사진을 선택해주세요.",Toast.LENGTH_SHORT).show();
+                }else if(latitude.equals("")){
+                    Toast.makeText(DiaryAdd.this,"위치을 선택해주세요.",Toast.LENGTH_SHORT).show();
                 }else{
                     animationView = findViewById(R.id.addDiaryLottie);
                     animationView.loop(true);
@@ -301,7 +306,6 @@ public class DiaryAdd extends AppCompatActivity implements OnMapReadyCallback {
     protected void onResume() {
         Log.d(TAG,"onResume호출");
         super.onResume();
-
         if(mapReady==true){
             Log.d(TAG, "onCreate: mapReady여서 들어옴");
             naverMap.setOnMapClickListener(new NaverMap.OnMapClickListener() {

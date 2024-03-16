@@ -67,7 +67,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="10dp"
         android:background="#0503DAC5"
         android:orientation="horizontal"
         android:visibility="gone"
@@ -133,9 +132,10 @@
 
         <ImageButton
             android:id="@+id/noticeboardShowLikesImage"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:layout_marginStart="10dp"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:paddingLeft="10dp"
+            android:paddingTop="10dp"
             android:background="#00ffffff"
             android:scaleType="centerCrop"
             android:visibility="gone"
@@ -147,15 +147,18 @@
             android:layout_height="20dp"
             android:layout_gravity="center"
             android:layout_marginStart="5dp"
+            android:layout_marginTop="10dp"
             android:text="0"
             android:visibility="gone"
             android:textSize="15sp" />
 
         <ImageButton
             android:id="@+id/noticeboardShowCommentImage"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:layout_marginStart="10dp"
+            android:paddingTop="10dp"
+            android:paddingLeft="10dp"
             android:background="#00ffffff"
             android:scaleType="centerCrop"
             android:visibility="gone"
@@ -167,6 +170,7 @@
             android:layout_height="20dp"
             android:layout_gravity="center"
             android:layout_marginStart="5dp"
+            android:layout_marginTop="10dp"
             android:visibility="gone"
             android:text="0"
             android:textSize="15sp" />

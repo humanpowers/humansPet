@@ -18,11 +18,12 @@
 
     <TextView
         android:id="@+id/myInfoNameText"
-        android:layout_width="@dimen/myInfoNameWidth"
+        android:layout_width="wrap_content"
         android:layout_height="@dimen/myInfoHeight"
         android:text="이름"
+        android:textStyle="bold"
+        android:textColor="#000000"
         android:textSize="@dimen/myInfoTextSize"
-        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.2"
@@ -36,6 +37,7 @@
         android:layout_height="@dimen/myInfoHeight"
         android:text=""
         android:textSize="@dimen/myInfoTextSize"
+        android:textColor="#000000"
         app:layout_constraintStart_toStartOf="@+id/myInfoUserId"
         app:layout_constraintTop_toTopOf="@+id/myInfoAddressText" />
 
@@ -45,6 +47,7 @@
         android:layout_height="@dimen/myInfoHeight"
         android:text=""
         android:textSize="@dimen/myInfoTextSize"
+        android:textColor="#000000"
         app:layout_constraintStart_toStartOf="@+id/myInfoUserName"
         app:layout_constraintTop_toTopOf="@+id/myInfoIdText" />
 
@@ -55,6 +58,7 @@
         android:layout_marginStart="@dimen/myInfoTextMarginStart"
         android:text=""
         android:textSize="@dimen/myInfoTextSize"
+        android:textColor="#000000"
         app:layout_constraintBottom_toBottomOf="@+id/myInfoNameText"
         app:layout_constraintStart_toEndOf="@+id/myInfoNameText"
         app:layout_constraintTop_toTopOf="@+id/myInfoNameText"
@@ -67,7 +71,8 @@
         android:layout_marginTop="@dimen/myInfoTextMarginTop"
         android:text="ID"
         android:textSize="@dimen/myInfoTextSize"
-        android:visibility="gone"
+        android:textStyle="bold"
+        android:textColor="#000000"
         app:layout_constraintStart_toStartOf="@+id/myInfoNameText"
         app:layout_constraintTop_toBottomOf="@+id/myInfoNameText" />
 
@@ -78,7 +83,8 @@
         android:layout_marginTop="@dimen/myInfoTextMarginTop"
         android:text="주소"
         android:textSize="@dimen/myInfoTextSize"
-        android:visibility="gone"
+        android:textStyle="bold"
+        android:textColor="#000000"
         app:layout_constraintStart_toStartOf="@+id/myInfoIdText"
         app:layout_constraintTop_toBottomOf="@+id/myInfoIdText" />
 
@@ -147,7 +153,7 @@
         app:layout_constraintVertical_bias="0.9" />
 
     <Button
-        android:id="@+id/myInfoOutBtn"
+        android:id="@+id/myInfoSecessionBtn"
         android:layout_width="@dimen/myInfoCheckBtnWidth"
         android:layout_height="@dimen/myInfoCheckBtnHeight"
         android:text="회원탈퇴"

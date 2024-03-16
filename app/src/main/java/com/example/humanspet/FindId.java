@@ -126,6 +126,8 @@ public class FindId extends AppCompatActivity {
                                         countdownText.setVisibility(View.INVISIBLE);
                                         if(phoneBoolean==true&&phoneCodeBoolean==true){
                                             finishBtn.setBackgroundResource(R.drawable.box_mint);
+                                            phoneCodeBtn.setBackgroundResource(R.drawable.box_gray);
+                                            findIdPhoneCheckBtn.setBackgroundResource(R.drawable.box_gray);
                                         }else{
                                             finishBtn.setBackgroundResource(R.drawable.box_gray);
                                         }
@@ -201,7 +203,6 @@ public class FindId extends AppCompatActivity {
                         case R.id.findIdFinishButton:
                             if(phoneBoolean==true&&phoneCodeBoolean==true){
                                 findId();
-                                // 배진우는 아이디 찾기를 구현할 수 있을 것인가
                             }
                             break;
                     }
@@ -220,28 +221,32 @@ public class FindId extends AppCompatActivity {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
                 Log.d(TAG, "onResponse: "+response.body());
-                String[] idSp = response.body().split("@");
-                String finalId = "";
-                String firstId = idSp[0];
-                String[] firstIdSp=firstId.split("");
-                for(int i=0;i<firstIdSp.length;i++){
-                    if(i<firstIdSp.length-5){
-                        finalId+=firstIdSp[i];
-                    }else{
-                        finalId+="*";
+                if(response.body().equals("없음")){
+                    Toast.makeText(FindId.this,"아이디가 존재하지 않습니다.",Toast.LENGTH_SHORT).show();
+                }else{
+                    String[] idSp = response.body().split("@");
+                    String finalId = "";
+                    String firstId = idSp[0];
+                    String[] firstIdSp=firstId.split("");
+                    for(int i=0;i<firstIdSp.length;i++){
+                        if(i<firstIdSp.length-5){
+                            finalId+=firstIdSp[i];
+                        }else{
+                            finalId+="*";
+                        }
                     }
+                    finalId+="@"+idSp[1];
+                    AlertDialog.Builder dialog = new AlertDialog.Builder(FindId.this);
+                    dialog.setTitle("아이디");
+                    dialog.setMessage(finalId);
+                    dialog.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            finish();
+                        }
+                    });
+                    dialog.show();
                 }
-                finalId+="@"+idSp[1];
-                AlertDialog.Builder dialog = new AlertDialog.Builder(FindId.this);
-                dialog.setTitle("아이디");
-                dialog.setMessage(finalId);
-                dialog.setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        finish();
-                    }
-                });
-                dialog.show();
             }
 
             @Override

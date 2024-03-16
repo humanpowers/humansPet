@@ -1,9 +1,5 @@
 package com.example.humanspet;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.database.Cursor;
@@ -15,11 +11,15 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Toast;
+
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.bumptech.glide.Glide;
 import com.example.humanspet.Interface.DiaryAddInterface;
-import com.example.humanspet.Interface.DiaryRecyclerViewInterface;
 
 import java.io.File;
 
@@ -33,18 +33,19 @@ import retrofit2.Response;
 public class PetAdd extends AppCompatActivity {
     String TAG="펫추가";
     String userId;
-
     EditText nameEdit,sexEdit,birthEdit,weightEdit,kindEdit,typesEdit,registrationEdit;
     String name,sex,birth,weight,types,kind,registration;
     Button checkBtn,cancelBtn;
     ImageButton imageBtn;
     String dataUri;
     LottieAnimationView animationView;
+    int imageCheck;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pet_add);
+        imageCheck=0;
 
         Intent getIntent=getIntent();
         userId=getIntent.getStringExtra("USERID");
@@ -64,6 +65,7 @@ public class PetAdd extends AppCompatActivity {
                         Glide.with(this)
                                 .load(realUri)
                                 .into(imageBtn);
+                        imageCheck++;
                     }
                 });
 
@@ -97,39 +99,56 @@ public class PetAdd extends AppCompatActivity {
                 kind=kindEdit.getText().toString();
                 registrationEdit=findViewById(R.id.petAddRegistrationNumberEdit);
                 registration=registrationEdit.getText().toString();
+                if(name.trim().equals("")){
+                    Toast.makeText(PetAdd.this, "이름을 입력해주세요.", Toast.LENGTH_SHORT).show();
+                }else if(sex.trim().equals("")){
+                    Toast.makeText(PetAdd.this, "성별을 입력해주세요.", Toast.LENGTH_SHORT).show();
+                }else if(birth.trim().equals("")){
+                    Toast.makeText(PetAdd.this, "생일을 입력해주세요.", Toast.LENGTH_SHORT).show();
+                }else if(weight.trim().equals("")){
+                    Toast.makeText(PetAdd.this, "몸무게를 입력해주세요.", Toast.LENGTH_SHORT).show();
+                }else if(types.trim().equals("")){
+                    Toast.makeText(PetAdd.this, "동물과를 입력해주세요.", Toast.LENGTH_SHORT).show();
+                }else if(kind.trim().equals("")){
+                    Toast.makeText(PetAdd.this, "품종을 입력해주세요.", Toast.LENGTH_SHORT).show();
+                }else if(registration.trim().equals("")){
+                    Toast.makeText(PetAdd.this, "등록번호를 입력해주세요.", Toast.LENGTH_SHORT).show();
+                }else if(imageCheck==0){
+                    Toast.makeText(PetAdd.this, "사진을 선택해주세요.", Toast.LENGTH_SHORT).show();
+                }else{
+                    File dataFile= new File(dataUri);
+                    Log.d(TAG, "onClick: dataFile: "+dataFile);
+                    String fileName=name+".jpg";
+                    Log.d(TAG, "onClick: fileName: "+fileName);
 
-                File dataFile= new File(dataUri);
-                Log.d(TAG, "onClick: dataFile: "+dataFile);
-                String fileName=name+".jpg";
-                Log.d(TAG, "onClick: fileName: "+fileName);
+                    RequestBody requestBody=RequestBody.create(MediaType.parse("multipart/form-data"),dataFile);
+                    MultipartBody.Part body = MultipartBody.Part.createFormData("uploaded_file",fileName,requestBody);
+                    Log.d(TAG, "onClick: body: "+body);
 
-                RequestBody requestBody=RequestBody.create(MediaType.parse("multipart/form-data"),dataFile);
-                MultipartBody.Part body = MultipartBody.Part.createFormData("uploaded_file",fileName,requestBody);
-                Log.d(TAG, "onClick: body: "+body);
+                    animationView = findViewById(R.id.petAddLottie);
+                    animationView.loop(true);
+                    animationView.playAnimation();
+                    animationView.setVisibility(View.VISIBLE);
 
-                animationView = findViewById(R.id.petAddLottie);
-                animationView.loop(true);
-                animationView.playAnimation();
-                animationView.setVisibility(View.VISIBLE);
-
-                DiaryAddInterface api = ApiClient.getApiClient().create(DiaryAddInterface.class);
-                Call<String> call = api.getDiaryAdd(userId,name,sex,birth,weight,types,kind,registration,body);
-                call.enqueue(new Callback<String>() {
-                    @Override
-                    public void onResponse(Call<String> call, Response<String> response) {
-                        Log.d(TAG, "onResponse: "+response.body());
-                        if(response.body().equals("성공")){
-                            finish();
-                        }else{
-                            Log.d(TAG, "onResponse: 실패");
+                    DiaryAddInterface api = ApiClient.getApiClient().create(DiaryAddInterface.class);
+                    Call<String> call = api.getDiaryAdd(userId,name,sex,birth,weight,types,kind,registration,body);
+                    call.enqueue(new Callback<String>() {
+                        @Override
+                        public void onResponse(Call<String> call, Response<String> response) {
+                            Log.d(TAG, "onResponse: "+response.body());
+                            if(response.body().equals("성공")){
+                                finish();
+                            }else{
+                                Log.d(TAG, "onResponse: 실패");
+                            }
                         }
-                    }
 
-                    @Override
-                    public void onFailure(Call<String> call, Throwable t) {
-                        Log.e(TAG,"에러 = " + t.getMessage());
-                    }
-                });
+                        @Override
+                        public void onFailure(Call<String> call, Throwable t) {
+                            Log.e(TAG,"에러 = " + t.getMessage());
+                        }
+                    });
+                }
             }
         });
 

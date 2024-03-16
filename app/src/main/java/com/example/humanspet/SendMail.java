@@ -42,7 +42,8 @@ public class SendMail extends AppCompatActivity {
                 // UI 업데이트 코드를 여기에 추가
                 preferences = context.getSharedPreferences("USER", Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = preferences.edit();
-                editor.putString("CODE", emailCode);
+                String[] emailCodeSp = emailCode.split("\n");
+                editor.putString("CODE", emailCodeSp[1]);
                 editor.apply();
                 super.onPostExecute(result);
             }

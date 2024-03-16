@@ -14,6 +14,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.text.style.ForegroundColorSpan;
@@ -253,6 +254,15 @@ public class Diary extends Fragment  {
             @Override
             public void onClick(View v) {
                 toggleFab();
+                Animation scaleUp = AnimationUtils.loadAnimation(getContext(), R.anim.scale_up);
+                final Animation scaleDown = AnimationUtils.loadAnimation(getContext(), R.anim.scale_down);
+                fabMain.startAnimation(scaleUp);
+                new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        fabMain.startAnimation(scaleDown);
+                    }
+                }, 200); // 시간 2초 이후 실행
             }
         });
 

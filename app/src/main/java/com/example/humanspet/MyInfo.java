@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -25,6 +26,10 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.humanspet.Interface.MyInfoInterface;
 import com.example.humanspet.Interface.UserImageChangeInterface;
+import com.example.humanspet.Interface.UserSecessionInterface;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.kakao.sdk.user.UserApiClient;
 
 import java.io.File;
@@ -38,14 +43,16 @@ import retrofit2.Response;
 
 public class MyInfo extends AppCompatActivity {
     String TAG="인포";
-    Button checkBtn,logoutBtn,outBtn;
-    String userEmail;
-    TextView nameText,emailText,addressText;
-    ImageButton userImageBtn;
+    Button checkBtn,logoutBtn,secessionBtn;
+    String userEmail,userName;
+    TextView nameText,addressText,idText,imageChange,userIdText,userNameText,userAddressText;
+    ImageButton imageChangeBtn;
     ImageView userImage;
     ApiClient apiClient=new ApiClient();
     LottieAnimationView animationView,loadingAnimation;
     private SharedPreferences preferences;
+    GoogleSignInOptions gso;
+    GoogleSignInClient mGoogleSignInClient;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,8 +63,15 @@ public class MyInfo extends AppCompatActivity {
         SharedPreferences.Editor editor = preferences.edit();
         userEmail=preferences.getString("USERID","");
 
-        userImageBtn=findViewById(R.id.myInfoImageAddButton);
+        init();
+
         userImage=findViewById(R.id.myInfoImage);
+
+        gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build();
+
+        mGoogleSignInClient = GoogleSignIn.getClient(MyInfo.this, gso);
 
         ActivityResultLauncher<Intent> diaryLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
                 result -> {
@@ -121,7 +135,7 @@ public class MyInfo extends AppCompatActivity {
                     }
                 });
 
-        userImageBtn.setOnClickListener(new View.OnClickListener() {
+        imageChangeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Log.d(TAG, "onClick: 다이어리 사진 누름");
@@ -132,17 +146,12 @@ public class MyInfo extends AppCompatActivity {
             }
         });
 
-        myInfoInput();
-
-        checkBtn=findViewById(R.id.myInfoCheckBtn);
         checkBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 finish();
             }
         });
-
-        logoutBtn=findViewById(R.id.myInfoLogoutBtn);
         logoutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -163,23 +172,38 @@ public class MyInfo extends AppCompatActivity {
                 finish();
             }
         });
-
-        outBtn=findViewById(R.id.myInfoOutBtn);
-        outBtn.setOnClickListener(new View.OnClickListener() {
+        secessionBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                UserApiClient.getInstance().unlink(error -> {
-                    if (error != null) {
-                        Log.e(TAG, "회원탈퇴 실패", error);
-                    } else {
-                        Log.e(TAG, "회원 탈퇴 성공");
-                        Intent intent = new Intent(MyInfo.this,Login.class); //fragment라서 activity intent와는 다른 방식
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                        startActivity(intent);
-                        finish();
+                AlertDialog.Builder dlg = new AlertDialog.Builder(MyInfo.this);
+                dlg.setMessage("정말로 탈퇴하시겠습니까?\n(탈퇴시 등록되어있던 모든 정보가 사라집니다.)");
+                dlg.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        UserSecessionInterface secessionApi = ApiClient.getApiClient().create(UserSecessionInterface.class);
+                        Call<String> secessionCall = secessionApi.userSecession(userEmail,userName);
+                        secessionCall.enqueue(new Callback<String>() {
+                            @Override
+                            public void onResponse(Call<String> call, Response<String> response) {
+                                if(response.body().equals("완료")){
+                                    Toast.makeText(MyInfo.this, "회원 탈퇴하셨습니다 ㅠ.ㅠ", Toast.LENGTH_SHORT).show();
+                                    Intent intent = new Intent(MyInfo.this,Login.class);
+                                    startActivity(intent);
+                                    finish();
+
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<String> call, Throwable t) {
+
+                            }
+                        });
                     }
-                    return null;
                 });
+                dlg.setNegativeButton("취소",null);
+                dlg.show();
+
             }
         });
 
@@ -196,7 +220,8 @@ public class MyInfo extends AppCompatActivity {
     protected void onResume() {
         Log.d(TAG,"onResume호출");
         super.onResume();
-
+        infoGone();
+        myInfoInput();
     }
 
     @Override
@@ -224,13 +249,8 @@ public class MyInfo extends AppCompatActivity {
     }
 
     private void myInfoInput(){
-        nameText=findViewById(R.id.myInfoUserName);
-        emailText=findViewById(R.id.myInfoUserId);
-        addressText=findViewById(R.id.myInfoUserAddress);
-        userImage=findViewById(R.id.myInfoImage);
         Log.d(TAG,userEmail);
 
-        infoGone();
         loadingAnimation = findViewById(R.id.myInfoFirstLottie);
         loadingAnimation.loop(true);
         loadingAnimation.playAnimation();
@@ -246,12 +266,14 @@ public class MyInfo extends AppCompatActivity {
                     loadingAnimation.setVisibility(View.GONE);
                     infoVisible();
                     String[] responseSp=response.body().split("!!@!!");
-                    nameText.setText(responseSp[0]);
-                    emailText.setText(responseSp[1]);
+                    userNameText.setText(responseSp[0]);
+                    userName = responseSp[0];
+                    Log.d(TAG, "onResponse: userName"+userName);
+                    userIdText.setText(responseSp[1]);
                     if(responseSp.length<=3){
-                        addressText.setText("아직 주소를 입력하지 않았습니다");
+                        userAddressText.setText("아직 주소를 입력하지 않았습니다");
                     }else{
-                        addressText.setText(responseSp[3]);
+                        userAddressText.setText(responseSp[3]);
                     }
                     Log.d(TAG, "onResponse: length"+responseSp.length);
                     if(!responseSp[2].equals("")){
@@ -281,17 +303,8 @@ public class MyInfo extends AppCompatActivity {
     }
 
     public void infoGone(){
-        TextView nameText=findViewById(R.id.myInfoNameText);
-        TextView addressText=findViewById(R.id.myInfoAddressText);
-        TextView idText=findViewById(R.id.myInfoIdText);
-        Button checkBtn=findViewById(R.id.myInfoCheckBtn);
-        TextView imageChange=findViewById(R.id.myInfoImageAddText);
-        ImageButton imageChangeBtn=findViewById(R.id.myInfoImageAddButton);
-        ImageView userImage=findViewById(R.id.myInfoImage);
-        Button logoutBtn = findViewById(R.id.myInfoLogoutBtn);
-        Button outBtn = findViewById(R.id.myInfoOutBtn);
         logoutBtn.setVisibility(View.GONE);
-        outBtn.setVisibility(View.GONE);
+        secessionBtn.setVisibility(View.GONE);
         userImage.setVisibility(View.GONE);
         nameText.setVisibility(View.GONE);
         addressText.setVisibility(View.GONE);
@@ -302,17 +315,8 @@ public class MyInfo extends AppCompatActivity {
     }
 
     public void infoVisible(){
-        TextView nameText=findViewById(R.id.myInfoNameText);
-        TextView addressText=findViewById(R.id.myInfoAddressText);
-        TextView idText=findViewById(R.id.myInfoIdText);
-        Button checkBtn=findViewById(R.id.myInfoCheckBtn);
-        TextView imageChange=findViewById(R.id.myInfoImageAddText);
-        ImageButton imageChangeBtn=findViewById(R.id.myInfoImageAddButton);
-        ImageView userImage=findViewById(R.id.myInfoImage);
-        Button logoutBtn = findViewById(R.id.myInfoLogoutBtn);
-        Button outBtn = findViewById(R.id.myInfoOutBtn);
         logoutBtn.setVisibility(View.VISIBLE);
-        outBtn.setVisibility(View.VISIBLE);
+        secessionBtn.setVisibility(View.VISIBLE);
         userImage.setVisibility(View.VISIBLE);
         nameText.setVisibility(View.VISIBLE);
         addressText.setVisibility(View.VISIBLE);
@@ -320,6 +324,22 @@ public class MyInfo extends AppCompatActivity {
         checkBtn.setVisibility(View.VISIBLE);
         imageChange.setVisibility(View.VISIBLE);
         imageChangeBtn.setVisibility(View.VISIBLE);
+    }
+
+    public void init(){
+        nameText=findViewById(R.id.myInfoNameText);
+        addressText=findViewById(R.id.myInfoAddressText);
+        idText=findViewById(R.id.myInfoIdText);
+        userNameText = findViewById(R.id.myInfoUserName);
+        userIdText = findViewById(R.id.myInfoUserId);
+        userAddressText = findViewById(R.id.myInfoUserAddress);
+        checkBtn=findViewById(R.id.myInfoCheckBtn);
+        imageChange=findViewById(R.id.myInfoImageAddText);
+        imageChangeBtn=findViewById(R.id.myInfoImageAddButton);
+        userImage=findViewById(R.id.myInfoImage);
+        logoutBtn = findViewById(R.id.myInfoLogoutBtn);
+        secessionBtn = findViewById(R.id.myInfoSecessionBtn);
+
     }
 
 }

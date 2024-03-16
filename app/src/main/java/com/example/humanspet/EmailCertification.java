@@ -127,7 +127,7 @@ public class EmailCertification extends AppCompatActivity {
                             Toast.makeText(EmailCertification.this, "이미 사용중인 이메일 입니다.", Toast.LENGTH_SHORT).show();
                         }else{
                             countdownText.setVisibility(View.VISIBLE);
-                            initialTimeMillis = 30 * 1000;
+                            initialTimeMillis = 3*60*1000;
                             countDownTimer.start();
                             mailBtn.setClickable(false);
                             emailCheck();
@@ -203,7 +203,7 @@ public class EmailCertification extends AppCompatActivity {
         countDownTimer.start();
     }
 
-    private void updateCountdownText(long millisUntilFinished) {
+    public void updateCountdownText(long millisUntilFinished) {
         int minutes = (int) (millisUntilFinished / (1000 * 60));
         int seconds = (int) ((millisUntilFinished % (1000 * 60)) / 1000);
 

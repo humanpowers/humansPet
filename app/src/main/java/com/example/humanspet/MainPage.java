@@ -1,6 +1,7 @@
 package com.example.humanspet;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -65,8 +66,10 @@ public class MainPage extends AppCompatActivity {
                        if(fifth!=null){getSupportFragmentManager().beginTransaction().hide(fifth).commit();}
                        break;
                    case R.id.btn_fragmentD:
+                       Log.d(TAG, "onNavigationItemSelected: 01111"+fourth);
                        if(fourth ==null){
                            fourth = new Walking();
+                           Log.d(TAG, "onNavigationItemSelected: 22222"+fourth);
                            getSupportFragmentManager().beginTransaction().add(R.id.frameLayout,fourth).commit();
                        }
                        if(first!=null){getSupportFragmentManager().beginTransaction().hide(first).commit();}

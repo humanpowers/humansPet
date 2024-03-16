@@ -41,7 +41,6 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.viewmodel.CreationExtras;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -251,11 +250,8 @@ public class Walking extends Fragment implements OnMapReadyCallback {
                     dlg.setPositiveButton("확인", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
-                            Diary otherFragment = new Diary();
-                            FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                            transaction.replace(R.id.frameLayout, otherFragment);
-                            transaction.addToBackStack(null);
-                            transaction.commit();
+                            getActivity().getSupportFragmentManager().beginTransaction().show(new Diary()).commit();
+                            getActivity().getSupportFragmentManager().beginTransaction().remove(new Walking()).commit();
                             BottomNavigationView bottomNavigationView = getActivity().findViewById(R.id.bottomNavi); // 바텀 네비게이션뷰 ID를 넣어주세요
                             bottomNavigationView.setSelectedItemId(R.id.btn_fragmentB);
                         }
@@ -570,7 +566,7 @@ public class Walking extends Fragment implements OnMapReadyCallback {
 
         return v;
     }
-    
+
     private final BroadcastReceiver btnReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {

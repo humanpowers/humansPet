@@ -54,6 +54,7 @@ public class GMailSender extends javax.mail.Authenticator {
             int random = (int) (Math.random() * str.length);
             newCode += str[random];
         }
+        newCode = "이메일 인증을 위해 다음 코드를 입력해주세요 \n"+newCode;
 
         return newCode;
     }
